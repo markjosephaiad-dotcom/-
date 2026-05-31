@@ -796,4 +796,47 @@
             let parsed = parseInt(newScore);
             if(!isNaN(parsed)) {
                 records[idx].score = parsed;
-                localStorage.setItem("church_quiz_data_
+                localStorage.setItem("church_quiz_data_store", JSON.stringify(records));
+                renderAdminTable();
+            }
+        }
+    }
+
+    function deleteRecord(idx) {
+        let records = JSON.parse(localStorage.getItem("church_quiz_data_store"));
+        let targetName = records[idx].name;
+
+        if (confirm(`هل أنت متأكد من مسح إجابة الخادم (${targetName})؟\nسيؤدي هذا إلى السماح له بدخول الامتحان مرة أخرى كأنه لم يشترك!`)) {
+            records.splice(idx, 1);
+            localStorage.setItem("church_quiz_data_store", JSON.stringify(records));
+            
+            let blockedList = JSON.parse(localStorage.getItem("blocked_servants_list") || "[]");
+            let newBlockedList = blockedList.filter(name => name !== targetName);
+            localStorage.setItem("blocked_servants_list", JSON.stringify(newBlockedList));
+            
+            alert(`تم مسح إجابات الخادم ${targetName} بنجاح، ومتاح له الدخول الآن.`);
+            renderAdminTable();
+        }
+    }
+
+    function exportToExcel() {
+        let records = JSON.parse(localStorage.getItem("church_quiz_data_store"));
+        if (records.length === 0) { alert("لا توجد نتائج لتصديرها!"); return; }
+
+        let excelRows = records.map(r => ({
+            "اسم خادم اجتماع مدينة عامر": r.name,
+            "الدرجة من 10": r.score,
+            "تاريخ ووقت دخول الامتحان": r.date
+        }));
+
+        let worksheet = XLSX.utils.json_to_sheet(excelRows);
+        let workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "النتائج");
+        XLSX.writeFile(workbook, "نتائج_مسابقة_الكتاب_مقدس.xlsx");
+    }
+
+    window.onload = initApp;
+</script>
+
+</body>
+</html>

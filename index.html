@@ -3,12 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مسابقات دراسة الكتاب المقدس | كنيسة أبي سيفين</title>
+    <title>مسابقة دراسة الكتاب المقدس</title>
     
-    <!-- الخطوط الرسمية الفاخرة للطابع الكنسي -->
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
     
-    <!-- مكتبة لإنتاج ملفات الاكسيل مباشرة -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.5/xlsx.full.min.js"></script>
 
     <style>
@@ -20,6 +18,7 @@
             --light-bg: #FAF6EE;
             --text-dark: #2b2b2b;
             --success-green: #2E7D32;
+            --error-red: #c62828;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', 'Amiri', sans-serif; }
@@ -30,7 +29,7 @@
         .header-title { font-family: 'Amiri', serif; color: var(--maroon); font-size: 2.2rem; margin-bottom: 5px; font-weight: bold; }
         .subtitle { color: var(--dark-gold); font-size: 1.2rem; margin-bottom: 20px; font-weight: 600; }
 
-        /* حاوية صور القديسين بالصفحة الرئيسية */
+        /* حاوية صور القديسين بالصفحة الرئيسية بأسمائك المحلية */
         .images-container { display: flex; justify-content: center; gap: 25px; margin: 20px 0; }
         .saint-card { display: flex; flex-direction: column; align-items: center; }
         .saint-img { width: 140px; height: 180px; object-fit: cover; border-radius: 10px; border: 3px solid var(--primary-gold); box-shadow: 0 6px 12px rgba(0,0,0,0.15); background-color: #eee; }
@@ -81,19 +80,28 @@
         /* شاشة النتيجة الفردية */
         .result-box { padding: 35px; border: 3px dashed var(--primary-gold); background: #fffdf9; border-radius: 12px; display: inline-block; margin: 25px 0; min-width: 280px; }
         .score-num { font-size: 3.5rem; color: var(--maroon); font-weight: bold; margin-top: 10px; }
+
+        /* لوحة المراجعة الحية ومراجعة الأخطاء للخدام والأدمن */
+        .review-card { background: #fff; border: 1px solid #ddd; padding: 15px; margin: 15px 0; border-radius: 8px; text-align: right; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .badge { padding: 4px 10px; border-radius: 4px; font-size: 0.85rem; font-weight: bold; display: inline-block; margin-bottom: 8px; color: white; }
+        .badge-success { background-color: var(--success-green); }
+        .badge-error { background-color: var(--error-red); }
+        .review-opt { padding: 8px; margin: 4px 0; border-radius: 5px; background: #f9f9f9; font-size: 0.95rem; }
+        .review-opt.user-picked-wrong { background-color: #FFEBEE; border-right: 4px solid var(--error-red); color: #c62828; }
+        .review-opt.correct-ans { background-color: #E8F5E9; border-right: 4px solid var(--success-green); color: #2E7D32; font-weight: bold; }
+        
+        /* حاوية تعديل الإجابات المضمنة للأدمن */
+        .inline-edit-box { background: #f1f8e9; padding: 15px; border-radius: 8px; margin-top: 10px; border: 1px dashed var(--success-green); text-align: right; color: #333; }
     </style>
 </head>
 <body>
 
 <div class="coptic-border">
-    <!-- الهيدر الثابت الموحد -->
     <div class="header-title">كنيسة الشهيد العظيم فيلوباتير مرقوريوس أبي سيفين</div>
     <div class="subtitle">مدينة عامر - اجتماع الخدام</div>
     
-    <!-- زر الانتقال السريع للمشرفين -->
     <button class="btn btn-maroon" style="position: absolute; top: 25px; left: 25px; font-size: 0.8rem; padding: 6px 14px;" onclick="showPage('admin-login-page')">⚙️ لوحة التحكم</button>
 
-    <!-- الشاشة 1: تسجيل الدخول والترحيب بالايقونات والتحضير برة الامتحان -->
     <div id="login-page" class="page active-page">
         <div class="images-container">
             <div class="saint-card">
@@ -108,41 +116,37 @@
         
         <h3 style="margin: 5px 0 15px 0; color: var(--maroon); font-family: 'Amiri', serif; font-size: 1.8rem;">مسابقة دراسة الكتاب المقدس</h3>
         
-        <!-- زرار إقرأ وإسمع الأصحاح برة الامتحان -->
         <div style="margin: 15px auto; padding: 12px; background: #FFFDE7; border: 1px solid #FFF59D; border-radius: 8px; max-width: 500px;">
             <p style="font-weight: bold; font-size: 0.95rem; color: #555; margin-bottom: 8px;">قبل ما تدخل الامتحان.. إقرا واسمع الأصحاح من هنا: </p>
             <a id="sheet-study-link" href="#" target="_blank" class="btn btn-maroon" style="font-size: 0.9rem; padding: 8px 20px;">📖 إقرأ واسمع الأصحاح</a>
         </div>
 
         <div style="margin: 15px 0;">
-            <label style="font-weight: bold;">اختر اسمك من قائمة الخدام (مرتبة أبجدياً):</label><br>
+            <label style="font-weight: bold;">اختر اسمك من قائمة الخدام:</label><br>
             <select id="khadim-select">
                 <option value="">-- اضغط هنا لاختيار الاسم --</option>
             </select>
         </div>
         
         <div>
-            <label style="font-weight: bold;">أدخل كود المرور البسيط الخاص بك:</label><br>
-            <input type="password" id="khadim-password" placeholder="اكتب كودك السري (مثال: 1، 2، 3...)">
+            <label style="font-weight: bold;">أدخل كود المرور الخاص بك (الباسورد السري):</label><br>
+            <input type="password" id="khadim-password" placeholder="اكتب كودك السري">
         </div>
         
         <button class="btn btn-gold" style="margin-top: 15px;" onclick="loginKhadim()">🔓 دخول الامتحان وبدء الوقت</button>
     </div>
 
-    <!-- الشاشة 2: شاشة مساحة الامتحان النشطة -->
     <div id="quiz-page" class="page">
         <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #eee; padding-bottom: 12px; margin-bottom: 15px;">
             <h3 id="welcome-khadim" style="color: var(--maroon);">الخادم: </h3>
             <div id="timer-box">المتبقي للسؤال: <span id="time-display">03:00</span></div>
         </div>
 
-        <!-- كتلة السؤال والخيارات الأربعة -->
         <div id="question-block" style="margin-top: 20px;">
             <h3 id="question-text" style="text-align: right; line-height: 1.6; font-size: 1.3rem; color: #111;"></h3>
             <div id="options-box" class="options-container"></div>
         </div>
 
-        <!-- أزرار التنقل الخلفي والأمامي والارسال النهائي -->
         <div style="margin-top: 35px; display: flex; justify-content: space-between; align-items: center;">
             <button id="btn-prev" class="btn btn-maroon" onclick="navigateQuestion(-1)">⬅️ السابق</button>
             <span id="question-counter" style="font-weight: bold; font-size: 1.1rem; color: var(--dark-gold);">السؤال 1 من 10</span>
@@ -151,7 +155,6 @@
         </div>
     </div>
 
-    <!-- الشاشة 3: لوحة إظهار النتيجة الفردية المغلقة لكل خادم -->
     <div id="result-page" class="page">
         <h2 style="color: var(--success-green); font-family: 'Amiri', serif; font-size: 2rem;">تمت المسابقة بنجاح ونعمة!</h2>
         <p style="margin-top: 5px; color: #555;">"مُبَارَكٌ الإِنْسَانُ الَّذِي يَتَّكِلُ عَلَى الرَّبِّ"</p>
@@ -161,10 +164,16 @@
             <div class="score-num" id="final-score">0 / 10</div>
         </div>
         <br>
+        
+        <button class="btn btn-gold" id="btn-know-results" onclick="toggleKhadimReview()">🔍 اعرف نتيجتك (مراجعة الإجابات)</button>
         <button class="btn btn-maroon" onclick="window.location.reload()">🔄 الخروج والعودة للرئيسية</button>
+        
+        <div id="khadim-review-zone" style="display: none; margin-top: 25px; border-top: 2px dashed #ddd; padding-top: 20px;">
+            <h3 style="color: var(--maroon); margin-bottom: 15px;">تقرير الإجابات الخاص بك:</h3>
+            <div id="khadim-review-list"></div>
+        </div>
     </div>
 
-    <!-- الشاشة 4: حماية الدخول لغرفة المشرفين -->
     <div id="admin-login-page" class="page">
         <h3 style="color: var(--maroon); margin-bottom: 10px;">دخول إدارة المسابقة 🔐</h3>
         <input type="password" id="admin-pass-field" placeholder="أدخل كلمة سر الإدارة">
@@ -173,7 +182,6 @@
         <button class="btn btn-gold" onclick="showPage('login-page')">إلغاء وعودة</button>
     </div>
 
-    <!-- الشاشة 5: لوحة تحكم غامقة بلون ماروني فاخر -->
     <div id="admin-dashboard-page" class="page admin-panel">
         <h2>غرفة تحكم المسابقات والنتائج والشهرية ⚙️</h2>
         
@@ -181,6 +189,8 @@
             <button class="btn btn-gold" onclick="exportToExcel()">📥 تحميل النتائج إكسيل فوري (Excel)</button>
             <button class="btn btn-green" onclick="showPage('login-page')">🚪 تسجيل الخروج للرئيسية</button>
         </div>
+
+        <div id="admin-inline-edit-area" style="display: none; margin-bottom: 25px;"></div>
 
         <div style="overflow-x: auto;">
             <table class="admin-table">
@@ -193,27 +203,25 @@
                     </tr>
                 </thead>
                 <tbody id="results-table-body">
-                    <!-- النتائج تظهر هنا تلقائياً -->
-                </tbody>
+                    </tbody>
             </table>
         </div>
     </div>
 
 </div>
 
-<!-- البنية البرمجية والذكاء الكامل للموقع -->
 <script>
     // روابط جوجل شيت المباشرة المقروءة لعدم حدوث عطل 404
     const QUESTIONS_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQATB615cDv6gnBZdVqUNJV8f7WTaA4p8nLuiV8uBJfGKUz5fFBP5UT6-XQTRyTumgZIBv_h9Pt64mg/pub?output=csv";
     const ESSAH_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRlHtC2XhIAwgkBPyOKvgS40OJ8JiYHt_019eGTHb9ltGaxc-oV6gT2QS924VOBSFZMv0N7d2OnzRBe/pub?output=csv";
     
-    const ADMIN_PASSWORD = "123"; // كلمة سر لوحة التحكم الافتراضية
+    const ADMIN_PASSWORD = "284655"; // كلمة سر لوحة التحكم الافتراضية
 
-    // الأسماء الـ 71 كاملة مصفوفة ومرتبة
+    // الأسماء الـ 71 كاملة مصفوفة ومرتبة أبجدياً بالملي
     let rawServants = [
         "كيرلس يوسف", "نرجس خير", "جورج فايز", "ياسر نبيه", "رؤوف خير", "مريم عماد", "ميرنا عماد", 
         "فادي سليمان", "مينا مجدي", "فيوليت فوزي", "سماح حلمي", "شيري شهدي", "سمير زكي", "مني ميشيل", 
-        "جانيت ويصا", "ماريان مجدي", "شكرالله nsr", "جيهان ماهر", "جمال حنا", "ناهد فاروق", "رمزي سعيد", 
+        "جانيت ويصا", "ماريان مجدي", "شكرالله نصر", "جيهان ماهر", "جمال حنا", "ناهد فاروق", "رمزي سعيد", 
         "عايدة يعقوب", "نعمة عبد السيد", "كيرلس اسامة", "مارينا اشرف", "جاكلين سيعد", "سارة عماد", 
         "ماريانا ادورد", "وردة ماهر", "كمال كريم", "كرستين نصر", "ماري عادل", "هيلانة جورج", "رزق كامل", 
         "صفاء سمير", "صفاء عدلي", "سناء سعيد", "مريان عادل", "سمر جادالرب", "يوستينا رأفت", "مريم مكرم", 
@@ -230,18 +238,19 @@
     let questionTimer;
     let secondsLeftForQuestion = 3 * 60; 
     let activeKhadimName = "";
+    let lastSavedKhadimRecord = null; // لمراجعة الإجابات الفردية بعد الإرسال
 
     function initApp() {
         // 1. ترتيب الأسماء أبجدياً تلقائياً
         rawServants.sort((a, b) => a.localeCompare(b, "ar"));
         
-        // 2. توزيع الأكواد التسلسلية البسيطة من 1 إلى 71 بناء على الترتيب الأبجدي
+        // 2. إخفاء الأكواد من القائمة لتصبح كـ باسورد سري حقيقي
         const selectEl = document.getElementById("khadim-select");
         rawServants.forEach((name, index) => {
             let opt = document.createElement("option");
             opt.value = name;
-            let codeNumber = index + 1;
-            opt.textContent = `${name} (كود: ${codeNumber})`;
+            let codeNumber = index + 1; // رقم الباسورد السري من 1 لـ 71
+            opt.textContent = name; // يظهر الاسم صافي فقط بدون الكود!
             opt.setAttribute("data-pass", codeNumber.toString());
             selectEl.appendChild(opt);
         });
@@ -259,22 +268,32 @@
             const qData = await qResponse.text();
             parseQuestions(qData);
 
+            // جلب الأصحاح المباشر وحل مشكلة الـ 404 نهائياً
             const eResponse = await fetch(ESSAH_SHEET_URL);
             const eData = await eResponse.text();
             const lines = eData.split("\n");
             if (lines.length > 0) {
-                let rawLink = lines[0].replace(/"/g, "").trim();
-                if (lines[1] && lines[1].includes("http")) {
-                    rawLink = lines[1].replace(/"/g, "").split(",")[0].trim();
+                let foundLink = "";
+                for(let line of lines) {
+                    let cleanLine = line.replace(/"/g, "").trim();
+                    if(cleanLine.includes("http://") || cleanLine.includes("https://")) {
+                        foundLink = cleanLine.split(",")[0].trim();
+                        break;
+                    }
                 }
-                document.getElementById("sheet-study-link").href = rawLink;
+                if(foundLink) {
+                    document.getElementById("sheet-study-link").href = foundLink;
+                } else {
+                    document.getElementById("sheet-study-link").href = lines[0].replace(/"/g, "").trim();
+                }
             }
         } catch (error) {
-            console.log("تنبيه: تم تشغيل الأسئلة الاحتياطية بـ 4 خيارات:", error);
+            console.log("تنبيه: تم تشغيل الأسئلة الاحتياطية بـ 4 خيارات وطبقاً لنظام المزامنة:", error);
             loadBackupQuestions();
         }
     }
 
+    // قراءة الشيت على أساس الترتيب: question, option1, option2, option3, option4, answer
     function parseQuestions(csvText) {
         const lines = csvText.split("\n");
         let loadedQs = [];
@@ -289,7 +308,7 @@
                     opt2: columns[2].replace(/"/g, "").trim(),
                     opt3: columns[3].replace(/"/g, "").trim(),
                     opt4: columns[4].replace(/"/g, "").trim(),
-                    correct: columns[5].replace(/"/g, "").trim().toLowerCase()
+                    correct: columns[5].replace(/"/g, "").trim().toLowerCase() // هذا يقرأ عمود الـ answer بالملي
                 });
             }
         }
@@ -310,7 +329,7 @@
             { q: "كم سنة قضاها الشعب في تيه برية سيناء؟", opt1: "12 سنة", opt2: "70 سنة", opt3: "40 سنة", opt4: "50 سنة", correct: "opt3" },
             { q: "ما هو الاسم الآخر لسمعان بطرس؟", opt1: "برنابا", opt2: "صفا", opt3: "ديوديموس", opt4: "تيوفيلس", correct: "opt2" },
             { q: "من هي أول امرأة آمنت في أوروبا على يد بولس الرسول؟", opt1: "بريسكلا", opt2: "دامرس", opt3: "ليديا بائعة الأرجوان", opt4: "طابيثا", correct: "opt3" },
-            { q: "ما هو أصغر سفر في العهد القديم？", opt1: "حجي", opt2: "عوبديا", opt3: "ملاخي", opt4: "عاموس", correct: "opt2" },
+            { q: "ما هو أصغر سفر في العهد القديم؟", opt1: "حجي", opt2: "عوبديا", opt3: "ملاخي", opt4: "عاموس", correct: "opt2" },
             { q: "في أي مدينة وُلد السيد المسيح له المجد؟", opt1: "الناصرة", opt2: "بيت لحم", opt3: "أورشليم", opt4: "كفرناحوم", correct: "opt2" }
         ];
     }
@@ -318,7 +337,10 @@
     function showPage(pageId) {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active-page'));
         document.getElementById(pageId).classList.add('active-page');
-        if (pageId === 'admin-dashboard-page') renderAdminTable();
+        if (pageId === 'admin-dashboard-page') {
+            document.getElementById("admin-inline-edit-area").style.display = "none";
+            renderAdminTable();
+        }
     }
 
     function loginKhadim() {
@@ -337,7 +359,7 @@
             startQuestionTimer();
             displayQuestion();
         } else {
-            alert("كود المرور غير صحيح! اكتب رقم الترتيب المكتوب بجانب اسمك.");
+            alert("كود المرور السري غير صحيح! تأكد من رقم ترتيبك الأبجدي السري.");
         }
     }
 
@@ -411,7 +433,7 @@
     function submitQuiz() {
         clearInterval(questionTimer);
         let finalScore = 0;
-        let khadimAnswersSave = {}; // حفظ اختياراته للرجوع لها عند التظلم
+        let khadimAnswersSave = {}; 
 
         quizQuestions.forEach((q, idx) => {
             khadimAnswersSave[idx] = selectedAnswers[idx] || "لم يحل";
@@ -422,16 +444,61 @@
 
         document.getElementById("final-score").textContent = `${finalScore} / ${quizQuestions.length}`;
         
-        let records = JSON.parse(localStorage.getItem("church_quiz_data_store"));
-        records.push({
+        lastSavedKhadimRecord = {
             name: activeKhadimName,
             score: finalScore,
-            answers: khadimAnswersSave, // مضافة هنا لتعديلها لاحقاً
+            answers: khadimAnswersSave,
             date: new Date().toLocaleString("ar-EG")
-        });
+        };
+
+        let records = JSON.parse(localStorage.getItem("church_quiz_data_store"));
+        records.push(lastSavedKhadimRecord);
         localStorage.setItem("church_quiz_data_store", JSON.stringify(records));
 
+        // إعادة تصفير شاشة المراجعة
+        document.getElementById("khadim-review-zone").style.display = "none";
         showPage("result-page");
+    }
+
+    // ميزة "اعرف نتيجتك" للخادم لعرض الصح والغلط في نهاية الامتحان
+    function toggleKhadimReview() {
+        const zone = document.getElementById("khadim-review-zone");
+        if(zone.style.display === "block") {
+            zone.style.display = "none";
+            return;
+        }
+
+        if(!lastSavedKhadimRecord) return;
+        
+        const container = document.getElementById("khadim-review-list");
+        container.innerHTML = "";
+
+        quizQuestions.forEach((q, idx) => {
+            let userAns = lastSavedKhadimRecord.answers[idx];
+            let isCorrect = userAns === q.correct || q.correct.includes(userAns);
+            
+            let card = document.createElement("div");
+            card.className = "review-card";
+            
+            card.innerHTML = `
+                <div>
+                    <span class="badge ${isCorrect ? 'badge-success' : 'badge-error'}">
+                        ${isCorrect ? '✓ إجابة صحيحة' : '✗ إجابة خاطئة'}
+                    </span>
+                    <strong>السؤال ${idx + 1}: ${q.q}</strong>
+                </div>
+                <div style="margin-top:10px;">
+                    <div class="review-opt ${userAns === 'opt1' ? (isCorrect ? 'correct-ans' : 'user-picked-wrong') : (q.correct==='opt1'?'correct-ans':'')}">أ) ${q.opt1}</div>
+                    <div class="review-opt ${userAns === 'opt2' ? (isCorrect ? 'correct-ans' : 'user-picked-wrong') : (q.correct==='opt2'?'correct-ans':'')}">ب) ${q.opt2}</div>
+                    <div class="review-opt ${userAns === 'opt3' ? (isCorrect ? 'correct-ans' : 'user-picked-wrong') : (q.correct==='opt3'?'correct-ans':'')}">ج) ${q.opt3}</div>
+                    <div class="review-opt ${userAns === 'opt4' ? (isCorrect ? 'correct-ans' : 'user-picked-wrong') : (q.correct==='opt4'?'correct-ans':'')}">د) ${q.opt4}</div>
+                </div>
+            `;
+            container.appendChild(card);
+        });
+
+        zone.style.display = "block";
+        zone.scrollIntoView({ behavior: 'smooth' });
     }
 
     function loginAdmin() {
@@ -461,7 +528,7 @@
                 <td><span style="color:var(--maroon); font-weight:bold; font-size:1.1rem;">${rec.score} / 10</span></td>
                 <td>${rec.date}</td>
                 <td>
-                    <button class="action-btn btn-edit-ans" onclick="editAnswers(${idx})">📝 تعديل الإجابات</button>
+                    <button class="action-btn btn-edit-ans" onclick="inlineEditAnswers(${idx})">📝 تعديل الإجابات</button>
                     <button class="action-btn btn-edit-deg" onclick="editDegree(${idx})">⭐ تعديل الدرجة</button>
                     <button class="action-btn btn-delete" onclick="deleteRecord(${idx})">❌ مسح الإجابة</button>
                 </td>
@@ -470,53 +537,82 @@
         });
     }
 
-    // 🚀 ميزة الأدمن الحقيقية لتعديل الإجابات وإعادة الحساب الذكي تلقائياً
-    function editAnswers(idx) {
+    // 🚀 ميزة الأدمن الجديدة: فتح قائمة الأسئلة وتغييرها من نفس الصفحة بدون مغادرة
+    function inlineEditAnswers(idx) {
         let records = JSON.parse(localStorage.getItem("church_quiz_data_store"));
         let record = records[idx];
         
-        // لو الخادم امتحن على كود قديم ولم تسجل مصفوفة إجاباته لسه
         if (!record.answers) {
             record.answers = {0:"opt1", 1:"opt1", 2:"opt1", 3:"opt1", 4:"opt1", 5:"opt1", 6:"opt1", 7:"opt1", 8:"opt1", 9:"opt1"};
         }
 
-        let qNumInput = prompt(`خيار التظلمات والتحكم لإجابات الخادم: (${record.name})\nاكتب رقم السؤال اللي عايز تعدل إجابته (من 1 إلى 10):`);
-        if (qNumInput === null || qNumInput.trim() === "") return;
-        
-        let qIdx = parseInt(qNumInput) - 1;
-        if (isNaN(qIdx) || qIdx < 0 || qIdx > 9) {
-            alert("رقم السؤال غير صحيح! اكتب رقم بين 1 و 10.");
-            return;
-        }
+        const area = document.getElementById("admin-inline-edit-area");
+        area.innerHTML = "";
+        area.style.display = "block";
 
-        let currentAns = record.answers[qIdx] || "لم يحل";
-        let newAnsInput = prompt(`السؤال رقم ${qNumInput} حالياً إجابته هي: (${currentAns})\nاكتب الاختيار الجديد المظبوط للخادم من دول بالظبط (opt1 أو opt2 أو opt3 أو opt4):`);
-        
-        if (newAnsInput === null || newAnsInput.trim() === "") return;
-        newAnsInput = newAnsInput.trim().toLowerCase();
+        let title = document.createElement("h3");
+        title.style.color = "var(--primary-gold)";
+        title.style.marginBottom = "15px";
+        title.textContent = `مراجعة وتعديل إجابات الخادم: ${record.name}`;
+        area.appendChild(title);
 
-        if (['opt1', 'opt2', 'opt3', 'opt4'].includes(newAnsInput)) {
-            // تحديث إجابة السؤال المختار
-            record.answers[qIdx] = newAnsInput;
+        quizQuestions.forEach((q, qIdx) => {
+            let currentAns = record.answers[qIdx] || "لم يحل";
             
-            // إعادة حساب الدرجة أوتوماتيكياً بناء على الإجابات الجديدة والـ Correct اللي في الشيت
-            let systemCalculatedScore = 0;
+            let box = document.createElement("div");
+            box.className = "inline-edit-box";
+            box.innerHTML = `
+                <p><strong>س ${qIdx + 1}: ${q.q}</strong></p>
+                <p style="font-size:0.85rem; color:#666; margin:4px 0;">الإجابة الصحيحة النموذجية بالشيت هي: <span style="color:green; font-weight:bold;">${q.correct}</span></p>
+                <label>تعديل اختيار الخادم لهذا السؤال: </label>
+                <select id="inline-select-${qIdx}" style="width:auto; padding:5px; margin:5px; font-size:0.9rem;">
+                    <option value="opt1" ${currentAns === 'opt1' ? 'selected' : ''}>الاختيار الأول: ${q.opt1}</option>
+                    <option value="opt2" ${currentAns === 'opt2' ? 'selected' : ''}>الاختيار الثاني: ${q.opt2}</option>
+                    <option value="opt3" ${currentAns === 'opt3' ? 'selected' : ''}>الاختيار الثالث: ${q.opt3}</option>
+                    <option value="opt4" ${currentAns === 'opt4' ? 'selected' : ''}>الاختيار الرابع: ${q.opt4}</option>
+                    <option value="لم يحل" ${currentAns === 'لم يحل' ? 'selected' : ''}>لم يحل</option>
+                </select>
+            `;
+            area.appendChild(box);
+        });
+
+        let saveBtn = document.createElement("button");
+        saveBtn.className = "btn btn-gold";
+        saveBtn.style.marginTop = "15px";
+        saveBtn.textContent = "💾 حفظ التعديلات وإعادة حساب الدرجة فوراً";
+        saveBtn.onclick = () => {
+            quizQuestions.forEach((q, qIdx) => {
+                let sel = document.getElementById(`inline-select-${qIdx}`);
+                record.answers[qIdx] = sel.value;
+            });
+
+            // إعادة حساب الدرجة تلقائياً بناءً على التعديلات المضمنة
+            let newScore = 0;
             quizQuestions.forEach((q, i) => {
-                let khadimAns = record.answers[i];
-                if (khadimAns && (khadimAns === q.correct || q.correct.includes(khadimAns))) {
-                    systemCalculatedScore++;
+                let ans = record.answers[i];
+                if (ans && (ans === q.correct || q.correct.includes(ans))) {
+                    newScore++;
                 }
             });
 
-            record.score = systemCalculatedScore; // تعيين الدرجة الجديدة تلقائياً
-            
-            // حفظ التغييرات في الذاكرة المحلية
+            record.score = newScore;
+            records[idx] = record;
             localStorage.setItem("church_quiz_data_store", JSON.stringify(records));
-            alert(`تم تعديل إجابة السؤال ${qNumInput} وبناءً عليه تم تحديث نتيجته الكلية تلقائياً لتصبح: ${systemCalculatedScore} / 10`);
+            
+            alert(`تم حفظ التعديلات بنجاح! الدرجة الجديدة المحسوبة: ${newScore} / 10`);
+            area.style.display = "none";
             renderAdminTable();
-        } else {
-            alert("خطأ في كتابة الاختيار! لازم تكتب الرمز برمجياً زي كدة بالظبط: opt1 أو opt2 أو opt3 أو opt4");
-        }
+        };
+
+        let cancelBtn = document.createElement("button");
+        cancelBtn.className = "btn btn-maroon";
+        cancelBtn.style.marginTop = "15px";
+        cancelBtn.textContent = "إلغاء";
+        cancelBtn.onclick = () => { area.style.display = "none"; };
+
+        area.appendChild(saveBtn);
+        area.appendChild(cancelBtn);
+        area.scrollIntoView({ behavior: 'smooth' });
     }
 
     function editDegree(idx) {

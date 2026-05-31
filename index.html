@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>✝️ مسابقة دراسة الكتاب المقدس </title>
+    <title> مسابقة دراسة الكتاب المقدس </title>
     
     <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.5/xlsx.full.min.js"></script>
@@ -146,11 +146,34 @@
         
         .inline-edit-box { background: #F4F9F4; padding: 15px; border-radius: 8px; margin-top: 10px; border: 1px dashed var(--success-green); text-align: right; color: #333; }
 
+        /* نظام التحكم في حجم الخط */
+        .font-controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .btn-font {
+            padding: 6px 16px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            border-radius: 6px;
+            border: 1px solid var(--coptic-gold);
+            background-color: var(--pure-white);
+            color: var(--coptic-maroon);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-font:hover {
+            background-color: var(--coptic-maroon);
+            color: var(--pure-white);
+        }
+
         /* نافذة عرض الأصحاح البوب أب الفاخرة */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(43,37,31,0.7); display: none; justify-content: center; align-items: center; z-index: 9999; padding: 20px; backdrop-filter: blur(4px); }
         .modal-content { background: var(--church-cream); border: 4px solid var(--coptic-gold); outline: 2px solid var(--coptic-maroon); outline-offset: -6px; border-radius: 16px; max-width: 800px; width: 100%; max-height: 90vh; overflow-y: auto; padding: 30px; text-align: right; box-shadow: 0 15px 35px rgba(0,0,0,0.4); }
         
-        .modal-body { font-family: 'Amiri', serif; font-size: 1.45rem; line-height: 2; color: #1A1512; white-space: pre-wrap; text-align: justify; margin: 20px 0; padding: 25px; background: var(--pure-white); border-radius: 8px; border: 1px solid #EAE4D3; max-height: 45vh; overflow-y: auto; font-weight: 500; box-shadow: inset 0 2px 6px rgba(0,0,0,0.02); }
+        .modal-body { font-family: 'Amiri', serif; font-size: 1.45rem; line-height: 2; color: #1A1512; white-space: pre-wrap; text-align: justify; margin: 20px 0; padding: 25px; background: var(--pure-white); border-radius: 8px; border: 1px solid #EAE4D3; max-height: 45vh; overflow-y: auto; font-weight: 500; box-shadow: inset 0 2px 6px rgba(0,0,0,0.02); transition: font-size 0.2s ease; }
         
         /* منطقة مشغل الصوت الكنسي */
         .audio-control-zone { background: #F5EEDC; border: 2px solid var(--coptic-gold); border-radius: 10px; padding: 18px; margin: 15px 0; text-shadow: none; box-shadow: 0 4px 8px rgba(0,0,0,0.04); }
@@ -191,17 +214,17 @@
 
 <!-- بنر التنبيهات الاحترافي المدمج في النطاق -->
 <div id="church-alert-banner">
-    <span id="church-alert-cross">✝️</span>
+    <span id="church-alert-cross">❖</span>
     <span id="church-alert-text">رسالة تنبيهية كنسية</span>
 </div>
 
 <div class="coptic-border">
     <!-- صليب قبطي أرثوذكسي مذهب وماروني متناسق -->
-    <div class="coptic-cross-header">✝️</div>
+    <div class="coptic-cross-header">❖</div>
     <div class="header-title">كنيسة الشهيد العظيم فيلوباتير مرقوريوس أبي سيفين - بمدينة عامر</div>
     <div class="subtitle"> اجتماع الخدام </div>
 
-    <div class="church-separator"><span>✝️ 🎚️ ✝️</span></div>
+    <div class="church-separator"><span>❖ ❖ ❖</span></div>
 
     <!-- الشاشة 1: تسجيل الدخول والمحتوى الدراسي المتفق عليه -->
     <div id="login-page" class="page active-page">
@@ -218,7 +241,7 @@
             </div>
         </div>
         
-        <h3 style="margin: 10px 0 15px 0; color: var(--coptic-maroon); font-family: 'Amiri', serif; font-size: 1.9rem; font-weight: bold;">مسابقة دراسة الكتاب المقدس </h3>
+        <h3 style="margin: 10px 0 15px 0; color: var(--coptic-maroon); font-family: 'Amiri', serif; font-size: 1.9rem; font-weight: bold;">مسابقة دراسة الكتاب المقدس الشهرية</h3>
         
         <div style="margin: 20px auto; padding: 16px; background: #FFFFEF; border: 1px solid var(--coptic-gold); border-radius: 10px; max-width: 550px; box-shadow: 0 4px 10px rgba(0,0,0,0.03);">
             <p style="font-weight: bold; font-size: 1rem; color: #554E45; margin-bottom: 10px;">قبل البدء في الإجابة.. فضلاً قم بقراءة وسماع نص الأصحاح الحالي: </p>
@@ -237,14 +260,14 @@
             <input type="password" id="khadim-password" placeholder="اكتب كودك السري الشخصي">
         </div>
         
-        <button class="btn btn-gold" style="margin-top: 20px; font-size: 1.1rem;" onclick="loginKhadim()"> دخول الامتحان وبدء الوقت التنازلي 🔓</button>
+        <button class="btn btn-gold" style="margin-top: 20px; font-size: 1.1rem;" onclick="loginKhadim()">🔓 دخول الامتحان وبدء الوقت التنازلي 🔓</button>
     </div>
 
     <!-- الشاشة 2: مساحة الامتحان والأسئلة العشرة -->
     <div id="quiz-page" class="page">
         <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #EAE4D7; padding-bottom: 15px; margin-bottom: 20px;">
             <h3 id="welcome-khadim" style="color: var(--coptic-maroon); font-family: 'Amiri', serif; font-size: 1.4rem;">الخادم: </h3>
-            <div id="timer-box"> المتبقي للسؤال⏳: <span id="time-display">03:00</span></div>
+            <div id="timer-box">⏳ المتبقي للسؤال: <span id="time-display">03:00</span></div>
         </div>
 
         <div id="question-block" style="margin-top: 25px;">
@@ -269,7 +292,7 @@
         <p style="margin-top: 5px; color: var(--dark-gold); font-family: 'Amiri', serif; font-size: 1.3rem; font-style: italic;">"مُبَارَكٌ الإِنْسَانُ الَّذِي يَتَّكِلُ عَلَى الرَّبِّ" (إرميا 17 : 7)</p>
         
         <div class="result-box">
-            <p style="font-size: 1.3rem; font-weight: bold; color: var(--text-dark);">نتيجتك الحالية:</p>
+            <p style="font-size: 1.3rem; font-weight: bold; color: var(--text-dark);">نتيجتك الفردية الحالية:</p>
             <div class="score-num" id="final-score">0 / 10</div>
         </div>
         <br>
@@ -278,24 +301,24 @@
         <button class="btn btn-maroon" onclick="window.location.reload()">🔄 الخروج والعودة للصفحة الرئيسية</button>
         
         <div id="khadim-review-zone" style="display: none; margin-top: 30px; border-top: 2px dashed #D5CDBF; padding-top: 25px;">
-            <h3 style="color: var(--coptic-maroon); margin-bottom: 20px; font-family: 'Amiri', serif; font-size: 1.6rem;"> مراجعة الإجابات :</h3>
+            <h3 style="color: var(--coptic-maroon); margin-bottom: 20px; font-family: 'Amiri', serif; font-size: 1.6rem;">تقرير مراجعة الإجابات والآيات:</h3>
             <div id="khadim-review-list"></div>
         </div>
     </div>
 
     <!-- الشاشة 4: شاشة حماية الدخول للمشرفين -->
     <div id="admin-login-page" class="page">
-        <h3 style="color: var(--coptic-maroon); margin-bottom: 15px; font-family: 'Amiri', serif; font-size: 1.7rem;">🔐  إدارة المسابقة </h3>
+        <h3 style="color: var(--coptic-maroon); margin-bottom: 15px; font-family: 'Amiri', serif; font-size: 1.7rem;">🔐  إدارة المسابقة 🔐</h3>
         <p id="admin-lock-msg" style="color: var(--error-red); font-weight: bold; display: none; margin-bottom: 10px;">🛑 تم قفل محاولات الإدارة لجهازك مؤقتاً بسبب تخمين خاطئ متكرر!</p>
         <input type="password" id="admin-pass-field" placeholder="أدخل كلمة سر الإدارة">
         <br>
-        <button id="admin-login-submit-btn" class="btn btn-maroon" onclick="loginAdmin()">🔑 تسجيل الدخول</button>
+        <button id="admin-login-submit-btn" class="btn btn-maroon" onclick="loginAdmin()">🔑 تسجيل الدخول 🔑</button>
         <button class="btn btn-gold" onclick="showPage('login-page')">إلغاء والرجوع للرئيسية</button>
     </div>
 
     <!-- الشاشة 5: لوحة التحكم الإدارية الاحترافية الشاملة -->
     <div id="admin-dashboard-page" class="page admin-panel">
-        <h2>⚙️ غرفة تحكم دراسة الكتاب المقدس والنتائج </h2>
+        <h2>⚙️ غرفة تحكم دراسة الكتاب المقدس والنتائج ⚙️</h2>
         
         <div style="display: flex; justify-content: space-between; flex-wrap: wrap; margin-bottom: 25px; gap: 12px;">
             <button class="btn btn-gold" onclick="exportToExcel()">📥 تحميل تقرير إكسيل فوري (Excel)</button>
@@ -355,6 +378,12 @@
 
         <div id="yt-hidden-player"></div>
 
+        <!-- لوحة التحكم في حجم الخط لتسهيل القراءة للجميع -->
+        <div class="font-controls">
+            <button class="btn-font" onclick="changeFontSize(2)">➕ تكبير الخط</button>
+            <button class="btn-font" onclick="changeFontSize(-2)">➖ تصغير الخط</button>
+        </div>
+
         <div id="essah-text-container" class="modal-body">جاري جلب أسطر وآيات الأصحاح بالكامل من قاعدة البيانات الحالية...</div>
         
         <div style="text-align: center; margin-top: 20px;">
@@ -374,7 +403,7 @@
         "كيرلس يوسف", "نرجس خير", "جورج فايز", "ياسر نبيه", "رؤوف خير", "مريم عماد", "ميرنا عماد", 
         "فادي سليمان", "مينا مجدي", "فيوليت فوزي", "سماح حلمي", "شيري شهدي", "سمير زكي", "مني ميشيل", 
         "جانيت ويصا", "ماريان مجدي", "شكرالله نصر", "جيهان ماهر", "جمال حنا", "ناهد فاروق", "رمزي سعيد", 
-        "عايدة يعقوب", "نعمة عبدالسيد", "كيرلس اسامة", "مارينا اشرف", "جاكلين سيعد", "سارة عماد", 
+        "عايدة يعقوب", "نعمة عبد السيد", "كيرلس اسامة", "مارينا اشرف", "جاكلين سيعد", "سارة عماد", 
         "ماريانا ادورد", "وردة ماهر", "كمال كريم", "كرستين نصر", "ماري عادل", "هيلانة جورج", "رزق كامل", 
         "صفاء سمير", "صفاء عدلي", "سناء سعيد", "مريان عادل", "سمر جادالرب", "يوستينا رأفت", "مريم مكرم", 
         "توني هاني", "نرمين سليمان", "ثناء زكريا", "امال سامي", "جيرمين زاهر", "ايريني سمير", "كريم شكرالله", 
@@ -398,6 +427,7 @@
     let ytPlayer = null;
     let progressUpdateTimer = null;
     let isPlayerReady = false;
+    let currentTextFontSize = 1.45; // القيمة الافتراضية بـ rem
 
     // دالة الإشعارات الاحترافية المدمجة في نفس النطاق والألوان بديلة الـ alert
     function showChurchNotification(text) {
@@ -407,6 +437,17 @@
         setTimeout(() => {
             banner.classList.remove("alert-show");
         }, 4000);
+    }
+
+    // دالة التحكم في تكبير وتصغير خط الأصحاح
+    function changeFontSize(action) {
+        const textContainer = document.getElementById("essah-text-container");
+        if (action === 2 && currentTextFontSize < 2.5) {
+            currentTextFontSize += 0.15;
+        } else if (action === -2 && currentTextFontSize > 1.0) {
+            currentTextFontSize -= 0.15;
+        }
+        textContainer.style.fontSize = currentTextFontSize + "rem";
     }
 
     function initApp() {
@@ -619,10 +660,10 @@
         const passwordInput = document.getElementById("khadim-password").value.trim();
         const selectedOption = selectEl.options[selectEl.selectedIndex];
 
-        if (!selectedOption.value) { showChurchNotification("⚠️ من فضلك اختر اسمك أولاً من قائمة الخدام الكنسية"); return; }
+        if (!selectedOption.value) { showChurchNotification("⚠️ من فضلك اختر اسمك أولاً من قائمة الخدام ⚠️ "); return; }
         let targetName = selectedOption.value;
 
-        // قفل أمني مركزي: الحظر يعتمد على "الاسم والكود" لمنع الدخول من أي متصفح أو جهاز آخر نهائياً بمجرد إتمام الامتحان
+        // قفل أمني مركزي: الدخول مرة واحدة فقط للفرد من أي متصفح أو جهاز
         let blockedList = JSON.parse(localStorage.getItem("blocked_servants_list") || "[]");
         if(blockedList.includes(targetName)) {
             showChurchNotification("🛑 عفواً ، لقد قمت باجتياز مسابقة هذا الأصحاح بالفعل (مسموح بالدخول مرة واحدة فقط)!");
@@ -797,9 +838,9 @@
                 <td><span style="color:var(--coptic-maroon); font-weight:bold; font-size:1.15rem;">${rec.score} / 10</span></td>
                 <td>${rec.date}</td>
                 <td>
-                    <button class="action-btn btn-edit-ans" onclick="inlineEditAnswers(${idx})">📝 تعديل الإجابات</button>
-                    <button class="action-btn btn-edit-deg" onclick="inlineEditDegree(${idx})">⭐ الدرجة يدوياً</button>
-                    <button class="action-btn btn-delete" onclick="deleteRecord(${idx})">❌ حذف السجل</button>
+                    <button class="action-btn btn-edit-ans" onclick="inlineEditAnswers(${idx})">📝 تعديل الإجابات 📝</button>
+                    <button class="action-btn btn-edit-deg" onclick="inlineEditDegree(${idx})">⭐ الدرجة يدوياً ⭐</button>
+                    <button class="action-btn btn-delete" onclick="deleteRecord(${idx})">❌ حذف السجل ❌</button>
                 </td>`;
             tbody.appendChild(tr);
         });
@@ -813,7 +854,7 @@
 
         let title = document.createElement("h3");
         title.style.color = "var(--coptic-gold)"; title.style.marginBottom = "15px";
-        title.textContent = `📝 تحديث ومراجعة اختيارات الخادم: ${record.name}`;
+        title.textContent = `📝 تحديث ومراجعة اختيارات الخادم 📝: ${record.name}`;
         area.appendChild(title);
 
         quizQuestions.forEach((q, qIdx) => {
@@ -834,7 +875,7 @@
         });
 
         let saveBtn = document.createElement("button");
-        saveBtn.className = "btn btn-gold"; saveBtn.textContent = "💾 حفظ التعديلات والاعتماد";
+        saveBtn.className = "btn btn-gold"; saveBtn.textContent = "💾  حفظ التعديلات والاعتماد 💾";
         saveBtn.onclick = () => {
             quizQuestions.forEach((q, qIdx) => { record.answers[qIdx] = document.getElementById(`inline-select-${qIdx}`).value; });
             let newScore = 0;
@@ -851,7 +892,6 @@
         area.scrollIntoView({ behavior: 'smooth' });
     }
 
-    // 🌟 التحديث الفاخر: تعديل الدرجة يدوياً ينسدل داخل نفس النطاق والموقع بدون pop-up خارجي
     function inlineEditDegree(idx) {
         let records = JSON.parse(localStorage.getItem("church_quiz_data_store"));
         let record = records[idx];
@@ -860,7 +900,7 @@
 
         let title = document.createElement("h3");
         title.style.color = "var(--coptic-gold)"; title.style.marginBottom = "15px";
-        title.textContent = `⭐ تعديل درجة الخادم يدوياً: ${record.name}`;
+        title.textContent = `⭐ تعديل درجة الخادم يدوياً ⭐: ${record.name}`;
         area.appendChild(title);
 
         let box = document.createElement("div");
@@ -874,13 +914,13 @@
         area.appendChild(box);
 
         let saveBtn = document.createElement("button");
-        saveBtn.className = "btn btn-gold"; saveBtn.textContent = "💾 اعتماد الدرجة الجديدة";
+        saveBtn.className = "btn btn-gold"; saveBtn.textContent = "💾 اعتماد الدرجة الجديدة 💾";
         saveBtn.onclick = () => {
             let val = parseInt(document.getElementById("inline-degree-input").value);
-            if(isNaN(val) || val < 0) { showChurchNotification("⚠️ من فضلك أدخل درجة رقمية صحيحة!"); return; }
+            if(isNaN(val) || val < 0) { showChurchNotification("⚠️ من فضلك أدخل درجة رقمية صحيحة! ⚠️"); return; }
             records[idx].score = val;
             localStorage.setItem("church_quiz_data_store", JSON.stringify(records));
-            showChurchNotification(`✅ تم تعديل درجة الخادم (${record.name}) إلى ${val} بنجاح.`);
+            showChurchNotification(`✅ تم تعديل درجة الخادم ✅(${record.name}) إلى ${val} بنجاح.`);
             area.style.display = "none"; renderAdminTable();
         };
 
@@ -894,12 +934,11 @@
         let records = JSON.parse(localStorage.getItem("church_quiz_data_store"));
         let targetName = records[idx].name;
         
-        // تحويل الحذف لـ inline مع تأكيد مدمج لحماية النظام
         const area = document.getElementById("admin-inline-edit-area");
         area.innerHTML = ""; area.style.display = "block";
         area.innerHTML = `
-            <h3 style="color:var(--error-red); margin-bottom:15px;">⚠️ تأكيد حذف سجل الخادم</h3>
-            <p style="color:white; margin-bottom:15px;">هل أنت متأكد تماماً من مسح درجة الخادم (${targetName}) وإتاحة دخوله مجدداً؟</p>
+            <h3 style="color:var(--error-red); margin-bottom:15px;">⚠️ تأكيد حذف سجل الخادم ⚠️</h3>
+            <p style="margin-bottom:15px;">هل أنت متأكد تماماً من مسح درجة الخادم (${targetName}) وإتاحة دخوله مجدداً؟</p>
             <button class="btn btn-red" id="confirm-del-btn">نعم، مسح كلي</button>
             <button class="btn btn-gold" onclick="document.getElementById('admin-inline-edit-area').style.display='none'">إلغاء وتراجع</button>
         `;
@@ -908,7 +947,7 @@
             localStorage.setItem("church_quiz_data_store", JSON.stringify(records));
             let blockedList = JSON.parse(localStorage.getItem("blocked_servants_list") || "[]");
             localStorage.setItem("blocked_servants_list", JSON.stringify(blockedList.filter(name => name !== targetName)));
-            showChurchNotification("✅ تم مسح السجل وفك الحظر بنجاح.");
+            showChurchNotification("✅ تم مسح السجل وفك الحظر بنجاح ✅.");
             area.style.display = "none"; renderAdminTable(); renderUnblockInterface();
         };
         area.scrollIntoView({ behavior: 'smooth' });
@@ -918,15 +957,15 @@
         const area = document.getElementById("admin-inline-edit-area");
         area.innerHTML = ""; area.style.display = "block";
         area.innerHTML = `
-            <h3 style="color:var(--error-red); margin-bottom:15px;">⚠️ تحذير: مسح وتصفير قاعدة البيانات</h3>
-            <p style="color:white; margin-bottom:15px;">هذا الإجراء سيقوم بحذف جميع درجات هذا الشهر وفك حظر كافة الخدام لبدء مسابقة جديدة. هل تود الاستمرار؟</p>
+            <h3 style="color:var(--error-red); margin-bottom:15px;">⚠️ تحذير:⚠️ مسح وتصفير قاعدة البيانات</h3>
+            <p style="margin-bottom:15px;">هذا الإجراء سيقوم بحذف جميع درجات هذا الشهر وفك حظر كافة الخدام لبدء مسابقة جديدة. هل تود الاستمرار؟</p>
             <button class="btn btn-red" id="confirm-reset-btn">نعم، تصفير شامل</button>
             <button class="btn btn-gold" onclick="document.getElementById('admin-inline-edit-area').style.display='none'">إلغاء</button>
         `;
         document.getElementById("confirm-reset-btn").onclick = () => {
             localStorage.setItem("church_quiz_data_store", JSON.stringify([]));
             localStorage.setItem("blocked_servants_list", JSON.stringify([]));
-            showChurchNotification("✅ تم تصفير المسابقة مسح كلي وبدء شهر جديد.");
+            showChurchNotification("✅ تم تصفير المسابقة مسح كلي وبدء شهر جديد ✅.");
             area.style.display = "none"; renderAdminTable(); renderUnblockInterface();
         };
         area.scrollIntoView({ behavior: 'smooth' });
@@ -934,13 +973,13 @@
 
     function exportToExcel() {
         let records = JSON.parse(localStorage.getItem("church_quiz_data_store"));
-        if (records.length === 0) { showChurchNotification("⚠️ لا توجد نتائج لتصديرها حالياً!"); return; }
+        if (records.length === 0) { showChurchNotification("⚠️ لا توجد نتائج لتصديرها حالياً ⚠️!"); return; }
         let excelRows = records.map(r => ({ "اسم الخادم": r.name, "الدرجة": r.score, "التاريخ": r.date }));
         let worksheet = XLSX.utils.json_to_sheet(excelRows);
         let workbook = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(workbook, worksheet, "نتائج الخدام");
         XLSX.writeFile(workbook, "نتائج_مسابقة_الكتاب_المقدس.xlsx");
-        showChurchNotification("📥 جاري تحميل ملف الإكسيل الآن...");
+        showChurchNotification("📥 جاري تحميل ملف الإكسيل الآن... 📥");
     }
 
     window.onload = initApp;

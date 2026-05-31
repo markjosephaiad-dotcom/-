@@ -45,6 +45,8 @@
         .btn-gold:hover { background-color: var(--dark-gold); color: white; }
         .btn-green { background-color: var(--success-green); color: white; }
         .btn-green:hover { background-color: #1b5e20; }
+        .btn-red { background-color: var(--error-red); color: white; }
+        .btn-red:hover { background-color: #8e1b1b; }
 
         select, input[type="password"] { width: 85%; max-width: 400px; padding: 12px; margin: 12px 0; border: 2px solid #ddd; border-radius: 6px; font-size: 1.05rem; text-align: center; font-weight: 600; }
         select:focus, input:focus { border-color: var(--primary-gold); outline: none; }
@@ -59,6 +61,13 @@
 
         .admin-panel { background-color: var(--maroon); color: white; padding: 25px; border-radius: 12px; box-shadow: inset 0 0 20px rgba(0,0,0,0.2); }
         .admin-panel h2 { color: var(--primary-gold); margin-bottom: 20px; font-family: 'Amiri', serif; font-size: 2rem; }
+        
+        /* تصميم كروت قائمة فك الحظر السري */
+        .unblock-zone { background: rgba(255, 255, 255, 0.1); padding: 15px; border-radius: 8px; margin: 15px 0; border: 1px dashed var(--primary-gold); text-align: right; }
+        .unblock-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; margin-top: 10px; max-height: 200px; overflow-y: auto; background: white; padding: 10px; border-radius: 6px; color: #333; }
+        .unblock-item { display: flex; align-items: center; gap: 8px; font-size: 0.95rem; cursor: pointer; padding: 5px; }
+        .unblock-item input { width: 16px; height: 16px; cursor: pointer; }
+
         .admin-table { width: 100%; border-collapse: collapse; margin-top: 20px; background: white; color: var(--text-dark); border-radius: 8px; overflow: hidden; }
         .admin-table th { background-color: var(--dark-gold); color: white; padding: 14px; text-align: center; font-size: 1.05rem; }
         .admin-table td { padding: 12px; border-bottom: 1px solid #eee; text-align: center; font-size: 0.95rem; }
@@ -88,13 +97,11 @@
         
         .modal-body { font-family: 'Amiri', serif; font-size: 22px; line-height: 1.9; color: #1a1a1a; white-space: pre-wrap; text-align: justify; margin: 15px 0; padding: 20px; background: #fff; border-radius: 6px; border: 1px solid #e0e0e0; max-height: 45vh; overflow-y: auto; font-weight: 500; }
         
-        /* لوحة التحكم بالصوت وشريط التقدم المطور */
         .audio-control-zone { background: #F3E5AB; border: 2px solid var(--primary-gold); border-radius: 8px; padding: 15px; margin: 15px 0; text-align: center; }
         .progress-container { display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 12px; direction: ltr; }
         .progress-bar-slider { width: 70%; max-width: 400px; height: 8px; background: #ccc; border-radius: 4px; appearance: none; outline: none; cursor: pointer; accent-color: var(--maroon); transition: background 0.1s; }
         .time-label { font-size: 0.9rem; font-weight: bold; color: var(--maroon); min-width: 45px; }
 
-        /* إخفاء الآيفريم الخاص بيوتيوب عشان يشتغل كأنه ريكورد صوتي فقط */
         #yt-hidden-player { display: none; }
     </style>
 </head>
@@ -122,8 +129,8 @@
         <h3 style="margin: 5px 0 15px 0; color: var(--maroon); font-family: 'Amiri', serif; font-size: 1.8rem;">مسابقة دراسة الكتاب المقدس</h3>
         
         <div style="margin: 15px auto; padding: 12px; background: #FFFDE7; border: 1px solid #FFF59D; border-radius: 8px; max-width: 500px;">
-            <p style="font-weight: bold; font-size: 0.95rem; color: #555; margin-bottom: 8px;">قبل ما تدخل الامتحان.. إقرا واسمع الأصحاح من هنا: </p>
-            <button class="btn btn-maroon" style="font-size: 0.9rem; padding: 8px 20px;" onclick="openEssahModal()">📖 إقرأ واستمع للأصحاح الحالي</button>
+            <p style="font-weight: bold; font-size: 0.95rem; color: #555; margin-bottom: 8px;">قبل ما تدخل الامتحان.. إقرا واسمع المحتوى الدراسي الحالي: </p>
+            <button class="btn btn-maroon" id="btn-open-essah-trigger" style="font-size: 0.9rem; padding: 8px 20px;" onclick="openEssahModal()">📖 قراءة واستماع النص الدراسي الحالي</button>
         </div>
 
         <div style="margin: 15px 0;">
@@ -190,13 +197,28 @@
         <button class="btn btn-gold" onclick="showPage('login-page')">إلغاء وعودة</button>
     </div>
 
-    <!-- الشاشة 5: لوحة التحكم الإدارية -->
+    <!-- الشاشة 5: لوحة التحكم الإدارية المحدثة -->
     <div id="admin-dashboard-page" class="page admin-panel">
         <h2>غرفة تحكم المسابقات والنتائج والشهرية ⚙️</h2>
         
-        <div style="display: flex; justify-content: space-between; flex-wrap: wrap; margin-bottom: 20px;">
+        <div style="display: flex; justify-content: space-between; flex-wrap: wrap; margin-bottom: 20px; gap: 10px;">
             <button class="btn btn-gold" onclick="exportToExcel()">📥 تحميل النتائج إكسيل فوري (Excel)</button>
+            <button class="btn btn-red" onclick="resetEntireSystem()">⚠️ تصفير المسابقة بالكامل (مسح نهائي وبدء جديد)</button>
             <button class="btn btn-green" onclick="showPage('login-page')">🚪 تسجيل الخروج للرئيسية</button>
+        </div>
+
+        <!-- اللوحة الفرعية المضافة حديثاً: فك حظر يدوي بالأسماء بالتحديد الفردي -->
+        <div class="unblock-zone">
+            <h3 style="color: var(--primary-gold); font-size: 1.1rem; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 5px;">🔓 إدارة الحظر وإعادة السماح بالدخول (بالتحديد اليدوي)</h3>
+            <p style="font-size: 0.85rem; color: #ddd; margin-top: 5px;">الخدام الظاهرين هنا هم اللي قفل عليهم الامتحان، علم على الأسماء اللي عايز تسمح لهم بالدخول تاني واضغط فك حظر:</p>
+            
+            <div id="unblock-names-container" class="unblock-grid">
+                <!-- هيتم ملؤها برمجياً بالأسماء المحظورة حالياً -->
+            </div>
+            
+            <div style="text-align: left; margin-top: 10px;">
+                <button class="btn btn-gold" style="font-size: 0.85rem; padding: 6px 15px;" onclick="executeSelectedUnblock()">🔓 فك حظر الأسماء المحددة فوراً</button>
+            </div>
         </div>
 
         <div id="admin-inline-edit-area" style="display: none; margin-bottom: 25px;"></div>
@@ -222,7 +244,7 @@
 <!-- صندوق منبثق لعرض نص الأصحاح + أزرار التحكم وشريط التقدم المطور -->
 <div id="essah-modal" class="modal-overlay" onclick="closeEssahModal()">
     <div class="modal-content" onclick="event.stopPropagation()">
-        <h3 style="color: var(--maroon); font-family: 'Amiri', serif; border-bottom: 2px solid var(--primary-gold); padding-bottom: 10px; font-size: 1.8rem;">📖 نص الأصحاح المُراد دراسته</h3>
+        <h3 id="essah-modal-dynamic-title" style="color: var(--maroon); font-family: 'Amiri', serif; border-bottom: 2px solid var(--primary-gold); padding-bottom: 10px; font-size: 1.8rem;">📖 نص الأصحاح المُراد دراسته</h3>
         
         <!-- لوحة التحكم بالصوت -->
         <div id="audio-zone" class="audio-control-zone" style="display: none;">
@@ -232,7 +254,6 @@
                 <button class="btn btn-maroon" onclick="closeEssahModal()" style="padding: 10px 20px;">انهاء و الرجوع للدخول للاسئلة ❌</button>
             </div>
             
-            <!-- شريط تقدم الصوت تفاعلي وسهل التقديم والتأخير -->
             <div class="progress-container">
                 <span id="vid-current-time" class="time-label">00:00</span>
                 <input type="range" id="vid-progress-slider" class="progress-bar-slider" min="0" max="100" value="0" oninput="seekAudio(this.value)">
@@ -243,7 +264,7 @@
         <!-- عنصر يوتيوب المخفي المشغل للصوت -->
         <div id="yt-hidden-player"></div>
 
-        <div id="essah-text-container" class="modal-body">جاري تحميل نص الأصحاح الفعلي من شيت جوجل الحالي...</div>
+        <div id="essah-text-container" class="modal-body">جاري تحميل النص الفعلي من شيت جوجل الحالي...</div>
         
         <div style="text-align: center; margin-top: 15px;">
             <button class="btn btn-maroon" onclick="closeEssahModal()">إغلاق وقراءة المسابقة ❌</button>
@@ -255,7 +276,7 @@
     const QUESTIONS_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQATB615cDv6gnBZdVqUNJV8f7WTaA4p8nLuiV8uBJfGKUz5fFBP5UT6-XQTRyTumgZIBv_h9Pt64mg/pub?output=csv";
     const ESSAH_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRlHtC2XhIAwgkBPyOKvgS40OJ8JiYHt_019eGTHb9ltGaxc-oV6gT2QS924VOBSFZMv0N7d2OnzRBe/pub?output=csv";
     
-    const ADMIN_PASSWORD = "123";
+    const ADMIN_PASSWORD = "284655";
 
     let rawServants = [
         "كيرلس يوسف", "نرجس خير", "جورج فايز", "ياسر نبيه", "رؤوف خير", "مريم عماد", "ميرنا عماد", 
@@ -279,6 +300,7 @@
     let activeKhadimName = "";
     let lastSavedKhadimRecord = null;
     
+    let dynamicEssahTitle = "📖 نص الأصحاح المُراد دراسته"; // الاسم الافتراضي
     let loadedEssahText = "جاري جلب بيانات الأصحاح الجديدة للآن...";
     let ytVideoId = "";
     let ytPlayer = null;
@@ -289,6 +311,7 @@
         rawServants.sort((a, b) => a.localeCompare(b, "ar"));
         
         const selectEl = document.getElementById("khadim-select");
+        selectEl.innerHTML = '<option value="">-- اضغط هنا لاختيار الاسم --</option>';
         rawServants.forEach((name, index) => {
             let opt = document.createElement("option");
             opt.value = name;
@@ -313,6 +336,7 @@
         return (match && match[2].length === 11) ? match[2] : "";
     }
 
+    // تعديل الدالة لتقرأ العنوان الديناميكي من الشيت
     async function fetchOnlineData() {
         try {
             const qResponse = await fetch(QUESTIONS_SHEET_URL);
@@ -323,10 +347,23 @@
             let eData = await eResponse.text();
             
             if (eData.trim()) {
-                let firstLine = eData.split("\n")[0];
+                let lines = eData.split("\n");
                 
-                if (firstLine.includes(",")) {
-                    let parts = eData.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+                // السطر الأول مخصص بالكامل للعنوان المتغير
+                if(lines[0] && lines[0].trim()) {
+                    let rawTitle = lines[0].trim();
+                    if (rawTitle.startsWith('"') && rawTitle.endsWith('"')) rawTitle = rawTitle.substring(1, rawTitle.length - 1);
+                    dynamicEssahTitle = rawTitle.replace(/""/g, '"').trim();
+                    
+                    // تحديث نصوص الأزرار والواجهة بالعنوان الجديد تلقائياً
+                    document.getElementById("btn-open-essah-trigger").textContent = dynamicEssahTitle;
+                    document.getElementById("essah-modal-dynamic-title").textContent = dynamicEssahTitle;
+                }
+
+                // السطر الثاني يحتوي على النص ورابط اليوتيوب
+                if(lines[1] && lines[1].trim()) {
+                    let contentLine = lines[1];
+                    let parts = contentLine.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
                     if(parts.length >= 2) {
                         let textPart = parts[0].trim();
                         let mediaPart = parts[1].trim();
@@ -336,12 +373,12 @@
 
                         loadedEssahText = textPart.replace(/""/g, '"').trim();
                         ytVideoId = extractYoutubeId(mediaPart.replace(/\r?\n|\r/g, ""));
+                    } else {
+                        let cleaned = contentLine.trim();
+                        if (cleaned.startsWith('"') && cleaned.endsWith('"')) cleaned = cleaned.substring(1, cleaned.length - 1);
+                        loadedEssahText = cleaned.replace(/""/g, '"').trim();
+                        ytVideoId = "";
                     }
-                } else {
-                    let cleaned = eData.trim();
-                    if (cleaned.startsWith('"') && cleaned.endsWith('"')) cleaned = cleaned.substring(1, cleaned.length - 1);
-                    loadedEssahText = cleaned.replace(/""/g, '"').trim();
-                    ytVideoId = "";
                 }
             }
         } catch (error) {
@@ -350,7 +387,6 @@
         }
     }
 
-    // تُستدعى تلقائياً عند تحميل مكتبة يوتيوب
     window.onYouTubeIframeAPIReady = function() {
         buildYoutubePlayer();
     }
@@ -503,7 +539,50 @@
         if (pageId === 'admin-dashboard-page') {
             document.getElementById("admin-inline-edit-area").style.display = "none";
             renderAdminTable();
+            renderUnblockInterface(); // توليد قائمة التحكم في الحظر بالأسماء
         }
+    }
+
+    // بناء قائمة الحظر اليدوية بالأسماء داخل التحكم
+    function renderUnblockInterface() {
+        const container = document.getElementById("unblock-names-container");
+        container.innerHTML = "";
+        
+        let blockedList = JSON.parse(localStorage.getItem("blocked_servants_list") || "[]");
+        
+        if(blockedList.length === 0) {
+            container.innerHTML = `<div style="grid-column: 1/-1; text-align:center; color:#777; padding:10px;">لا توجد أسماء محظورة حالياً (الجميع متاح له الدخول).</div>`;
+            return;
+        }
+
+        blockedList.forEach(name => {
+            let label = document.createElement("label");
+            label.className = "unblock-item";
+            label.innerHTML = `
+                <input type="checkbox" class="unblock-checkbox" value="${name}">
+                <span>${name}</span>
+            `;
+            container.appendChild(label);
+        });
+    }
+
+    // تنفيذ عملية فك الحظر للملفات المحددة فقط بالـ Checkbox
+    function executeSelectedUnblock() {
+        const checkboxes = document.querySelectorAll(".unblock-checkbox:checked");
+        if(checkboxes.length === 0) {
+            alert("من فضلك علم على اسم خادم واحد على الأقل لفك حظره!");
+            return;
+        }
+
+        let blockedList = JSON.parse(localStorage.getItem("blocked_servants_list") || "[]");
+        let namesToUnblock = Array.from(checkboxes).map(cb => cb.value);
+
+        // تصفية المصفوفة وحذف المحددين فقط
+        let updatedBlockedList = blockedList.filter(name => !namesToUnblock.includes(name));
+        localStorage.setItem("blocked_servants_list", JSON.stringify(updatedBlockedList));
+
+        alert(`✅ تم بنجاح فك الحظر عن الخدام المحددين، ويمكنهم الآن الدخول لإعادة الامتحان فوراً.`);
+        renderUnblockInterface();
     }
 
     function loginKhadim() {
@@ -582,8 +661,6 @@
     function startQuestionTimer() {
         clearInterval(questionTimer);
         secondsLeftForQuestion = 3 * 60; 
-        
-        // تعيين النص البدئي فوراً لتجنب التأخير البصري ثانية واحدة
         document.getElementById("time-display").textContent = "03:00";
 
         questionTimer = setInterval(() => {
@@ -833,6 +910,17 @@
             
             alert(`تم مسح إجابات الخادم ${targetName} بنجاح، ومتاح له الدخول الآن.`);
             renderAdminTable();
+            renderUnblockInterface();
+        }
+    }
+
+    function resetEntireSystem() {
+        if (confirm("⚠️ تحذير نهائي!\n\nهل أنت متأكد تماماً من تصفير قاعدة بيانات المسابقة بالكامل؟\nهذا الإجراء سيمسح جميع دراجات الخدام، ويفتح الحظر عن الجميع كأنها مسابقة جديدة تماماً ولم يدخلها أحد!")) {
+            localStorage.setItem("church_quiz_data_store", JSON.stringify([]));
+            localStorage.setItem("blocked_servants_list", JSON.stringify([]));
+            alert("✅ تم تصفير المسابقة بالكامل وبنجاح! يمكنك الآن بدء الأسبوع أو الشهر الجديد براحة.");
+            renderAdminTable();
+            renderUnblockInterface();
         }
     }
 

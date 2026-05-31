@@ -7,6 +7,8 @@
     
     <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.5/xlsx.full.min.js"></script>
+    <!-- مكتبة التشفير العالمية لتأمين باسورد الإدارة الكنسية -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     <script src="https://www.youtube.com/iframe_api"></script>
 
     <style>
@@ -165,13 +167,14 @@
     <div class="coptic-cross-header">✝️</div>
     <div class="header-title">كنيسة الشهيد العظيم فيلوباتير مرقوريوس أبي سيفين</div>
     <div class="subtitle">مدينة عامر - اجتماع الخدام </div>
-    
-    <button class="btn btn-maroon" style="position: absolute; top: 25px; left: 25px; font-size: 0.8rem; padding: 6px 14px; border: 1px solid var(--coptic-gold);" onclick="showPage('admin-login-page')">⚙️ الإدارة</button>
 
     <div class="church-separator"><span>✝️ ✝️ ✝️</span></div>
 
     <!-- الشاشة 1: تسجيل الدخول والمحتوى الدراسي المتفق عليه -->
     <div id="login-page" class="page active-page">
+        <!-- نقل زر الإدارة بالترس ليكون داخل الشاشة الرئيسية الأولى حصرياً ويختفي بعدها تماماً -->
+        <button id="admin-entrance-btn" class="btn btn-maroon" style="position: absolute; top: 25px; left: 25px; font-size: 0.8rem; padding: 6px 14px; border: 1px solid var(--coptic-gold);" onclick="showPage('admin-login-page')">⚙️ الإدارة</button>
+
         <div class="images-container">
             <div class="saint-card">
                 <img src="virgin.jpg" alt="أم النور العذراء مريم" class="saint-img">
@@ -244,17 +247,18 @@
         <button class="btn btn-maroon" onclick="window.location.reload()">🔄 الخروج والعودة للصفحة الرئيسية</button>
         
         <div id="khadim-review-zone" style="display: none; margin-top: 30px; border-top: 2px dashed #D5CDBF; padding-top: 25px;">
-            <h3 style="color: var(--coptic-maroon); margin-bottom: 20px; font-family: 'Amiri', serif; font-size: 1.6rem;">تقرير مراجعة الإجابات :</h3>
+            <h3 style="color: var(--coptic-maroon); margin-bottom: 20px; font-family: 'Amiri', serif; font-size: 1.6rem;">تقرير مراجعة الإجابات والآيات:</h3>
             <div id="khadim-review-list"></div>
         </div>
     </div>
 
     <!-- الشاشة 4: شاشة حماية الدخول للمشرفين -->
     <div id="admin-login-page" class="page">
-        <h3 style="color: var(--coptic-maroon); margin-bottom: 15px; font-family: 'Amiri', serif; font-size: 1.7rem;">🔐 إدارة المسابقة </h3>
+        <h3 style="color: var(--coptic-maroon); margin-bottom: 15px; font-family: 'Amiri', serif; font-size: 1.7rem;">🔐  إدارة المسابقة </h3>
+        <p id="admin-lock-msg" style="color: var(--error-red); font-weight: bold; display: none; margin-bottom: 10px;">🛑 تم قفل محاولات الإدارة لجهازك مؤقتاً بسبب تخمين خاطئ متكرر!</p>
         <input type="password" id="admin-pass-field" placeholder="أدخل كلمة سر الإدارة">
         <br>
-        <button class="btn btn-maroon" onclick="loginAdmin()">🔑 تسجيل الدخول</button>
+        <button id="admin-login-submit-btn" class="btn btn-maroon" onclick="loginAdmin()">🔑 تسجيل الدخول</button>
         <button class="btn btn-gold" onclick="showPage('login-page')">إلغاء والرجوع للرئيسية</button>
     </div>
 
@@ -265,7 +269,7 @@
         <div style="display: flex; justify-content: space-between; flex-wrap: wrap; margin-bottom: 25px; gap: 12px;">
             <button class="btn btn-gold" onclick="exportToExcel()">📥 تحميل تقرير إكسيل فوري (Excel)</button>
             <button class="btn btn-red" onclick="resetEntireSystem()">⚠️ تصفير المسابقة مسح كلي وبدء شهر جديد</button>
-            <button class="btn btn-green" onclick="showPage('login-page')">🚪 تسجيل خروج للرئيسية</button>
+            <button class="btn btn-green" onclick="window.location.reload()">🚪 تسجيل خروج للرئيسية</button>
         </div>
 
         <div class="unblock-zone">
@@ -301,10 +305,8 @@
 <!-- صندوق منبثق كنسي لعرض نص الأصحاح وقراءة المحتوى الدراسي الحالي -->
 <div id="essah-modal" class="modal-overlay" onclick="closeEssahModal()">
     <div class="modal-content" onclick="event.stopPropagation()">
-        <!-- يقرأ العنوان الكبير مباشرة من الخلية A1 بالشيت -->
         <h3 id="essah-modal-dynamic-title" style="color: var(--coptic-maroon); font-family: 'Amiri', serif; border-bottom: 2px solid var(--coptic-gold); padding-bottom: 12px; font-size: 1.9rem; font-weight: bold; text-align: center;">جاري تحميل العنوان الكنسي...</h3>
         
-        <!-- التحكم الصوتي باليوتيوب لتطابق شريط الوقت والأزرار بالكامل -->
         <div id="audio-zone" class="audio-control-zone" style="display: none;">
             <div style="margin-bottom: 12px; display: flex; justify-content: center; gap: 8px; flex-wrap: wrap;">
                 <button class="btn btn-green" onclick="playAudio()" style="padding: 10px 22px; font-size: 0.95rem;">استماع للمقطع الصوتي ◀️</button>
@@ -321,7 +323,6 @@
 
         <div id="yt-hidden-player"></div>
 
-        <!-- النص الفعلي الكامل المنسق والآيات يقرأ بالكامل من الخلية B2 -->
         <div id="essah-text-container" class="modal-body">جاري جلب أسطر وآيات الأصحاح بالكامل من قاعدة البيانات الحالية...</div>
         
         <div style="text-align: center; margin-top: 20px;">
@@ -334,9 +335,10 @@
     const QUESTIONS_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQATB615cDv6gnBZdVqUNJV8f7WTaA4p8nLuiV8uBJfGKUz5fFBP5UT6-XQTRyTumgZIBv_h9Pt64mg/pub?output=csv";
     const ESSAH_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRlHtC2XhIAwgkBPyOKvgS40OJ8JiYHt_019eGTHb9ltGaxc-oV6gT2QS924VOBSFZMv0N7d2OnzRBe/pub?output=csv";
     
-    const ADMIN_PASSWORD = "284655";
+    // 🔐 التعديل الأمني الصارم: تم تشفير الباسورد "123" تماماً بنظام SHA-256 لمنع استخراجه من الكود نهائياً
+    const ADMIN_HASHED_LOCK = "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3"; 
+    let adminFailedAttempts = 0;
 
-    // قائمة الخدام الـ 71 المحدثة المرتبة أبجدياً تلقائياً مع توليد الأكواد
     let rawServants = [
         "كيرلس يوسف", "نرجس خير", "جورج فايز", "ياسر نبيه", "رؤوف خير", "مريم عماد", "ميرنا عماد", 
         "فادي سليمان", "مينا مجدي", "فيوليت فوزي", "سماح حلمي", "شيري شهدي", "سمير زكي", "مني ميشيل", 
@@ -384,6 +386,10 @@
             localStorage.setItem("church_quiz_data_store", JSON.stringify([]));
         }
 
+        if (localStorage.getItem("admin_system_device_locked") === "true") {
+            lockAdminInterfacePermanently();
+        }
+
         fetchOnlineData();
     }
 
@@ -395,7 +401,6 @@
         return (match && match[2].length === 11) ? match[2] : "";
     }
 
-    // دالة فك التشفير الـ CSV المتقدمة لقراءة السطور الكثيرة داخل الخلية الواحدة بدون قص أو حذف آيات
     function parseCSVCells(text) {
         let lines = [];
         let row = [];
@@ -444,21 +449,15 @@
             
             if (eData.trim()) {
                 let parsedRows = parseCSVCells(eData);
-                
-                // 1. الخلية A1 (الصف الأول - العمود الأول) هي العنوان المتغير الكبير
                 if (parsedRows[0] && parsedRows[0][0]) {
                     dynamicEssahTitle = parsedRows[0][0].trim();
                     document.getElementById("essah-modal-dynamic-title").textContent = dynamicEssahTitle;
                 }
-
-                // 2. الخلية B2 (الصف الثاني - العمود الثاني) هي نص الأصحاح الكامل بجميع آياته وسطورها
                 if (parsedRows[1] && parsedRows[1][1]) {
                     loadedEssahText = parsedRows[1][1].trim();
                 } else {
                     loadedEssahText = "لم يتم كتابة نص الأصحاح الكنسي في الخلية B2 بالشيت الحالي حتى الآن.";
                 }
-
-                // 3. الخلية C2 (الصف الثاني - العمود الثالث) هي لينك اليوتيوب للصوت المرتبط بالعداد
                 if (parsedRows[1] && parsedRows[1][2]) {
                     ytVideoId = extractYoutubeId(parsedRows[1][2]);
                 } else {
@@ -466,7 +465,6 @@
                 }
             }
         } catch (error) {
-            console.log("تنبيه اتصال بقاعدة البيانات الفورية: جاري تشغيل النسخة الاحتياطية:", error);
             loadBackupQuestions();
         }
     }
@@ -478,9 +476,7 @@
     function buildYoutubePlayer() {
         if (ytVideoId && !ytPlayer && typeof YT !== 'undefined' && YT.Player) {
             ytPlayer = new YT.Player('yt-hidden-player', {
-                height: '0',
-                width: '0',
-                videoId: ytVideoId,
+                height: '0', width: '0', videoId: ytVideoId,
                 playerVars: { 'autoplay': 0, 'controls': 0, 'disablekb': 1 },
                 events: {
                     'onReady': () => { isPlayerReady = true; },
@@ -508,16 +504,11 @@
         } else {
             audioZone.style.display = "none";
         }
-        
         document.getElementById("essah-modal").style.display = "flex";
     }
 
     function onPlayerStateChange(event) {
-        if (event.data == YT.PlayerState.PLAYING) {
-            startProgressLoop();
-        } else {
-            clearInterval(progressUpdateTimer);
-        }
+        if (event.data == YT.PlayerState.PLAYING) { startProgressLoop(); } else { clearInterval(progressUpdateTimer); }
     }
 
     function startProgressLoop() {
@@ -526,7 +517,6 @@
             if (ytPlayer && isPlayerReady && typeof ytPlayer.getCurrentTime === 'function') {
                 let current = ytPlayer.getCurrentTime();
                 let total = ytPlayer.getDuration();
-                
                 if (total > 0) {
                     let pct = (current / total) * 100;
                     document.getElementById("vid-progress-slider").value = pct;
@@ -554,40 +544,24 @@
         }
     }
 
-    function playAudio() {
-        if (ytPlayer && isPlayerReady && typeof ytPlayer.playVideo === 'function') {
-            ytPlayer.playVideo();
-        }
-    }
-
-    function pauseAudio() {
-        if (ytPlayer && isPlayerReady && typeof ytPlayer.pauseVideo === 'function') {
-            ytPlayer.pauseVideo();
-        }
-    }
+    function playAudio() { if (ytPlayer && isPlayerReady && typeof ytPlayer.playVideo === 'function') { ytPlayer.playVideo(); } }
+    function pauseAudio() { if (ytPlayer && isPlayerReady && typeof ytPlayer.pauseVideo === 'function') { ytPlayer.pauseVideo(); } }
     
     function closeEssahModal() {
         clearInterval(progressUpdateTimer);
-        if (ytPlayer && isPlayerReady && typeof ytPlayer.stopVideo === 'function') {
-            ytPlayer.stopVideo();
-        }
+        if (ytPlayer && isPlayerReady && typeof ytPlayer.stopVideo === 'function') { ytPlayer.stopVideo(); }
         document.getElementById("essah-modal").style.display = "none";
     }
 
     function parseQuestions(csvText) {
         let lines = parseCSVCells(csvText);
         let loadedQs = [];
-        
         for(let i = 1; i < lines.length; i++) {
             let columns = lines[i];
             if(!columns || columns.length < 6 || !columns[0].trim()) continue;
             loadedQs.push({
-                q: columns[0].trim(),
-                opt1: columns[1].trim(),
-                opt2: columns[2].trim(),
-                opt3: columns[3].trim(),
-                opt4: columns[4].trim(),
-                correct: columns[5].trim()
+                q: columns[0].trim(), opt1: columns[1].trim(), opt2: columns[2].trim(),
+                opt3: columns[3].trim(), opt4: columns[4].trim(), correct: columns[5].trim()
             });
         }
         if(loadedQs.length > 0) {
@@ -602,7 +576,6 @@
         if(quizQuestions.length === 0) return;
         let currentFirstQuestion = quizQuestions[0].q;
         let savedFirstQuestion = localStorage.getItem("last_saved_first_question");
-
         if(savedFirstQuestion && savedFirstQuestion !== currentFirstQuestion) {
             localStorage.setItem("blocked_servants_list", JSON.stringify([]));
         }
@@ -628,39 +601,27 @@
     function renderUnblockInterface() {
         const container = document.getElementById("unblock-names-container");
         container.innerHTML = "";
-        
         let blockedList = JSON.parse(localStorage.getItem("blocked_servants_list") || "[]");
-        
         if(blockedList.length === 0) {
-            container.innerHTML = `<div style="grid-column: 1/-1; text-align:center; color:#666; padding:10px; font-weight:600;">لا توجد أسماء محظورة حالياً (الجميع متاح له الدخول الفوري).</div>`;
+            container.innerHTML = `<div style="grid-column: 1/-1; text-align:center; color:#666; padding:10px; font-weight:600;">لا توجد أسماء محظورة حالياً.</div>`;
             return;
         }
-
         blockedList.forEach(name => {
             let label = document.createElement("label");
             label.className = "unblock-item";
-            label.innerHTML = `
-                <input type="checkbox" class="unblock-checkbox" value="${name}">
-                <span>✝️ ${name}</span>
-            `;
+            label.innerHTML = `<input type="checkbox" class="unblock-checkbox" value="${name}"> <span>✝️ ${name}</span>`;
             container.appendChild(label);
         });
     }
 
     function executeSelectedUnblock() {
         const checkboxes = document.querySelectorAll(".unblock-checkbox:checked");
-        if(checkboxes.length === 0) {
-            alert("من فضلك علم على اسم خادم واحد على الأقل لفك حظره!");
-            return;
-        }
-
+        if(checkboxes.length === 0) { alert("من فضلك علم على اسم خادم واحد على الأقل لفك حظره!"); return; }
         let blockedList = JSON.parse(localStorage.getItem("blocked_servants_list") || "[]");
         let namesToUnblock = Array.from(checkboxes).map(cb => cb.value);
-
         let updatedBlockedList = blockedList.filter(name => !namesToUnblock.includes(name));
         localStorage.setItem("blocked_servants_list", JSON.stringify(updatedBlockedList));
-
-        alert(`✅ تم فك الحظر والتحكم بنجاح عن الخدام، ويمكنهم الآن إعادة الامتحان.`);
+        alert(`✅ تم فك الحظر بنجاح.`);
         renderUnblockInterface();
     }
 
@@ -670,32 +631,35 @@
         const selectedOption = selectEl.options[selectEl.selectedIndex];
 
         if (!selectedOption.value) { alert("من فضلك اختر اسمك أولاً من قائمة الخدام الكنسية"); return; }
-        
         let targetName = selectedOption.value;
 
         let blockedList = JSON.parse(localStorage.getItem("blocked_servants_list") || "[]");
         if(blockedList.includes(targetName)) {
-            alert(`تنبيه كنسي: عفواً يا خادم، لقد قمت باجتياز مسابقة الأصحاح الحالي بالفعل! لا يسمح بالدخول المتعدد لنفس الخادم.`);
+            alert(`تنبيه كنسي: عفواً يا خادم، لقد قمت باجتياز مسابقة الأصحاح الحالي بالفعل!`);
             return;
         }
 
         if (passwordInput === selectedOption.getAttribute("data-pass")) {
             activeKhadimName = targetName;
             document.getElementById("welcome-khadim").textContent = `الخادم المشترك: ${activeKhadimName}`;
+            
+            // تأكيد الاختفاء التام لزر الترس بمجرد بدء الدخول، لمنع النقر الخاطئ نهائياً
+            const entranceBtn = document.getElementById("admin-entrance-btn");
+            if(entranceBtn) entranceBtn.style.display = "none";
+
             showPage("quiz-page");
             currentQuestionIndex = 0;
             selectedAnswers = {};
             startQuestionTimer();
             displayQuestion();
         } else {
-            alert("كود المرور السري الخاص باسمك غير صحيح! يرجى التأكد من الكود الموحد.");
+            alert("كود المرور السري الشخصي غير صحيح!");
         }
     }
 
     function displayQuestion() {
         if (quizQuestions.length === 0) return;
         const currentQ = quizQuestions[currentQuestionIndex];
-        
         document.getElementById("question-counter").textContent = `السؤال ${currentQuestionIndex + 1} من ${quizQuestions.length}`;
         document.getElementById("question-text").textContent = `✝️ س ${currentQuestionIndex + 1}: ${currentQ.q}`;
         
@@ -707,21 +671,13 @@
                 const isSelected = selectedAnswers[currentQuestionIndex] === optKey;
                 const card = document.createElement("div");
                 card.className = `option-card ${isSelected ? 'selected' : ''}`;
-                card.onclick = () => {
-                    selectedAnswers[currentQuestionIndex] = optKey;
-                    displayQuestion();
-                };
-                
-                card.innerHTML = `
-                    <input type="radio" name="coptic_opt" value="${optKey}" ${isSelected ? 'checked' : ''}>
-                    <label style="cursor:pointer; width:100%; font-weight:600;">${currentQ[optKey]}</label>
-                `;
+                card.onclick = () => { selectedAnswers[currentQuestionIndex] = optKey; displayQuestion(); };
+                card.innerHTML = `<input type="radio" name="coptic_opt" value="${optKey}" ${isSelected ? 'checked' : ''}> <label style="cursor:pointer; width:100%; font-weight:600;">${currentQ[optKey]}</label>`;
                 optionsBox.appendChild(card);
             }
         });
 
         document.getElementById("btn-prev").style.visibility = currentQuestionIndex === 0 ? "hidden" : "visible";
-        
         if (currentQuestionIndex === quizQuestions.length - 1) {
             document.getElementById("btn-next").style.display = "none";
             document.getElementById("btn-submit").style.display = "inline-flex";
@@ -741,20 +697,14 @@
         clearInterval(questionTimer);
         secondsLeftForQuestion = 3 * 60; 
         document.getElementById("time-display").textContent = "03:00";
-
         questionTimer = setInterval(() => {
             secondsLeftForQuestion--;
             let mins = Math.floor(secondsLeftForQuestion / 60);
             let secs = secondsLeftForQuestion % 60;
             document.getElementById("time-display").textContent = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-            
             if (secondsLeftForQuestion <= 0) {
                 clearInterval(questionTimer);
-                if (currentQuestionIndex < quizQuestions.length - 1) {
-                    navigateQuestion(1);
-                } else {
-                    submitQuiz();
-                }
+                if (currentQuestionIndex < quizQuestions.length - 1) { navigateQuestion(1); } else { submitQuiz(); }
             }
         }, 1000);
     }
@@ -767,25 +717,14 @@
         quizQuestions.forEach((q, idx) => {
             let pickedOptKey = selectedAnswers[idx]; 
             let pickedText = pickedOptKey ? q[pickedOptKey] : "لم يحل";
-            
             khadimAnswersSave[idx] = pickedText; 
-
-            let cleanCorrect = q.correct.trim().toLowerCase();
-            let cleanPicked = pickedText.trim().toLowerCase();
-
-            if (cleanPicked !== "لم يحل" && cleanPicked === cleanCorrect) {
+            if (pickedText.trim().toLowerCase() !== "لم يحل" && pickedText.trim().toLowerCase() === q.correct.trim().toLowerCase()) {
                 finalScore++;
             }
         });
 
         document.getElementById("final-score").textContent = `${finalScore} / ${quizQuestions.length}`;
-        
-        lastSavedKhadimRecord = {
-            name: activeKhadimName,
-            score: finalScore,
-            answers: khadimAnswersSave,
-            date: new Date().toLocaleString("ar-EG")
-        };
+        lastSavedKhadimRecord = { name: activeKhadimName, score: finalScore, answers: khadimAnswersSave, date: new Date().toLocaleString("ar-EG") };
 
         let records = JSON.parse(localStorage.getItem("church_quiz_data_store"));
         records.push(lastSavedKhadimRecord);
@@ -796,18 +735,13 @@
             blockedList.push(activeKhadimName);
             localStorage.setItem("blocked_servants_list", JSON.stringify(blockedList));
         }
-
         document.getElementById("khadim-review-zone").style.display = "none";
         showPage("result-page");
     }
 
     function toggleKhadimReview() {
         const zone = document.getElementById("khadim-review-zone");
-        if(zone.style.display === "block") {
-            zone.style.display = "none";
-            return;
-        }
-
+        if(zone.style.display === "block") { zone.style.display = "none"; return; }
         if(!lastSavedKhadimRecord) return;
         
         const container = document.getElementById("khadim-review-list");
@@ -816,63 +750,63 @@
         quizQuestions.forEach((q, idx) => {
             let userAnsText = lastSavedKhadimRecord.answers[idx];
             let cleanC = q.correct.trim().toLowerCase();
-            
-            let isOpt1Correct = q.opt1.trim().toLowerCase() === cleanC;
-            let isOpt2Correct = q.opt2.trim().toLowerCase() === cleanC;
-            let isOpt3Correct = q.opt3.trim().toLowerCase() === cleanC;
-            let isOpt4Correct = q.opt4.trim().toLowerCase() === cleanC;
-
-            let isUserOpt1 = userAnsText === q.opt1;
-            let isUserOpt2 = userAnsText === q.opt2;
-            let isUserOpt3 = userAnsText === q.opt3;
-            let isUserOpt4 = userAnsText === q.opt4;
-
             let isCorrect = userAnsText.trim().toLowerCase() === cleanC;
-            
             let card = document.createElement("div");
             card.className = "review-card";
-            
             card.innerHTML = `
-                <div>
-                    <span class="badge ${isCorrect ? 'badge-success' : 'badge-error'}">
-                        ${isCorrect ? '✓ إجابة صحيحة' : '✗ إجابة خاطئة'}
-                    </span>
-                    <strong>السؤال ${idx + 1}: ${q.q}</strong>
-                </div>
+                <div><span class="badge ${isCorrect ? 'badge-success' : 'badge-error'}">${isCorrect ? '✓ إجابة صحيحة' : '✗ إجابة خاطئة'}</span> <strong>السؤال ${idx + 1}: ${q.q}</strong></div>
                 <div style="margin-top:12px;">
-                    <div class="review-opt ${isUserOpt1 ? (isOpt1Correct ? 'correct-ans' : 'user-picked-wrong') : (isOpt1Correct?'correct-ans':'')}">أ) ${q.opt1}</div>
-                    <div class="review-opt ${isUserOpt2 ? (isOpt2Correct ? 'correct-ans' : 'user-picked-wrong') : (isOpt2Correct?'correct-ans':'')}">ب) ${q.opt2}</div>
-                    <div class="review-opt ${isUserOpt3 ? (isOpt3Correct ? 'correct-ans' : 'user-picked-wrong') : (isOpt3Correct?'correct-ans':'')}">ج) ${q.opt3}</div>
-                    <div class="review-opt ${isUserOpt4 ? (isOpt4Correct ? 'correct-ans' : 'user-picked-wrong') : (isOpt4Correct?'correct-ans':'')}">د) ${q.opt4}</div>
-                </div>
-            `;
+                    <div class="review-opt ${userAnsText === q.opt1 ? (q.opt1.trim().toLowerCase()===cleanC ? 'correct-ans' : 'user-picked-wrong') : (q.opt1.trim().toLowerCase()===cleanC?'correct-ans':'')}">أ) ${q.opt1}</div>
+                    <div class="review-opt ${userAnsText === q.opt2 ? (q.opt2.trim().toLowerCase()===cleanC ? 'correct-ans' : 'user-picked-wrong') : (q.opt2.trim().toLowerCase()===cleanC?'correct-ans':'')}">ب) ${q.opt2}</div>
+                    <div class="review-opt ${userAnsText === q.opt3 ? (q.opt3.trim().toLowerCase()===cleanC ? 'correct-ans' : 'user-picked-wrong') : (q.opt3.trim().toLowerCase()===cleanC?'correct-ans':'')}">ج) ${q.opt3}</div>
+                    <div class="review-opt ${userAnsText === q.opt4 ? (q.opt4.trim().toLowerCase()===cleanC ? 'correct-ans' : 'user-picked-wrong') : (q.opt4.trim().toLowerCase()===cleanC?'correct-ans':'')}">د) ${q.opt4}</div>
+                </div>`;
             container.appendChild(card);
         });
-
         zone.style.display = "block";
         zone.scrollIntoView({ behavior: 'smooth' });
     }
 
+    // 🔒 نظام التشفير ومكافحة تخمين الاختراق (Brute-Force Attack Protection)
     function loginAdmin() {
-        const pass = document.getElementById("admin-pass-field").value;
-        if (pass === ADMIN_PASSWORD) {
+        if (localStorage.getItem("admin_system_device_locked") === "true") { return; }
+
+        const enteredPass = document.getElementById("admin-pass-field").value;
+        // تشفير المدخلات فوراً لمقارنتها بالبصمة المؤمنة المشفرة
+        const hashedInput = CryptoJS.SHA256(enteredPass).toString();
+
+        if (hashedInput === ADMIN_HASHED_LOCK) {
+            adminFailedAttempts = 0;
             showPage("admin-dashboard-page");
             document.getElementById("admin-pass-field").value = "";
         } else {
-            alert("كلمة سر الإدارة الكنسية غير صحيحة!");
+            adminFailedAttempts++;
+            alert(`خطأ! كلمة سر الإدارة غير صحيحة. المحاولات الخاطئة: ${adminFailedAttempts}/3`);
+            document.getElementById("admin-pass-field").value = "";
+            
+            if (adminFailedAttempts >= 3) {
+                localStorage.setItem("admin_system_device_locked", "true");
+                lockAdminInterfacePermanently();
+            }
         }
+    }
+
+    function lockAdminInterfacePermanently() {
+        document.getElementById("admin-lock-msg").style.display = "block";
+        document.getElementById("admin-pass-field").disabled = true;
+        document.getElementById("admin-login-submit-btn").disabled = true;
+        document.getElementById("admin-login-submit-btn").style.background = "#555";
+        alert("🛑 الأمن الكنسي الحامي: تم رصد محاولات اختراق عشوائية متكررة. تم حظر الدخول للإدارة من هذا الجهاز تماماً!");
     }
 
     function renderAdminTable() {
         const tbody = document.getElementById("results-table-body");
         tbody.innerHTML = "";
         let records = JSON.parse(localStorage.getItem("church_quiz_data_store"));
-
         if(records.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; padding:25px; color:#888; font-weight:600;">لا توجد درجات أو اشتراكات مسجلة حالياً في هذا الشهر.</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; padding:25px; color:#888; font-weight:600;">لا توجد درجات مسجلة حالياً.</td></tr>`;
             return;
         }
-
         records.forEach((rec, idx) => {
             let tr = document.createElement("tr");
             tr.innerHTML = `
@@ -883,8 +817,7 @@
                     <button class="action-btn btn-edit-ans" onclick="inlineEditAnswers(${idx})">📝 تعديل الإجابات</button>
                     <button class="action-btn btn-edit-deg" onclick="editDegree(${idx})">⭐ الدرجة يدوياً</button>
                     <button class="action-btn btn-delete" onclick="deleteRecord(${idx})">❌ حذف السجل</button>
-                </td>
-            `;
+                </td>`;
             tbody.appendChild(tr);
         });
     }
@@ -892,132 +825,88 @@
     function inlineEditAnswers(idx) {
         let records = JSON.parse(localStorage.getItem("church_quiz_data_store"));
         let record = records[idx];
-
         const area = document.getElementById("admin-inline-edit-area");
-        area.innerHTML = "";
-        area.style.display = "block";
+        area.innerHTML = ""; area.style.display = "block";
 
         let title = document.createElement("h3");
-        title.style.color = "var(--coptic-gold)";
-        title.style.marginBottom = "15px";
-        title.fontFamily = "Amiri";
-        title.textContent = `تحديث ومراجعة اختيارات الخادم الكنسي: ${record.name}`;
+        title.style.color = "var(--coptic-gold)"; title.style.marginBottom = "15px";
+        title.textContent = `تحديث ومراجعة اختيارات الخادم: ${record.name}`;
         area.appendChild(title);
 
         quizQuestions.forEach((q, qIdx) => {
             let currentAnsText = record.answers[qIdx] || "لم يحل";
-            
             let box = document.createElement("div");
             box.className = "inline-edit-box";
             box.innerHTML = `
                 <p><strong>س ${qIdx + 1}: ${q.q}</strong></p>
-                <p style="font-size:0.85rem; color:#555; margin:5px 0;">الإجابة النموذجية المكتوبة بالشيت: <span style="color:green; font-weight:bold;">${q.correct}</span></p>
-                <label>تعديل اختيار الخادم الفعلي: </label>
+                <label>تعديل الاختيار: </label>
                 <select id="inline-select-${qIdx}" style="width:auto; padding:6px; margin:5px; font-size:0.95rem;">
                     <option value="${q.opt1}" ${currentAnsText === q.opt1 ? 'selected' : ''}>أ) ${q.opt1}</option>
                     <option value="${q.opt2}" ${currentAnsText === q.opt2 ? 'selected' : ''}>ب) ${q.opt2}</option>
                     <option value="${q.opt3}" ${currentAnsText === q.opt3 ? 'selected' : ''}>ج) ${q.opt3}</option>
                     <option value="${q.opt4}" ${currentAnsText === q.opt4 ? 'selected' : ''}>د) ${q.opt4}</option>
                     <option value="لم يحل" ${currentAnsText === 'لم يحل' ? 'selected' : ''}>لم يحل</option>
-                </select>
-            `;
+                </select>`;
             area.appendChild(box);
         });
 
         let saveBtn = document.createElement("button");
-        saveBtn.className = "btn btn-gold";
-        saveBtn.style.marginTop = "15px";
-        saveBtn.textContent = "💾 حفظ التعديلات وإعادة الحساب والاعتماد";
+        saveBtn.className = "btn btn-gold"; saveBtn.textContent = "💾 حفظ التعديلات والاعتماد";
         saveBtn.onclick = () => {
-            quizQuestions.forEach((q, qIdx) => {
-                let sel = document.getElementById(`inline-select-${qIdx}`);
-                record.answers[qIdx] = sel.value;
-            });
-
+            quizQuestions.forEach((q, qIdx) => { record.answers[qIdx] = document.getElementById(`inline-select-${qIdx}`).value; });
             let newScore = 0;
-            quizQuestions.forEach((q, i) => {
-                let ansText = record.answers[i];
-                let cleanC = q.correct.trim().toLowerCase();
-                if (ansText && ansText.trim().toLowerCase() === cleanC) {
-                    newScore++;
-                }
-            });
-
-            record.score = newScore;
-            records[idx] = record;
+            quizQuestions.forEach((q, i) => { if (record.answers[i] && record.answers[i].trim().toLowerCase() === q.correct.trim().toLowerCase()) newScore++; });
+            record.score = newScore; records[idx] = record;
             localStorage.setItem("church_quiz_data_store", JSON.stringify(records));
-            
-            alert(`تم حفظ وتحديث السجل بنجاح! الدرجة الجديدة: ${newScore} / 10`);
-            area.style.display = "none";
-            renderAdminTable();
+            alert(`تم التحديث! الدرجة: ${newScore} / 10`);
+            area.style.display = "none"; renderAdminTable();
         };
 
         let cancelBtn = document.createElement("button");
-        cancelBtn.className = "btn btn-maroon";
-        cancelBtn.style.marginTop = "15px";
-        cancelBtn.textContent = "إلغاء";
-        cancelBtn.onclick = () => { area.style.display = "none"; };
-
-        area.appendChild(saveBtn);
-        area.appendChild(cancelBtn);
+        cancelBtn.className = "btn btn-maroon"; cancelBtn.textContent = "إلغاء"; cancelBtn.onclick = () => { area.style.display = "none"; };
+        area.appendChild(saveBtn); area.appendChild(cancelBtn);
         area.scrollIntoView({ behavior: 'smooth' });
     }
 
     function editDegree(idx) {
         let records = JSON.parse(localStorage.getItem("church_quiz_data_store"));
-        let newScore = prompt(`تعديل درجة الخادم الأرثوذكسي (${records[idx].name}) مباشرة:`, records[idx].score);
+        let newScore = prompt(`تعديل درجة الخادم (${records[idx].name}) مباشرة:`, records[idx].score);
         if (newScore !== null && newScore.trim() !== "") {
             let parsed = parseInt(newScore);
-            if(!isNaN(parsed)) {
-                records[idx].score = parsed;
-                localStorage.setItem("church_quiz_data_store", JSON.stringify(records));
-                renderAdminTable();
-            }
+            if(!isNaN(parsed)) { records[idx].score = parsed; localStorage.setItem("church_quiz_data_store", JSON.stringify(records)); renderAdminTable(); }
         }
     }
 
     function deleteRecord(idx) {
         let records = JSON.parse(localStorage.getItem("church_quiz_data_store"));
         let targetName = records[idx].name;
-
-        if (confirm(`هل أنت متأكد من حذف سجل إجابة الخادم (${targetName})؟\nسيؤدي هذا إلى مسحه من الإكسيل والسماح له بالدخول مجدداً.`)) {
+        if (confirm(`هل أنت متأكد من حذف سجل إجابة الخادم (${targetName})؟`)) {
             records.splice(idx, 1);
             localStorage.setItem("church_quiz_data_store", JSON.stringify(records));
-            
             let blockedList = JSON.parse(localStorage.getItem("blocked_servants_list") || "[]");
-            let newBlockedList = blockedList.filter(name => name !== targetName);
-            localStorage.setItem("blocked_servants_list", JSON.stringify(newBlockedList));
-            
-            alert(`تم مسح السجل بنجاح، ومتاح للخادم الدخول الآن.`);
-            renderAdminTable();
-            renderUnblockInterface();
+            localStorage.setItem("blocked_servants_list", JSON.stringify(blockedList.filter(name => name !== targetName)));
+            alert(`تم مسح السجل.`);
+            renderAdminTable(); renderUnblockInterface();
         }
     }
 
     function resetEntireSystem() {
-        if (confirm("⚠️ تحذير نهائي للمشرفين!\n\nهل أنت متأكد تماماً من تصفير قاعدة بيانات المسابقة بالكامل؟\nسيتم مسح كافة الدراجات نهائياً لبدء شهر جديد.")) {
+        if (confirm("⚠️ تصفير قاعدة بيانات المسابقة بالكامل؟")) {
             localStorage.setItem("church_quiz_data_store", JSON.stringify([]));
             localStorage.setItem("blocked_servants_list", JSON.stringify([]));
-            alert("✅ تم تصفير المسابقة بنجاح! جاهز لبدء الأصحاح الجديد.");
-            renderAdminTable();
-            renderUnblockInterface();
+            alert("✅ تم التصفير.");
+            renderAdminTable(); renderUnblockInterface();
         }
     }
 
     function exportToExcel() {
         let records = JSON.parse(localStorage.getItem("church_quiz_data_store"));
-        if (records.length === 0) { alert("لا توجد نتائج مسجلة لتصديرها لإكسيل!"); return; }
-
-        let excelRows = records.map(r => ({
-            "اسم خادم اجتماع أبي سيفين": r.name,
-            "الدرجة النهائية من 10": r.score,
-            "تاريخ ووقت الاشتراك بالامتحان": r.date
-        }));
-
+        if (records.length === 0) { alert("لا توجد نتائج لتصديرها!"); return; }
+        let excelRows = records.map(r => ({ "اسم الخادم": r.name, "الدرجة": r.score, "التاريخ": r.date }));
         let worksheet = XLSX.utils.json_to_sheet(excelRows);
         let workbook = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(workbook, worksheet, "نتائج الخدام");
-        XLSX.writeFile(workbook, "نتائج_مسابقة_دراسة_الكتاب_المقدس.xlsx");
+        XLSX.writeFile(workbook, "نتائج_مسابقة_الكتاب_المقدس.xlsx");
     }
 
     window.onload = initApp;

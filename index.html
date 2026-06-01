@@ -11,8 +11,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
 
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Coptic&display=swap');
-
         :root {
             --coptic-gold: #D4AF37;
             --dark-gold: #B8860B;
@@ -69,7 +67,6 @@
         .saint-box-side { width: 125px; height: 165px; border: 3px solid var(--coptic-gold); outline: 1px solid var(--coptic-maroon); outline-offset: -4px; border-radius: 10px; overflow: hidden; box-shadow: 0 6px 12px rgba(0,0,0,0.15); background: #fff; }
         .saint-box-side img { width: 100%; height: 100%; object-fit: cover; }
 
-        .coptic-name-tag { font-family: 'Noto Sans NKo', 'Noto Sans Coptic', 'Amiri', serif; font-size: 0.95rem; font-weight: bold; color: var(--coptic-maroon); background: var(--light-gold); padding: 2px 8px; border-radius: 5px; border: 1px solid var(--coptic-gold); text-shadow: 0.5px 0.5px 0px #fff; }
         .coptic-cross-center { font-size: 2.5rem; color: var(--coptic-maroon); text-shadow: 1px 1px 0px var(--coptic-gold); line-height: 1; margin-bottom: 8px; }
         
         .header-title { font-family: 'Rehan', 'Amiri', sans-serif; color: var(--coptic-maroon); font-size: 2.2rem; margin-bottom: 5px; font-weight: bold; line-height: 1.2; text-shadow: 1px 1px 1px rgba(0,0,0,0.1); }
@@ -109,13 +106,17 @@
 
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(43,37,31,0.85); display: none; justify-content: center; align-items: center; z-index: 9999; backdrop-filter: blur(4px); padding: 10px; }
         .modal-content { background: var(--church-cream); border: 4px solid var(--coptic-gold); outline: 2px solid var(--coptic-maroon); outline-offset: -6px; border-radius: 16px; max-width: 800px; width: 100%; padding: 20px; text-align: right; }
-        .modal-body { font-family: 'Amiri', serif; font-size: 1.3rem; line-height: 1.8; color: #1A1512; white-space: pre-wrap; padding: 15px; background: var(--pure-white); border-radius: 8px; max-height: 50vh; overflow-y: auto; border: 1px solid #EAE4D7; }
+        .modal-body { font-family: 'Amiri', serif; font-size: 1.3rem; line-height: 1.8; color: #1A1512; white-space: pre-wrap; padding: 15px; background: var(--pure-white); border-radius: 8px; max-height: 45vh; overflow-y: auto; border: 1px solid #EAE4D7; }
         
         #church-alert-banner { position: fixed; top: -100px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 450px; background: var(--church-cream); border: 3px solid var(--coptic-gold); border-radius: 12px; padding: 12px; box-shadow: 0 8px 25px rgba(112,0,26,0.25); z-index: 100000; transition: top 0.4s; display: flex; align-items: center; justify-content: center; gap: 10px; }
         #church-alert-banner.alert-show { top: 20px; }
 
-        .audio-player-wrapper { background: #F4EFE6; padding: 12px; border-radius: 10px; border: 1px solid var(--coptic-gold); text-align: center; margin-top: 10px; }
-        .audio-controls-top { display: flex; justify-content: center; gap: 10px; margin-bottom: 10px; }
+        /* ستايل مشغل الصوت الجديد الفاخر والمحاكي للبرامج */
+        .audio-player-wrapper { background: #F4EFE6; padding: 15px; border-radius: 12px; border: 2px solid var(--coptic-gold); text-align: center; margin-top: 5px; margin-bottom: 15px; box-shadow: inset 0 2px 5px rgba(0,0,0,0.05); }
+        .audio-controls-top { display: flex; justify-content: center; gap: 12px; margin-bottom: 12px; }
+        .audio-timeline-container { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 0 5px; }
+        .audio-time-label { font-size: 0.85rem; font-weight: bold; color: var(--coptic-maroon); min-width: 45px; font-family: monospace; }
+        .audio-progress-bar { flex: 1; height: 8px; border-radius: 4px; accent-color: var(--coptic-maroon); cursor: pointer; transition: all 0.1s; }
         
         .review-card { background: var(--pure-white); border: 1px solid #EAE4D7; border-radius: 8px; padding: 12px; margin-bottom: 12px; text-align: right; }
         .review-q-text { font-weight: bold; color: var(--coptic-maroon); margin-bottom: 8px; font-size: 1.05rem; }
@@ -128,7 +129,6 @@
             .header-main-layout { flex-direction: column; gap: 12px; }
             .saint-card-wrapper { display: inline-flex; margin: 0 5px; }
             .saint-box-side { width: 105px; height: 140px; }
-            .coptic-name-tag { font-size: 0.8rem; }
             .header-title { font-size: 1.8rem; }
             .subtitle { font-size: 1.1rem; }
             .bible-verse-container { font-size: 1.15rem; padding: 10px; }
@@ -152,7 +152,6 @@
     <div class="header-main-layout">
         <div class="saint-card-wrapper">
             <div class="saint-box-side"><img src="abusafein.jpg" alt="أبي سيفين"></div>
-            <div class="coptic-name-tag">Ⲫⲓⲗⲟⲡⲁⲏⲣ Ⲙⲉⲣⲣⲟⲩⲩⲣⲓⲟⲥ</div>
         </div>
         
         <div class="header-center-text">
@@ -164,7 +163,6 @@
         
         <div class="saint-card-wrapper">
             <div class="saint-box-side"><img src="virgin.jpg" alt="العذراء مريم"></div>
-            <div class="coptic-name-tag">Ϯθεοτοκος Μαρια</div>
         </div>
     </div>
 
@@ -243,7 +241,7 @@
         </div>
     </div>
 
-    <!-- الشاشة 5: لوحة المتابعة الكنسية بعد التحديث الإداري الممتاز -->
+    <!-- الشاشة 5: لوحة المتابعة الإدارية للخدمة -->
     <div id="admin-dashboard-page" class="page" style="background-color: var(--church-cream); border: 3px solid var(--coptic-gold); border-radius: 14px; padding: 15px; text-align: right;">
         <div style="background: var(--royal-gradient); color: #fff; padding: 12px; border-radius: 10px; margin-bottom: 20px; text-align: center;">
             <h2>⛪ لوحة المتابعة الإدارية الشاملة للخدمة</h2>
@@ -263,7 +261,6 @@
             </div>
         </div>
 
-        <!-- أزرار الإدارة الجديدة والحاسمة المطلوبة -->
         <div style="background: #F4EFE6; padding: 15px; border-radius: 10px; border: 1px solid var(--coptic-gold); margin-bottom: 15px; text-align: center; display: flex; flex-wrap: wrap; justify-content: center; gap: 10px;">
             <button class="btn btn-maroon" onclick="openEditAnswersModal()">✏️ تعديل الإجابة</button>
             <button class="btn btn-gold" onclick="openEditScoreOnlyModal()">🔢 تعديل الدرجة</button>
@@ -285,25 +282,37 @@
     </div>
 </div>
 
-<!-- نافذة الأصحاح والمشغل الصوتي المطور للعمل تلقائياً -->
+<!-- نافذة الأصحاح والمشغل الصوتي المطور كلياً بميزات برامج الصوتيات -->
 <div id="essah-modal" class="modal-overlay">
     <div class="modal-content" onclick="event.stopPropagation()">
         <h3 id="essah-modal-dynamic-title" style="color: var(--coptic-maroon); font-family: 'Amiri', serif; text-align: center; margin-bottom: 12px;">جاري تحميل العنوان...</h3>
+        
+        <!-- مشغل الصوت الاحترافي المتناسق فوق نص الأصحاح -->
         <div id="audio-player-zone" class="audio-player-wrapper">
             <div class="audio-controls-top">
-                <button class="btn btn-green" style="padding: 8px 20px; font-size:1rem;" id="btn-play-chapter-audio" onclick="toggleAudioNative()">اسمع الاستماع للاصحاح 🔊</button>
+                <button class="btn btn-green" style="padding: 8px 18px; font-size:0.95rem; background-color: var(--success-green);" onclick="playAudioNative()">اسمع الاستماع للاصحاح ▶️</button>
+                <button class="btn btn-maroon" style="padding: 8px 18px; font-size:0.95rem; background-color: var(--info-blue); border-bottom-color: #11364F;" onclick="pauseAudioNative()">إيقاف مؤقت ⏸️</button>
             </div>
-            <div style="color:var(--coptic-maroon); font-size:0.85rem; font-weight:bold;" id="audio-status-text">جاهز للتشغيل</div>
+            
+            <!-- شريط تقديم الصوت والوقت الحالي والمتبقي -->
+            <div class="audio-timeline-container">
+                <span id="audio-time-current" class="audio-time-label">00:00</span>
+                <input type="range" id="audio-progress" class="audio-progress-bar" value="0" min="0" max="100" step="1" oninput="seekAudioNative(this.value)">
+                <span id="audio-time-remaining" class="audio-time-label">-00:00</span>
+            </div>
         </div>
+
+        <!-- نص الأصحاح للقراءة -->
         <div id="essah-text-container" class="modal-body" style="text-align: justify; font-size: 22px;">جاري تحميل نص الأصحاح...</div>
+        
         <div style="text-align: center; margin-top: 15px;">
-            <button class="btn btn-blue" onclick="closeEssahAndGoToQuiz()">📝 اذهب لحل الأسئلة</button>
+            <button class="btn btn-blue" onclick="closeEssahModal()">📝 اذهب لحل الأسئلة</button>
             <button class="btn btn-maroon" onclick="closeEssahModal()">إغلاق ❌</button>
         </div>
     </div>
 </div>
 
-<!-- نافذة تعديل الإجابات التفصيلية (جديد) -->
+<!-- نافذة تعديل الإجابات التفصيلية -->
 <div id="edit-answers-modal" class="modal-overlay">
     <div class="modal-content" style="max-width: 700px;">
         <h3 style="color: var(--coptic-maroon); text-align: center; margin-bottom: 10px;">✏️ لوحة تعديل إجابات الخدام</h3>
@@ -319,7 +328,7 @@
     </div>
 </div>
 
-<!-- نافذة تعديل الدرجة المنفصلة (جديد) -->
+<!-- نافذة تعديل الدرجة المنفصلة المباشرة -->
 <div id="edit-score-modal" class="modal-overlay">
     <div class="modal-content" style="max-width: 500px;">
         <h3 style="color: var(--coptic-maroon); text-align: center; margin-bottom: 15px;">🔢 لوحة تعديل الدرجة المباشرة</h3>
@@ -354,7 +363,7 @@
 </form>
 <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
 
-<!-- استدعاء مشغل يوتيوب الرسمي بأمان واحترافية عالية لضمان العمل التلقائي للصوت -->
+<!-- استدعاء مشغل يوتيوب الرسمي بأمان واحترافية عالية -->
 <script src="https://www.youtube.com/iframe_api"></script>
 
 <script>
@@ -393,7 +402,7 @@
     let questionTimer = null; let secondsLeftForQuestion = 3 * 60; 
     let activeKhadimName = ""; let activeKhadimCode = "";
     let ytPlayer = null; let cloudFetchedRecords = {}; let localForcedOverrides = {}; let localResetExclusions = {}; 
-    let audioVideoIdGlobal = ""; let isAudioPlayingNow = false;
+    let audioVideoIdGlobal = ""; let updateTimerInterval = null;
 
     function showChurchNotification(text) {
         const banner = document.getElementById("church-alert-banner");
@@ -409,7 +418,6 @@
         let match = url.match(regExp); return (match && match[2].length === 11) ? match[2] : "";
     }
 
-    // تهيئة مشغل يوتيوب فور استدعاء مكتبة يوتيوب الرسمية
     window.onYouTubeIframeAPIReady = function() {
         if (audioVideoIdGlobal) { createPlayerInstance(audioVideoIdGlobal); }
     };
@@ -420,30 +428,70 @@
                 height: '1', width: '1', videoId: videoId,
                 playerVars: { 'autoplay': 0, 'controls': 0, 'playsinline': 1 },
                 events: {
-                    'onReady': () => { document.getElementById("audio-status-text").textContent = "الصوت جاهز الآن للإستماع 🎧"; },
-                    'onError': () => { console.log("خطأ بمشغل الصوت"); }
+                    'onReady': () => { console.log("الصوت جاهز"); },
+                    'onStateChange': onPlayerStateChange
                 }
             });
         } catch(e) { console.error(e); }
     }
 
-    function toggleAudioNative() {
-        const btn = document.getElementById("btn-play-chapter-audio");
-        const statusText = document.getElementById("audio-status-text");
+    // تشغيل الصوت الأساسي
+    function playAudioNative() {
         if (!ytPlayer || !ytPlayer.playVideo) {
-            statusText.textContent = "جاري تحضير الخادم الصوتي، اضغط مجدداً...";
             if (audioVideoIdGlobal) createPlayerInstance(audioVideoIdGlobal);
             return;
         }
-        if (!isAudioPlayingNow) {
-            ytPlayer.playVideo(); isAudioPlayingNow = true;
-            btn.textContent = "⏸️ إيقاف مؤقت للصوت"; btn.style.background = "var(--error-red)";
-            statusText.textContent = "جاري تشغيل الأصحاح بصوت مريح... 🔊";
-        } else {
-            ytPlayer.pauseVideo(); isAudioPlayingNow = false;
-            btn.textContent = "اسمع الاستماع للاصحاح 🔊"; btn.style.background = "var(--success-green)";
-            statusText.textContent = "تم إيقاف الاستماع مؤقتاً";
+        ytPlayer.playVideo();
+    }
+
+    // إيقاف مؤقت للصوت
+    function pauseAudioNative() {
+        if (ytPlayer && ytPlayer.pauseVideo) {
+            ytPlayer.pauseVideo();
         }
+    }
+
+    // التقديم والتأخير عبر الشريط السحاب
+    function seekAudioNative(value) {
+        if (ytPlayer && ytPlayer.getDuration) {
+            let duration = ytPlayer.getDuration();
+            let newTime = (value / 100) * duration;
+            ytPlayer.seekTo(newTime, true);
+        }
+    }
+
+    // تتبع حالة المشغل لتحديث أزمنة العداد والشريط تلقائياً
+    function onPlayerStateChange(event) {
+        if (event.data == YT.PlayerState.PLAYING) {
+            startUpdateTimerLoop();
+        } else {
+            clearInterval(updateTimerInterval);
+        }
+    }
+
+    function formatTime(seconds) {
+        if (isNaN(seconds) || seconds < 0) return "00:00";
+        let m = Math.floor(seconds / 60);
+        let s = Math.floor(seconds % 60);
+        return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+    }
+
+    function startUpdateTimerLoop() {
+        clearInterval(updateTimerInterval);
+        updateTimerInterval = setInterval(() => {
+            if (ytPlayer && ytPlayer.getCurrentTime && ytPlayer.getDuration) {
+                let current = ytPlayer.getCurrentTime();
+                let duration = ytPlayer.getDuration();
+                
+                if (duration > 0) {
+                    let progressPercent = (current / duration) * 100;
+                    document.getElementById("audio-progress").value = progressPercent;
+                    
+                    document.getElementById("audio-time-current").textContent = formatTime(current);
+                    document.getElementById("audio-time-remaining").textContent = "-" + formatTime(duration - current);
+                }
+            }
+        }, 1000);
     }
 
     function parseCsvAdvanced(text) {
@@ -522,11 +570,11 @@
     }
 
     function openEssahModal() { document.getElementById("essah-modal").style.display = "flex"; }
+    
     function closeEssahModal() { 
         document.getElementById("essah-modal").style.display = "none"; 
-        if(ytPlayer && ytPlayer.pauseVideo && isAudioPlayingNow) { toggleAudioNative(); }
+        if(ytPlayer && ytPlayer.pauseVideo) { ytPlayer.pauseVideo(); }
     }
-    function closeEssahAndGoToQuiz() { closeEssahModal(); }
 
     function loginKhadim() {
         const selectEl = document.getElementById("khadim-select");
@@ -619,15 +667,13 @@
     }
 
     function closeReviewModal() { document.getElementById("review-modal").style.display = "none"; }
+    
     function loginAdmin() {
         const pass = document.getElementById("admin-pass-field").value;
         if (CryptoJS.SHA256(pass).toString() === ADMIN_HASHED_LOCK) { document.getElementById("admin-pass-field").value = ""; showPage("admin-dashboard-page"); fetchOnlineAnswersData(); } 
         else { showChurchNotification("كود المرور خاطئ!"); }
     }
 
-    // ==================== وظائف الإدارة المتقدمة المضافة حديثاً ====================
-    
-    // فتح نافذة تعديل الإجابات التفصيلية لبناء الـ 2 زرار المطلوبين
     function openEditAnswersModal() {
         const select = document.getElementById("admin-edit-servant-select");
         select.innerHTML = `<option value="">-- اختر اسم خادم لتعديل إجاباته --</option>`;
@@ -641,7 +687,6 @@
 
     function closeEditAnswersModal() { document.getElementById("edit-answers-modal").style.display = "none"; }
 
-    // تحميل وعرض الإجابات الكاملة للخادم المختار لإمكانية التعديل بحرية كاملة للمسؤول
     function loadServantAnswersToEdit() {
         const name = document.getElementById("admin-edit-servant-select").value;
         const area = document.getElementById("admin-answers-edit-area");
@@ -672,7 +717,6 @@
         });
     }
 
-    // حفظ التعديلات وحساب الدرجة بالزيادة أو النقصان تلقائياً
     function saveEditedAnswersAction() {
         const name = document.getElementById("admin-edit-servant-select").value;
         if(!name) { alert("من فضلك اختر اسم الخادم أولاً!"); return; }
@@ -702,7 +746,6 @@
         showChurchNotification(`تم تعديل إجابات وحساب درجة ${name} بنجاح!`);
     }
 
-    // فتح نافذة تعديل الدرجة المنفصلة مباشرة (الزرار الثاني)
     function openEditScoreOnlyModal() {
         const select = document.getElementById("admin-score-servant-select");
         select.innerHTML = `<option value="">-- اختر خادم لتعديل درجته --</option>`;
@@ -732,7 +775,6 @@
         input.value = currentScore;
     }
 
-    // حفظ الدرجة الفردية المعدلة مباشرة
     function saveDirectScoreAction() {
         const name = document.getElementById("admin-score-servant-select").value;
         const newScoreVal = document.getElementById("admin-direct-score-num").value.trim();
@@ -754,8 +796,6 @@
         calculateAndRenderStats(); renderAdminTable(); closeEditScoreOnlyModal();
         showChurchNotification(`تم تحديث درجة ${name} مباشرة إلى ${newScoreVal}!`);
     }
-
-    // ==============================================================================
 
     function calculateAndRenderStats() {
         let totalCount = rawServants.length; let solvedCount = 0; let totalPercentSum = 0;

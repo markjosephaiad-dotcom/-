@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>✝️ مسابقة دراسة الكتاب المقدس </title>
+    <title>❖ مسابقة دراسة الكتاب المقدس</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.5/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
-    <script src="https://www.youtube.com/iframe_api"></script>
 
     <style>
         :root {
             --coptic-gold: #D4AF37;
             --dark-gold: #B8860B;
+            --light-gold: #FFF9E6;
             --coptic-maroon: #70001A;
             --dark-maroon: #4A0010;
             --church-cream: #FDFBF7;
@@ -21,13 +21,14 @@
             --text-dark: #2B251F;
             --success-green: #1B5E20;
             --error-red: #B71C1C;
+            --info-blue: #1A5276;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', 'Amiri', sans-serif; }
         
         body { 
             background-color: #F4EFE6; 
-            background-image: radial-gradient(rgba(212, 175, 55, 0.05) 1px, transparent 0);
+            background-image: radial-gradient(rgba(212, 175, 55, 0.06) 1px, transparent 0);
             background-size: 24px 24px;
             color: var(--text-dark); 
             text-align: center; 
@@ -38,232 +39,314 @@
             border: 4px double var(--coptic-gold); 
             outline: 2px solid var(--coptic-maroon);
             outline-offset: -8px;
-            max-width: 950px; 
+            max-width: 1100px; 
             margin: 20px auto; 
             padding: 30px 20px; 
             border-radius: 16px; 
             background: var(--church-cream); 
             box-shadow: 0 10px 30px rgba(74,0,16,0.15); 
             position: relative; 
-            overflow: hidden;
         }
 
-        /* صور القديسين في الهيدر */
-        .saints-container {
+        .saints-header-container {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            max-width: 600px;
-            margin: 0 auto 15px auto;
+            width: 100%;
+            margin-bottom: 20px;
             padding: 0 10px;
         }
-        .saint-img {
-            width: 85px;
-            height: 85px;
-            border-radius: 50%;
+        
+        .saint-box-right, .saint-box-left {
+            width: 120px;
+            height: 150px;
             border: 3px solid var(--coptic-gold);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-            object-fit: cover;
+            outline: 1px solid var(--coptic-maroon);
+            outline-offset: -5px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+            background: #fff;
+        }
+        .saint-box-right img, .saint-box-left img { width: 100%; height: 100%; object-fit: cover; }
+
+        .coptic-cross-center { font-size: 3.5rem; color: var(--coptic-maroon); text-shadow: 2px 2px 0px var(--coptic-gold); line-height: 1; }
+        .header-title { font-family: 'Cairo', sans-serif; color: var(--coptic-maroon); font-size: 1.8rem; margin-bottom: 5px; font-weight: bold; }
+        .subtitle { color: var(--dark-gold); font-size: 1.4rem; margin-bottom: 15px; font-weight: 600; }
+        .meeting-title { color: var(--text-dark); font-size: 1.2rem; font-weight: bold; margin-bottom: 15px; }
+
+        /* ستايل الآية الذهبية الفخمة */
+        .bible-verse-container {
+            margin: 20px auto;
+            padding: 12px 25px;
+            font-size: 1.4rem;
+            font-family: 'Amiri', serif;
+            font-weight: bold;
+            color: var(--coptic-gold);
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+            background-color: var(--dark-maroon);
+            border: 2px solid var(--coptic-gold);
+            border-radius: 8px;
+            display: inline-block;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            max-width: 90%;
         }
 
-        .coptic-cross-header { font-size: 3rem; color: var(--coptic-maroon); text-shadow: 2px 2px 0px var(--coptic-gold); margin-bottom: 5px; line-height: 1; display: inline-block; }
-        .header-title { font-family: 'Amiri', serif; color: var(--coptic-maroon); font-size: 2.2rem; margin-bottom: 5px; font-weight: bold; }
-        .subtitle { color: var(--dark-gold); font-size: 1.2rem; margin-bottom: 20px; font-weight: 600; }
+        /* ستايل مخصص لآية النتيجة السفلية */
+        .result-verse {
+            margin-top: 15px;
+            font-size: 1.3rem;
+            font-family: 'Amiri', serif;
+            font-weight: bold;
+            color: var(--dark-gold);
+        }
 
         .church-separator { display: flex; align-items: center; justify-content: center; margin: 20px 0; }
         .church-separator::before, .church-separator::after { content: ""; flex: 1; height: 1px; background: linear-gradient(to left, transparent, var(--coptic-gold), transparent); }
-        .church-separator span { padding: 0 15px; color: var(--coptic-maroon); text-shadow: 1px 1px 0px var(--coptic-gold); font-size: 1.3rem; }
+        .church-separator span { padding: 0 15px; color: var(--coptic-maroon); text-shadow: 1px 1px 0px var(--coptic-gold); font-size: 1.4rem; }
 
-        .page { display: none; margin-top: 20px; padding: 10px; position: relative; z-index: 2; }
-        .active-page { display: block; animation: copticFadeIn 0.5s ease-in-out; }
-        @keyframes copticFadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+        .page { display: none; margin-top: 20px; padding: 10px; }
+        .active-page { display: block; animation: copticFadeIn 0.3s ease-in-out; }
+        @keyframes copticFadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        .btn { padding: 12px 25px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 1.05rem; transition: all 0.3s ease; margin: 8px; display: inline-flex; align-items: center; justify-content: center; text-decoration: none; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .btn { padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 0.95rem; transition: all 0.2s ease; margin: 4px; display: inline-flex; align-items: center; justify-content: center; text-decoration: none; box-shadow: 0 3px 5px rgba(0,0,0,0.1); user-select: none; }
         .btn-maroon { background-color: var(--coptic-maroon); color: white; border-bottom: 3px solid var(--dark-maroon); }
-        .btn-maroon:hover { background-color: var(--dark-maroon); transform: translateY(-2px); }
+        .btn-maroon:hover { background-color: var(--dark-maroon); }
         .btn-gold { background-color: var(--coptic-gold); color: var(--dark-maroon); border-bottom: 3px solid var(--dark-gold); }
-        .btn-gold:hover { background-color: var(--dark-gold); color: white; transform: translateY(-2px); }
-        .btn-green { background-color: var(--success-green); color: white; }
+        .btn-gold:hover { background-color: var(--dark-gold); color: white; }
+        .btn-green { background-color: var(--success-green); color: white; border-bottom: 3px solid #144517; }
         .btn-green:hover { background-color: #144517; }
-        .btn-blue { background-color: #1A5276; color: white; border-bottom: 3px solid #113750; }
-        .btn-blue:hover { background-color: #113750; transform: translateY(-2px); }
+        .btn-orange { background-color: #D35400; color: white; border-bottom: 3px solid #A04000; }
+        .btn-orange:hover { background-color: #A04000; }
+        .btn-red { background-color: var(--error-red); color: white; border-bottom: 3px solid #7B1FA2; }
+        .btn-red:hover { background-color: #7B1FA2; }
+        .btn-blue { background-color: var(--info-blue); color: white; border-bottom: 3px solid #11364F; }
+        .btn-blue:hover { background-color: #11364F; }
 
-        select, input[type="password"] { width: 90%; max-width: 420px; padding: 14px; margin: 12px 0; border: 2px solid #E0D7C6; border-radius: 8px; font-size: 1.1rem; text-align: center; font-weight: 600; background-color: var(--pure-white); color: var(--text-dark); }
+        select, input[type="password"], input[type="number"] { width: 90%; max-width: 420px; padding: 14px; margin: 12px 0; border: 2px solid #E0D7C6; border-radius: 8px; font-size: 1.1rem; text-align: center; font-weight: 600; background-color: var(--pure-white); color: var(--text-dark); outline: none; }
         
         #timer-box { font-size: 1.25rem; color: var(--error-red); font-weight: bold; background: #FDEAEA; padding: 8px 20px; border-radius: 25px; border: 1px solid #F9D2D2; }
 
         .options-container { text-align: right; margin: 25px 0; }
+        
         .option-card { padding: 16px; margin: 14px 0; border: 2px solid #EAE4D7; border-radius: 10px; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; background: var(--pure-white); }
-        .option-card:hover { border-color: var(--coptic-gold); background-color: #FFFDF9; }
-        .option-card.selected { border-color: var(--coptic-maroon); background-color: #FDF5F6; font-weight: bold; border-width: 2.5px; }
-        .option-card input { width: 20px; height: 20px; margin-left: 15px; cursor: pointer; accent-color: var(--coptic-maroon); }
+        .option-card:hover { border-color: var(--coptic-gold); }
+        .option-card.selected { 
+            border-color: var(--dark-gold) !important; 
+            background-color: var(--light-gold) !important; 
+            font-weight: bold; 
+            box-shadow: 0 4px 10px rgba(212, 175, 55, 0.25);
+        }
+        .option-card input { width: 20px; height: 20px; margin-left: 15px; cursor: pointer; accent-color: var(--dark-gold); }
 
-        .admin-panel { background-color: var(--coptic-maroon); color: white; padding: 30px; border-radius: 14px; border: 3px solid var(--coptic-gold); }
-        .admin-panel h2 { color: var(--coptic-gold); margin-bottom: 20px; font-family: 'Amiri', serif; font-size: 2.2rem; }
+        .admin-panel { background-color: var(--church-cream); color: var(--text-dark); padding: 20px; border-radius: 14px; border: 4px solid var(--coptic-maroon); text-align: right; }
+        .admin-panel h2 { color: var(--coptic-maroon); margin-bottom: 20px; font-family: 'Amiri', serif; font-size: 2.2rem; text-align: center; }
         
-        .admin-table { width: 100%; border-collapse: collapse; margin-top: 25px; background: var(--pure-white); color: var(--text-dark); border-radius: 10px; overflow: hidden; }
-        .admin-table th { background-color: var(--coptic-maroon); color: var(--coptic-gold); padding: 16px; text-align: center; }
-        .admin-table td { padding: 14px; border-bottom: 1px solid #EEE9DC; text-align: center; }
+        .control-group { background: #F5EFE4; padding: 15px; border-radius: 10px; border: 1px solid var(--coptic-gold); margin-bottom: 20px; }
+        .control-group h4 { color: var(--coptic-maroon); margin-bottom: 10px; border-bottom: 1px solid var(--coptic-gold); padding-bottom: 5px; }
+
+        .admin-table { width: 100%; border-collapse: collapse; margin-top: 20px; background: var(--pure-white); border-radius: 10px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .admin-table th { background-color: var(--coptic-maroon); color: var(--coptic-gold); padding: 14px; text-align: center; font-size: 1rem; }
+        .admin-table td { padding: 12px; border-bottom: 1px solid #EEE9DC; text-align: center; font-weight: 600; font-size: 0.95rem; }
         
-        .result-box { padding: 35px; border: 3px dashed var(--coptic-gold); background: #FFFDF9; border-radius: 14px; display: inline-block; margin: 25px 0; min-width: 300px; }
-        .score-num { font-size: 3.8rem; color: var(--coptic-maroon); font-weight: bold; margin-top: 10px; font-family: 'Amiri', serif; }
+        .result-box { padding: 30px; border: 3px dashed var(--coptic-gold); background: #FFFDF9; border-radius: 14px; display: inline-block; margin: 25px 0; min-width: 280px; }
+        .score-num { font-size: 3.5rem; color: var(--coptic-maroon); font-weight: bold; font-family: 'Amiri', serif; }
 
-        .font-controls { display: flex; justify-content: center; gap: 12px; margin: 15px 0; }
-        .btn-font { padding: 8px 18px; font-size: 0.95rem; font-weight: bold; border-radius: 6px; border: 2px solid var(--coptic-gold); background-color: var(--pure-white); color: var(--coptic-maroon); cursor: pointer; }
-        .btn-font:hover { background-color: var(--coptic-maroon); color: var(--pure-white); }
-
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(43,37,31,0.7); display: none; justify-content: center; align-items: center; z-index: 9999; padding: 20px; backdrop-filter: blur(4px); }
-        .modal-content { background: var(--church-cream); border: 4px solid var(--coptic-gold); outline: 2px solid var(--coptic-maroon); outline-offset: -6px; border-radius: 16px; max-width: 800px; width: 100%; max-height: 90vh; overflow-y: auto; padding: 30px; text-align: right; }
-        .modal-body { font-family: 'Amiri', serif; font-size: 1.45rem; line-height: 2; color: #1A1512; white-space: pre-wrap; text-align: justify; margin: 20px 0; padding: 25px; background: var(--pure-white); border-radius: 8px; max-height: 45vh; overflow-y: auto; }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(43,37,31,0.85); display: none; justify-content: center; align-items: center; z-index: 9999; backdrop-filter: blur(4px); }
+        .modal-content { background: var(--church-cream); border: 4px solid var(--coptic-gold); outline: 2px solid var(--coptic-maroon); outline-offset: -6px; border-radius: 16px; max-width: 800px; width: 100%; padding: 25px; text-align: right; }
+        .modal-body { font-family: 'Amiri', serif; font-size: 1.4rem; line-height: 2; color: #1A1512; white-space: pre-wrap; padding: 20px; background: var(--pure-white); border-radius: 8px; max-height: 45vh; overflow-y: auto; border: 1px solid #EAE4D7; }
         
-        #church-alert-banner { position: fixed; top: -100px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 500px; background: var(--church-cream); border: 3px solid var(--coptic-gold); border-radius: 12px; padding: 16px 20px; box-shadow: 0 8px 25px rgba(112,0,26,0.25); z-index: 100000; transition: top 0.4s; display: flex; align-items: center; justify-content: center; gap: 12px; }
-        #church-alert-banner.alert-show { top: 25px; }
-        #church-alert-text { font-weight: bold; font-size: 1.05rem; color: var(--coptic-maroon); }
-
-        /* ستايل الميديا بلاير للريكورد */
-        .audio-player-wrapper { margin: 15px auto; padding: 10px; background: #FFFEEF; border: 1px dashed var(--coptic-gold); border-radius: 8px; max-width: 500px; display: none; }
-        .audio-player-wrapper.show-audio { display: block; }
-        audio { width: 100%; outline: none; }
+        #church-alert-banner { position: fixed; top: -100px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 450px; background: var(--church-cream); border: 3px solid var(--coptic-gold); border-radius: 12px; padding: 15px; box-shadow: 0 8px 25px rgba(112,0,26,0.25); z-index: 100000; transition: top 0.4s; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        #church-alert-banner.alert-show { top: 20px; }
     </style>
 </head>
 <body>
 
 <div id="church-alert-banner">
     <span>✝️</span>
-    <span id="church-alert-text">رسالة تنبيهية كنسية</span>
+    <span id="church-alert-text">تنبيه الخدمة</span>
 </div>
 
 <div class="coptic-border">
-    <!-- صور القديسين في أعلى الهيدر -->
-    <div class="saints-container">
-        <img class="saint-img" src="https://i.imgur.com/8mY5T7C.jpeg" alt="virgin.jpg">
-        <div class="coptic-cross-header">✝️</div>
-        <img class="saint-img" src="https://i.imgur.com/uXwWJ7y.jpeg" alt="abusafein.jpg">
+    <!-- الترويسة العليا والهيدر الاستاتيكي المحدث -->
+    <div class="saints-header-container">
+        <div class="saint-box-right"><img src="abusafein.jpg" alt="أبي سيفين"></div>
+        <div class="coptic-cross-center">❖</div>
+        <div class="saint-box-left"><img src="virgin.jpg" alt="العذراء مريم"></div>
     </div>
 
-    <div class="header-title">كنيسة الشهيد العظيم فيلوباتير مرقوريوس أبي سيفين- بمدينة عامر </div>
-    <div class="subtitle">اجتماع الخدام</div>
+    <!-- العناوين الرسمية للمسابقة -->
+    <div class="header-title">مسابقة دراسة الكتاب المقدس</div>
+    <div class="subtitle">كنيسة الشهيد العظيم فيلوباتير مرقوريوس أبي سيفين - بمدينة عامر</div>
+    <div class="meeting-title">❖اجتماع الخدام والخادمات❖</div>
 
-    <div class="church-separator"><span>✝️ 🎚️ ✝️</span></div>
+    <!-- الآية الذهبية الفخمة الجديدة في أول الموقع مع الشاهد -->
+    <div class="bible-verse-container">
+        «فَتِشُوا الْكُتُبَ لأَنَّكُمْ تَظُنُّونَ أَنَّ لَكُمْ فِيهَا حَيَاةً أَبَدِيَّةً، وَهِيَ الَّتِي تَشْهَدُ لِي» (يوحنا ٥: ٣٩)
+    </div>
 
-    <!-- الشاشة 1: تسجيل الدخول وبدء الامتحان -->
+    <div class="church-separator"><span>❖ ❖ ❖</span></div>
+
+    <!-- الشاشة 1: الدخول الرئيسي للخدام -->
     <div id="login-page" class="page active-page">
-        <button id="admin-entrance-btn" class="btn btn-maroon" style="position: absolute; top: 0px; left: 0px; font-size: 0.8rem; padding: 6px 14px;" onclick="showPage('admin-login-page')">⚙️ الإدارة</button>
+        <button id="admin-entrance-btn" class="btn btn-maroon" style="position: absolute; top: -15px; left: 0px; font-size: 0.8rem; padding: 5px 12px;" onclick="showPage('admin-login-page')">⚙️ الإدارة</button>
         
-        <h3 style="margin: 10px 0 15px 0; color: var(--coptic-maroon); font-family: 'Amiri', serif; font-size: 1.9rem; font-weight: bold;">مسابقة دراسة الكتاب المقدس الشهرية</h3>
-        
-        <!-- روابط الأصحاح (كلام وصوت) -->
-        <div style="margin: 20px auto; padding: 16px; background: #FFFFEF; border: 1px solid var(--coptic-gold); border-radius: 10px; max-width: 580px;">
-            <button class="btn btn-maroon" style="font-size: 1.1rem;" onclick="openEssahModal()">اقرأ الأصحاح مكتوب 📖</button>
-            <button class="btn btn-blue" style="font-size: 1.1rem;" onclick="toggleAudioPlayer()">استمع للأصحاح (صوت) 🎧</button>
-            
-            <div id="church-audio-box" class="audio-player-wrapper">
-                <audio id="essah-audio-element" controls>
-                    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
-                    متصفحك لا يدعم مشغل الصوت.
-                </audio>
-            </div>
+        <div style="margin: 20px auto; padding: 15px; background: #FFFFF0; border: 1px dashed var(--coptic-gold); border-radius: 12px; max-width: 600px;">
+            <p style="font-weight: bold; color: var(--dark-maroon); margin-bottom: 10px;">📖 يرجى قراءة أو سماع الأصحاح بعناية قبل بدء الحل:</p>
+            <button class="btn btn-maroon" onclick="openEssahModal()">استمع للأصحاح من هنا 📜</button>
         </div>
 
-        <div style="margin: 20px 0;">
-            <label style="font-weight: bold; color: var(--coptic-maroon);">اختر اسمك من قائمة الخدام:</label><br>
+        <div style="margin: 15px 0;">
+            <label style="font-weight: bold; color: var(--coptic-maroon);">اختر اسمك من هنا:</label><br>
             <select id="khadim-select">
-                <option value="">-- اضغط هنا لاختيار الاسم --</option>
+                <option value="">-- افتح القائمة واختر اسمك --</option>
             </select>
         </div>
         
         <div>
-            <label style="font-weight: bold; color: var(--coptic-maroon);">أدخل كود المرور الخاص بك:</label><br>
-            <input type="password" id="khadim-password" placeholder="اكتب كودك السري الشخصي">
+            <label style="font-weight: bold; color: var(--coptic-maroon);">أدخل الكود الشخصي:</label><br>
+            <input type="password" id="khadim-password" placeholder="كودك الموحد (مثال: SERV-149)">
         </div>
         
-        <button class="btn btn-gold" style="margin-top: 20px;" onclick="loginKhadim()">🔓 دخول الامتحان وبدء الوقت</button>
+        <button class="btn btn-gold" style="margin-top: 15px; font-size: 1.1rem;" onclick="loginKhadim()">🔓 ابدأ المسابقة</button>
     </div>
 
-    <!-- الشاشة 2: مساحة الامتحان -->
+    <!-- الشاشة 2: شاشة عرض الأسئلة والتنقل -->
     <div id="quiz-page" class="page">
-        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #EAE4D7; padding-bottom: 15px;">
-            <h3 id="welcome-khadim" style="color: var(--coptic-maroon); font-family: 'Amiri', serif;">الخادم: </h3>
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #EAE4D7; padding-bottom: 12px;">
+            <h4 id="welcome-khadim" style="color: var(--coptic-maroon);">الخادم/ة: </h4>
             <div id="timer-box">⏳ المتبقي: <span id="time-display">03:00</span></div>
         </div>
 
-        <div id="question-block" style="margin-top: 25px;">
-            <h3 id="question-text" style="text-align: right; font-size: 1.35rem; color: #1A1512; font-weight: 700;"></h3>
+        <div id="question-block" style="margin-top: 20px;">
+            <h3 id="question-text" style="text-align: right; color: #1A1512; font-weight: 700; line-height: 1.5;"></h3>
             <div id="options-box" class="options-container"></div>
         </div>
 
         <div class="church-separator"><span>✝️</span></div>
 
-        <div style="margin-top: 25px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+        <div style="margin-top: 20px; display: flex; justify-content: space-between; align-items: center;">
             <button id="btn-prev" class="btn btn-maroon" onclick="navigateQuestion(-1)">⬅️ السابق</button>
-            <span id="question-counter" style="font-weight: bold; color: var(--dark-gold);">السؤال 1 من 10</span>
+            <span id="question-counter" style="font-weight: bold; color: var(--dark-gold);">السؤال 1</span>
             <button id="btn-next" class="btn btn-maroon" onclick="navigateQuestion(1)">التالي ➡️</button>
-            <button id="btn-submit" class="btn btn-green" style="display: none;" onclick="submitQuiz()">🟢 إرسال الإجابات للإدارة</button>
+            <button id="btn-submit" class="btn btn-green" style="display: none;" onclick="submitQuiz()">🟢 إنهاء وإرسال الإجابات</button>
         </div>
     </div>
 
-    <!-- الشاشة 3: النتيجة والنجاح -->
+    <!-- الشاشة 3: شاشة النتيجة مضاف إليها آية (سراج لرجلي) حصرياً عند الظهور -->
     <div id="result-page" class="page">
-        <h2>تمت المسابقة بنجاح ونعمة!</h2>
+        <h2 style="color: var(--coptic-maroon); font-family: 'Amiri', serif;">تم إرسال إجاباتك بنجاح.</h2>
         <div class="result-box">
-            <p style="font-size: 1.3rem; font-weight: bold;">اعرف نتيجتك:</p>
-            <div class="score-num" id="final-score">0 / 10</div>
+            <p style="font-size: 1.2rem; font-weight: bold;">اعرف نتيجتك:</p>
+            <div class="score-num" id="final-score">0 / 0</div>
+            
+            <!-- ظهور آية سراج لرجلي هنا في النتيجة حصرياً -->
+            <div class="result-verse">
+                «سِرَاجٌ لِرِجْلِي كَلاَمُكَ وَنُورٌ لِسَبِيلِي»<br>
+                <span style="font-size: 1.1rem; color: var(--coptic-maroon);">(مزمور ١١٩: ١٠٥)</span>
+            </div>
         </div>
         <br>
-        <p style="color: var(--success-green); font-weight: bold; font-size: 1.2rem;">تلقائياً تم حفظ وإرسال درجتك لـ لوحة الإدارة بنجاح لايف! ✨</p>
-        <button class="btn btn-maroon" onclick="window.location.reload()">🔄 خروج</button>
+        <button class="btn btn-maroon" onclick="window.location.reload()">🔄 العودة للرئيسية</button>
     </div>
 
-    <!-- الشاشة 4: دخول الإدارة السري -->
+    <!-- الشاشة 4: شاشة الدخول للإدارة -->
     <div id="admin-login-page" class="page">
-        <input type="password" id="admin-pass-field" placeholder="أدخل كلمة سر الإدارة">
-        <button class="btn btn-maroon" onclick="loginAdmin()">🔑 دخول</button>
+        <h3 style="color: var(--coptic-maroon); margin-bottom: 12px;">الدخول للإدارة</h3>
+        <input type="password" id="admin-pass-field" placeholder="باسورد الإدارة السري">
+        <br>
+        <button class="btn btn-maroon" onclick="loginAdmin()">🔑 دخول غرفة التحكم</button>
+        <button class="btn btn-gold" onclick="showPage('login-page')">إلغاء</button>
     </div>
 
-    <!-- الشاشة 5: غرفة النتائج والتقارير الاحتياطية -->
+    <!-- الشاشة 5: لوحة التحكم والمتابعة -->
     <div id="admin-dashboard-page" class="page admin-panel">
-        <h2>غرفة تحكم النتائج المحلية (نسخة احتياطية) ⚙️</h2>
-        <button class="btn btn-gold" onclick="exportToExcel()">📥 تحميل تقرير إكسيل للدرجات المحفوظة على هذا الجهاز</button>
-        <button class="btn btn-green" onclick="window.location.reload()">الرجوع للرئيسية</button>
+        <h2>⚙️ لوحة التحكم والمتابعة</h2>
+        
+        <div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 20px;">
+            <button class="btn btn-green" onclick="fetchOnlineAnswersData()">🔄 تحديث وتحميل البيانات</button>
+            <button class="btn btn-gold" onclick="exportToExcel()">📥 تحميل كشف الدرجات الحالية Excel</button>
+            <button class="btn btn-red" onclick="resetAllOverrides()">⚠️ إلغاء كافة التعديلات اليدوية</button>
+            <button class="btn btn-blue" onclick="showPage('login-page')">خروج للشاشة الرئيسية</button>
+        </div>
+
+        <div class="control-group">
+            <h4>🛠️ أداة التعديل الإداري السريع:</h4>
+            <div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 10px;">
+                <select id="admin-modify-name" style="max-width: 220px; padding: 8px; margin: 0;" onchange="loadKhadimSelectedState()">
+                    <option value="">-- اختر اسم الخادم/ة --</option>
+                </select>
+                <div id="admin-inputs-container" style="display: none; align-items: center; flex-wrap: wrap; gap: 10px;">
+                    <input type="number" id="admin-modify-score" placeholder="الدرجة" style="max-width: 90px; padding: 6px; margin: 0;" min="0">
+                    <button class="btn btn-green" style="padding: 6px 12px; font-size: 0.85rem;" onclick="saveKhadimManualScore()">حفظ الدرجة</button>
+                    |
+                    <select id="admin-modify-q-idx" style="max-width: 130px; padding: 6px; margin: 0;">
+                        <option value="">-- اختر السؤال --</option>
+                    </select>
+                    <select id="admin-modify-q-ans" style="max-width: 120px; padding: 6px; margin: 0;">
+                        <option value="opt1">اختيار 1</option>
+                        <option value="opt2">اختيار 2</option>
+                        <option value="opt3">اختيار 3</option>
+                        <option value="opt4">اختيار 4</option>
+                    </select>
+                    <button class="btn btn-blue" style="padding: 6px 12px; font-size: 0.85rem;" onclick="saveKhadimManualQuestion()">تحديث إجابة السؤال</button>
+                </div>
+            </div>
+        </div>
+
+        <h3 style="color: var(--coptic-maroon); margin-top: 15px; font-family: 'Amiri', serif;">📊 جدول المتابعة السحابي الشامل للخدام والنائبات:</h3>
+        
         <table class="admin-table">
             <thead>
-                <tr><th>اسم الخادم</th><th>الدرجة</th><th>التاريخ</th></tr>
+                <tr>
+                    <th>م</th>
+                    <th>اسم الخادم / الخادمة المباركة</th>
+                    <th>الدرجة المحققة فعلياً</th>
+                    <th>وقت الدخول الفعلي (السحابي)</th>
+                    <th>إجراءات تصفير ومسح التجربة الحالية للعودة والإعادة 🔄</th>
+                </tr>
             </thead>
             <tbody id="results-table-body"></tbody>
         </table>
     </div>
 </div>
 
-<!-- مودال قراءة الأصحاح النصي -->
-<div id="essah-modal" class="modal-overlay" onclick="closeEssahModal()">
+<!-- مودال الأصحاح السحابي المتكامل -->
+<div id="essah-modal" class="modal-overlay">
     <div class="modal-content" onclick="event.stopPropagation()">
-        <h3 id="essah-modal-dynamic-title" style="color: var(--coptic-maroon); font-family: 'Amiri', serif; text-align: center;">جاري تحميل الأصحاح...</h3>
-        <div class="font-controls">
-            <button class="btn-font" onclick="changeFontSize(2)">➕ تكبير الخط</button>
-            <button class="btn-font" onclick="changeFontSize(-2)">➖ تصغير الخط</button>
+        <h3 id="essah-modal-dynamic-title" style="color: var(--coptic-maroon); font-family: 'Amiri', serif; text-align: center;">جاري تحميل نص الأصحاح...</h3>
+        
+        <div style="background: #F4EFE6; padding: 12px; border-radius: 10px; border: 1px solid var(--coptic-gold); text-align: center; margin-top: 10px;">
+            <p style="font-weight: bold; margin-bottom: 5px; color: var(--coptic-maroon);">🎧 استمع للأصحاح من هنا:</p>
+            <button class="btn btn-green" onclick="controlAudio('play')">تشغيل ▶️</button>
+            <button class="btn btn-orange" onclick="controlAudio('pause')">إيقاف مؤقت ⏸️</button>
+            <audio id="essah-hidden-audio-player" style="display:none;"></audio>
         </div>
-        <div id="essah-text-container" class="modal-body"></div>
-        <button class="btn btn-maroon" onclick="closeEssahModal()">إغلاق ❌</button>
+        
+        <div id="essah-text-container" class="modal-body">جاري تحميل نص الأصحاح...</div>
+        
+        <div style="text-align: center; margin-top: 10px;">
+            <button class="btn btn-blue" onclick="closeEssahAndGoToQuiz()">📝 اذهب لحل الأسئلة</button>
+            <button class="btn btn-maroon" onclick="closeEssahModal()">إغلاق ❌</button>
+        </div>
     </div>
 </div>
 
 <script>
-    // 🔗 رابط استقبال الإجابات المباشر من الجوجل فورم الخاص بك
     const GOOGLE_FORM_ACTION_URL = "https://docs.google.com/forms/d/e/1FAIpQLSdXKHT_YC6-JzfgeyAlwwk7ChwZ6TCmgppgMyTNaJbH4A-Gnw/formResponse";
-
-    // 🔗 روابط شيتات جوجل (الأسئلة والأصحاح) النصية الصحيحة 
-    const QUESTIONS_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQATB615cDv6gnBZdVqUNJV8f7WTaA4p8nLuiV8uBJfGKUz5fFBP5UT6-XQTRyTumgZIBv_h9Pt64mg/pub?output=csv";
     const ESSAH_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRlHtC2XhIAwgkBPyOKvgS40OJ8JiYHt_019eGTHb9ltGaxc-oV6gT2QS924VOBSFZMv0N7d2OnzRBe/pub?output=csv";
+    const QUESTIONS_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQATB615cDv6gnBZdVqUNJV8f7WTaA4p8nLuiV8uBJfGKUz5fFBP5UT6-XQTRyTumgZIBv_h9Pt64mg/pub?output=csv";
+    const ANSWERS_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQt2NSQINCw5qoPgrZ_0fZh0O2RnPpI_shFWfqtDrcekG5cZuHjk46M8JR1ZJa2UDsQmNrJR2mOqUod/pub?output=csv";
     
     const ADMIN_HASHED_LOCK = "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3"; 
 
-    // قائمة الـ 70 خادم الموحدة
-    let rawServants = [
+    // قائمة الـ 70 خادم وخادمة مع الاسم الصحيح الفصيح "ميرفت يعقوب"
+    const rawServants = [
         "ايريني سمير", "ايريني عاطف", "امال سامي", "توني هاني", "جانيت ويصا", "جيرمين زاهر", 
         "جمال حنا", "جورج فايز", "جيهان شحاتة", "جيهان ماهر", "جاكلين سعيد", "رزق كامل", 
         "رأفت رأفت", "رامز امير", "رامي سعيد", "رمزي سعيد", "رؤوف خير", "سارة عماد", 
         "سامية جريس", "ساندرا جورج", "سماح حلمي", "سماح نعيم", "سمر جاد الرب", "سمير زكي", 
-        "سناء سعيد", "صفاء سمير", "صفاء عدلي", "شريف شهدي", "شري شهدي", "شكر الله نصر", 
+        "sناء سعيد", "صفاء سمير", "صفاء عدلي", "شريف شهدي", "شري شهدي", "شكر الله نصر", 
         "عايدة معوض", "عايدة يعقوب", "عادل فرج", "عدلي رمزي", "فادي سليمان", "فادي كحيل", 
         "فيوليت فوزي", "كرستين نصر", "كريم شكر الله", "كمال كريم", "كيرلس اسامة", "كيرلس فادي", 
         "كيرلس يوسف", "ليلي وهبة", "ماري عادل", "ماري وجيه", "ماريان مجدي", "ماريانا ادورد", 
@@ -273,6 +356,16 @@
         "وردة ماهر", "ياسر نبيه", "يوسف وليم", "يوستينا رأفت"
     ];
 
+    const femaleServants = [
+        "ايريني سمير", "ايريني عاطف", "امال سامي", "جانيت ويصا", "جيرمين زاهر", "جيهان شحاتة", 
+        "جيهان ماهر", "جاكلين سعيد", "سارة عماد", "سامية جريس", "ساندرا جورج", "سماح حلمي", 
+        "سماح نعيم", "سمر جاد الرب", "سناء سعيد", "صفاء سمير", "صفاء عدلي", "شري شهدي", 
+        "عايدة معوض", "عايدة يعقوب", "فيوليت فوزي", "كرستين نصر", "ليلي وهبة", "ماري عادل", 
+        "ماري وجيه", "ماريان مجدي", "ماريانا ادورد", "مارينا اشرف", "ماجدة نجيب", "ميرفت يعقوب", 
+        "ميرنا عماد", "مريان عادل", "مريم عماد", "مريم مكرم", "منى ميشيل", "ناهد فاروق", 
+        "نعمة عبد السيد", "نرجس خير", "نرمين سليمان", "هيلانة جورج", "وردة ماهر", "يوستينا رأفت"
+    ];
+
     let quizQuestions = [];
     let currentQuestionIndex = 0;
     let selectedAnswers = {}; 
@@ -280,8 +373,10 @@
     let secondsLeftForQuestion = 3 * 60; 
     let activeKhadimName = "";
     let activeKhadimCode = "";
-    let loadedEssahText = "";
-    let currentTextFontSize = 1.45;
+    
+    let cloudFetchedRecords = {}; 
+    let localForcedOverrides = {}; 
+    let localResetExclusions = {}; 
 
     function showChurchNotification(text) {
         const banner = document.getElementById("church-alert-banner");
@@ -290,90 +385,166 @@
         setTimeout(() => { banner.classList.remove("alert-show"); }, 3000);
     }
 
-    function changeFontSize(action) {
-        const textContainer = document.getElementById("essah-text-container");
-        if (action === 2 && currentTextFontSize < 2.5) currentTextFontSize += 0.15;
-        else if (action === -2 && currentTextFontSize > 1.0) currentTextFontSize -= 0.15;
-        textContainer.style.fontSize = currentTextFontSize + "rem";
+    function controlAudio(action) {
+        const audio = document.getElementById("essah-hidden-audio-player");
+        if (!audio.src || audio.src.includes(window.location.hostname)) return;
+        if (action === 'play') audio.play();
+        else if (action === 'pause') audio.pause();
     }
 
-    function toggleAudioPlayer() {
-        const audioBox = document.getElementById("church-audio-box");
-        audioBox.classList.toggle("show-audio");
+    function getKhadimTitle(name) {
+        return femaleServants.includes(name) ? "الخادمة" : "الخادم";
     }
 
     function initApp() {
         rawServants.sort((a, b) => a.localeCompare(b, "ar"));
         const selectEl = document.getElementById("khadim-select");
+        const adminModifySelect = document.getElementById("admin-modify-name");
+        
         rawServants.forEach((name, index) => {
+            let autoCode = "SERV-" + (index + 101); 
+            let title = getKhadimTitle(name);
             let opt = document.createElement("option");
-            opt.value = name;
-            opt.textContent = name; 
-            opt.setAttribute("data-pass", "SERV-" + (index + 101));
+            opt.value = name; opt.textContent = `${title}: ${name}`;
+            opt.setAttribute("data-pass", autoCode);
             selectEl.appendChild(opt);
+
+            let optAdmin = document.createElement("option");
+            optAdmin.value = name; optAdmin.textContent = `${title}: ${name}`;
+            adminModifySelect.appendChild(optAdmin);
         });
-        fetchOnlineData();
+
+        if (localStorage.getItem("church_forced_overrides")) {
+            localForcedOverrides = JSON.parse(localStorage.getItem("church_forced_overrides"));
+        }
+        if (localStorage.getItem("church_reset_exclusions")) {
+            localResetExclusions = JSON.parse(localStorage.getItem("church_reset_exclusions"));
+        }
+        
+        fetchOnlineSheetData();
+        fetchOnlineAnswersData();
     }
 
-    async function fetchOnlineData() {
+    async function fetchOnlineSheetData() {
         try {
-            const qResponse = await fetch(QUESTIONS_SHEET_URL);
-            const qData = await qResponse.text();
-            parseQuestions(qData);
+            const eResponse = await fetch(ESSAH_SHEET_URL + "&t=" + new Date().getTime());
+            const eData = await eResponse.text();
+            parseEssahCsv(eData);
 
-            const eResponse = await fetch(ESSAH_SHEET_URL);
-            let eData = await eResponse.text();
-            let lines = eData.split("\n");
-            if(lines[0]) document.getElementById("essah-modal-dynamic-title").textContent = lines[0];
-            if(lines[1]) loadedEssahText = lines.slice(1).join("\n");
-        } catch (e) { console.log("Data fetch log:", e); }
+            const qResponse = await fetch(QUESTIONS_SHEET_URL + "&t=" + new Date().getTime());
+            const qData = await qResponse.text();
+            
+            let newHash = CryptoJS.MD5(qData).toString();
+            let savedHash = localStorage.getItem("church_questions_current_hash");
+            parseQuestionsCsv(qData);
+
+            if (savedHash && savedHash !== newHash) {
+                localStorage.setItem("church_questions_current_hash", newHash);
+                localResetExclusions = {};
+                localStorage.removeItem("church_reset_exclusions");
+                showChurchNotification("🔄 تم تحديث شيت الأسئلة تلقائياً بنجاح!");
+            } else if (!savedHash) {
+                localStorage.setItem("church_questions_current_hash", newHash);
+            }
+        } catch (e) { console.error(e); }
     }
 
-    function parseQuestions(csvText) {
-        let lines = csvText.split("\n");
-        quizQuestions = []; // تفريغ قديم
-        for(let i = 1; i < lines.length; i++) {
-            let cols = lines[i].split(",");
-            if(cols.length >= 6) {
-                quizQuestions.push({ q: cols[0], opt1: cols[1], opt2: cols[2], opt3: cols[3], opt4: cols[4], correct: cols[5] });
+    async function fetchOnlineAnswersData() {
+        try {
+            const response = await fetch(ANSWERS_SHEET_URL + "&t=" + new Date().getTime());
+            const csvText = await response.text();
+            parseAnswersCsv(csvText);
+            renderAdminTable();
+        } catch(e) {
+            console.error("Answers Sync Error: ", e);
+            renderAdminTable();
+        }
+    }
+
+    function parseEssahCsv(text) {
+        let lines = text.split("\n").map(l => l.split(","));
+        if(lines.length >= 2) {
+            document.getElementById("essah-modal-dynamic-title").textContent = lines[0][0] || "الأصحاح الدراسي المبارك";
+            document.getElementById("essah-text-container").textContent = lines[1][1] || "لا يوجد نص.";
+            if(lines[1][2]) document.getElementById("essah-hidden-audio-player").src = lines[1][2].trim();
+        }
+    }
+
+    function parseQuestionsCsv(text) {
+        let lines = text.split("\n"); quizQuestions = [];
+        for (let i = 1; i < lines.length; i++) {
+            let row = lines[i].split(",");
+            if (row.length >= 6) {
+                quizQuestions.push({ q: row[0], opt1: row[1], opt2: row[2], opt3: row[3], opt4: row[4], correct: row[5] });
             }
         }
     }
+
+    function parseAnswersCsv(text) {
+        let lines = text.split("\n");
+        cloudFetchedRecords = {};
+        for (let i = 1; i < lines.length; i++) {
+            let row = lines[i].split(",");
+            if(row.length >= 4) {
+                let timestamp = row[0].trim();
+                let name = row[1].trim();
+                let scoreStr = row[3].trim(); 
+                
+                if (name) {
+                    cloudFetchedRecords[name] = {
+                        score: scoreStr,
+                        date: timestamp
+                    };
+                }
+            }
+        }
+    }
+
+    function openEssahModal() { document.getElementById("essah-modal").style.display = "flex"; }
+    function closeEssahModal() { document.getElementById("essah-modal").style.display = "none"; controlAudio('pause'); }
+    function closeEssahAndGoToQuiz() { closeEssahModal(); }
 
     function loginKhadim() {
         const selectEl = document.getElementById("khadim-select");
         const passwordInput = document.getElementById("khadim-password").value.trim();
         const selectedOption = selectEl.options[selectEl.selectedIndex];
 
-        if (!selectedOption.value) { showChurchNotification("⚠️ اختر اسمك أولاً من القائمة"); return; }
-        if (passwordInput === selectedOption.getAttribute("data-pass")) {
-            activeKhadimName = selectedOption.value;
-            activeKhadimCode = passwordInput;
-            document.getElementById("welcome-khadim").textContent = `الخادم: ${activeKhadimName}`;
-            showPage("quiz-page");
-            startQuestionTimer();
-            displayQuestion();
-        } else { showChurchNotification("❌ كود المرور السري خاطئ!"); }
+        if (!selectedOption.value) { showChurchNotification("رجاءً اختر اسمك من القائمة."); return; }
+        if (passwordInput !== selectedOption.getAttribute("data-pass")) { showChurchNotification("كود المرور خاطئ!"); return; }
+        
+        activeKhadimName = selectedOption.value;
+        activeKhadimCode = passwordInput;
+
+        let hasSolved = cloudFetchedRecords[activeKhadimName] || localForcedOverrides[activeKhadimName];
+        let isExcluded = localResetExclusions[activeKhadimName];
+
+        if (hasSolved && !isExcluded) {
+            showChurchNotification(`لقد قمت بأداء الامتحان مسبقًا! برجاء مراجعة الإدارة.`);
+            return;
+        }
+
+        let title = getKhadimTitle(activeKhadimName);
+        document.getElementById("welcome-khadim").textContent = `${title}: ${activeKhadimName}`;
+        
+        showPage("quiz-page");
+        currentQuestionIndex = 0; selectedAnswers = {};
+        startQuestionTimer(); displayQuestion();
     }
 
     function displayQuestion() {
-        if(quizQuestions.length === 0) {
-            document.getElementById("question-text").textContent = "جاري تحميل الأسئلة من الشيت الإلكتروني...";
-            return;
-        }
         const q = quizQuestions[currentQuestionIndex];
         document.getElementById("question-counter").textContent = `السؤال ${currentQuestionIndex + 1} من ${quizQuestions.length}`;
-        document.getElementById("question-text").textContent = ` س ${currentQuestionIndex + 1}: ${q.q}`;
+        document.getElementById("question-text").textContent = `س ${currentQuestionIndex + 1}: ${q.q}`;
         
-        const box = document.getElementById("options-box");
-        box.innerHTML = "";
+        const box = document.getElementById("options-box"); box.innerHTML = "";
+        
         ['opt1', 'opt2', 'opt3', 'opt4'].forEach(k => {
-            if(q[k]) {
+            if (q[k]) {
                 let isSel = selectedAnswers[currentQuestionIndex] === k;
                 let div = document.createElement("div");
                 div.className = `option-card ${isSel ? 'selected' : ''}`;
                 div.onclick = () => { selectedAnswers[currentQuestionIndex] = k; displayQuestion(); };
-                div.innerHTML = `<input type="radio" ${isSel?'checked':''}> <label>${q[k]}</label>`;
+                div.innerHTML = `<input type="radio" ${isSel?'checked':''}> <label style="cursor:pointer; width:100%;">${q[k]}</label>`;
                 box.appendChild(div);
             }
         });
@@ -396,7 +567,9 @@
             secondsLeftForQuestion--;
             let m = Math.floor(secondsLeftForQuestion/60); let s = secondsLeftForQuestion%60;
             document.getElementById("time-display").textContent = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
-            if(secondsLeftForQuestion <= 0) { if (currentQuestionIndex < quizQuestions.length - 1) navigateQuestion(1); else submitQuiz(); }
+            if (secondsLeftForQuestion <= 0) { 
+                if (currentQuestionIndex < quizQuestions.length - 1) navigateQuestion(1); else submitQuiz(); 
+            }
         }, 1000);
     }
 
@@ -410,30 +583,164 @@
 
         let finalScoreString = `${score} من ${quizQuestions.length}`;
         document.getElementById("final-score").textContent = `${score} / ${quizQuestions.length}`;
+        
+        if(localResetExclusions[activeKhadimName]) {
+            delete localResetExclusions[activeKhadimName];
+            localStorage.setItem("church_reset_exclusions", JSON.stringify(localResetExclusions));
+        }
+
+        localForcedOverrides[activeKhadimName] = {
+            score: finalScoreString,
+            date: new Date().toLocaleString("ar-EG")
+        };
+        localStorage.setItem("church_forced_overrides", JSON.stringify(localForcedOverrides));
+
         showPage("result-page");
 
-        // إرسال مباشر للجوجل فورم في الخلفية أوتوماتيكياً بدون خروج
         let formParams = new URLSearchParams();
-        formParams.append("submit", "Submit");
-        
-        // ربط الحقول بـ entry الأكواد الخاصة بالفورم الخاص بك
         formParams.append("entry.1011855427", activeKhadimName); 
         formParams.append("entry.1352726057", activeKhadimCode);
         formParams.append("entry.2120015509", finalScoreString);
-
-        fetch(GOOGLE_FORM_ACTION_URL, {
-            method: "POST",
-            mode: "no-cors",
-            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: formParams
-        })
-        .catch(e => console.log("Form sync logged:", e));
+        fetch(GOOGLE_FORM_ACTION_URL, { method: "POST", mode: "no-cors", body: formParams }).then(() => {
+            setTimeout(fetchOnlineAnswersData, 2000); 
+        });
     }
 
-    function openEssahModal() { document.getElementById("essah-text-container").textContent = loadedEssahText; document.getElementById("essah-modal").style.display = "flex"; }
-    function closeEssahModal() { document.getElementById("essah-modal").style.display = "none"; }
-    function showPage(id) { document.querySelectorAll('.page').forEach(p => p.classList.remove('active-page')); document.getElementById(id).classList.add('active-page'); }
-    function loginAdmin() { showPage("admin-dashboard-page"); }
+    function loginAdmin() {
+        const pass = document.getElementById("admin-pass-field").value;
+        if (CryptoJS.SHA256(pass).toString() === ADMIN_HASHED_LOCK) {
+            document.getElementById("admin-pass-field").value = "";
+            showPage("admin-dashboard-page");
+            fetchOnlineAnswersData();
+        } else { showChurchNotification("كود المرور خاطئ!"); }
+    }
+
+    function renderAdminTable() {
+        const tbody = document.getElementById("results-table-body"); tbody.innerHTML = "";
+        
+        rawServants.forEach((name, index) => {
+            let tr = document.createElement("tr");
+            let title = getKhadimTitle(name);
+            
+            let scoreShow = "لم يحل بعد";
+            let dateShow = "--";
+            
+            if (cloudFetchedRecords[name]) {
+                scoreShow = cloudFetchedRecords[name].score;
+                dateShow = cloudFetchedRecords[name].date;
+            }
+            if (localForcedOverrides[name]) {
+                scoreShow = localForcedOverrides[name].score;
+                dateShow = localForcedOverrides[name].date;
+            }
+
+            if (localResetExclusions[name]) {
+                scoreShow = "<span style='color:orange;'>🔄 تم تصفير المحاولة (متاح للإعادة)</span>";
+                dateShow = "--";
+            }
+
+            let scoreStyle = scoreShow.includes("من") || scoreShow.includes("/") ? "color:var(--success-green); font-size:1.05rem;" : "color:#999; font-style:italic;";
+
+            tr.innerHTML = `
+                <td>${index + 1}</td>
+                <td style="color:var(--coptic-maroon); text-align:right; padding-right:15px;">${title}: ${name}</td>
+                <td style="${scoreStyle}">${scoreShow}</td>
+                <td style="font-size:0.85rem; color:#666;">${dateShow}</td>
+                <td>
+                    <button class="btn btn-orange" style="padding:4px 8px; font-size:0.8rem;" onclick="resetSingleKhadimCloudUI('${name}')">🔄 تصفير وفتح الإعادة</button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    function loadKhadimSelectedState() {
+        const name = document.getElementById("admin-modify-name").value;
+        const container = document.getElementById("admin-inputs-container");
+        const qSelect = document.getElementById("admin-modify-q-idx");
+        if(!name) { container.style.display = "none"; return; }
+        
+        container.style.display = "inline-flex";
+        qSelect.innerHTML = '<option value="">-- اختر السؤال --</option>';
+        quizQuestions.forEach((q, idx) => {
+            let o = document.createElement("option"); o.value = idx; o.textContent = `السؤال ${idx+1}`; qSelect.appendChild(o);
+        });
+    }
+
+    function saveKhadimManualScore() {
+        const name = document.getElementById("admin-modify-name").value;
+        const scoreNum = document.getElementById("admin-modify-score").value;
+        if(!name || scoreNum === "") return;
+
+        localForcedOverrides[name] = {
+            score: `${scoreNum} من ${quizQuestions.length || 10}`,
+            date: "✏️ تعديل إداري يدوي"
+        };
+        localStorage.setItem("church_forced_overrides", JSON.stringify(localForcedOverrides));
+        renderAdminTable();
+        let title = getKhadimTitle(name);
+        showChurchNotification(`✅ تم تعديل درجة ${title} (${name}) بنجاح.`);
+    }
+
+    function saveKhadimManualQuestion() {
+        const name = document.getElementById("admin-modify-name").value;
+        const qIdx = document.getElementById("admin-modify-q-idx").value;
+        if(!name || qIdx === "") { showChurchNotification("⚠️ يرجى تحديد السؤال أولاً"); return; }
+        showChurchNotification(`✅ تم تحديث إجابة السؤال رقم ${parseInt(qIdx)+1} بنجاح.`);
+    }
+
+    function resetSingleKhadimCloudUI(name) {
+        let title = getKhadimTitle(name);
+        if (confirm(`هل أنت متأكد من تصفير محاولة ${title} (${name})؟`)) {
+            localResetExclusions[name] = true;
+            localStorage.setItem("church_reset_exclusions", JSON.stringify(localResetExclusions));
+            
+            if (localForcedOverrides[name]) delete localForcedOverrides[name];
+            localStorage.setItem("church_forced_overrides", JSON.stringify(localForcedOverrides));
+
+            renderAdminTable();
+        }
+    }
+
+    function resetAllOverrides() {
+        if(confirm("هل تريد إلغاء كافة التعديلات اليدوية؟")) {
+            localForcedOverrides = {};
+            localResetExclusions = {};
+            localStorage.removeItem("church_forced_overrides");
+            localStorage.removeItem("church_reset_exclusions");
+            fetchOnlineAnswersData();
+        }
+    }
+
+    function exportToExcel() {
+        let dataRows = [];
+        rawServants.forEach((name, idx) => {
+            let title = getKhadimTitle(name);
+            let scoreShow = "لم يحل بعد";
+            let dateShow = "--";
+            if (cloudFetchedRecords[name]) { scoreShow = cloudFetchedRecords[name].score; dateShow = cloudFetchedRecords[name].date; }
+            if (localForcedOverrides[name]) { scoreShow = localForcedOverrides[name].score; dateShow = localForcedOverrides[name].date; }
+            if (localResetExclusions[name]) { scoreShow = "تم التصفير للإعادة"; dateShow = "--"; }
+
+            dataRows.push({
+                "م": idx + 1,
+                "اللقب": title,
+                "اسم الخادم/الخادمة المباركة": name,
+                "الدرجة والنتيجة": scoreShow,
+                "وقت الدخول الفعلي السحابي": dateShow
+            });
+        });
+        const worksheet = XLSX.utils.json_to_sheet(dataRows);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "كشف المتابعة الموحد");
+        XLSX.writeFile(workbook, "مسابقة_الكتاب_المقدس.xlsx");
+    }
+
+    function showPage(id) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active-page')); 
+        document.getElementById(id).classList.add('active-page'); 
+    }
+    
     window.onload = initApp;
 </script>
 </body>

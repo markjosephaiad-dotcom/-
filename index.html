@@ -3,14 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>❖ مسابقة دراسة الكتاب المقدس</title>
+    <title>✝️ مسابقة دراسة الكتاب المقدس</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- استدعاء الخطوط الكنسية الفاخرة والخطوط القبطية الرائعة -->
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@400;600;700&family=Rehan&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.5/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     <script src="https://www.youtube.com/iframe_api"></script>
 
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Coptic&display=swap');
+
         :root {
             --coptic-gold: #D4AF37;
             --dark-gold: #B8860B;
@@ -21,8 +24,12 @@
             --pure-white: #ffffff;
             --text-dark: #2B251F;
             --success-green: #1B5E20;
+            --light-green: #E8F5E9;
             --error-red: #B71C1C;
+            --light-red: #FFEBEE;
             --info-blue: #1A5276;
+            --soft-shadow: 0 8px 30px rgba(112, 0, 26, 0.08);
+            --royal-gradient: linear-gradient(135deg, var(--dark-maroon), var(--coptic-maroon));
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', 'Amiri', sans-serif; }
@@ -33,179 +40,189 @@
             background-size: 24px 24px;
             color: var(--text-dark); 
             text-align: center; 
-            padding: 15px; 
+            padding: 10px; 
         }
 
         .coptic-border { 
-            border: 4px double var(--coptic-gold); 
+            border: 5px double var(--coptic-gold); 
             outline: 2px solid var(--coptic-maroon);
             outline-offset: -8px;
-            max-width: 1100px; 
-            margin: 20px auto; 
-            padding: 30px 20px; 
+            max-width: 1150px; 
+            margin: 10px auto; 
+            padding: 25px 15px; 
             border-radius: 16px; 
             background: var(--church-cream); 
-            box-shadow: 0 10px 30px rgba(74,0,16,0.15); 
+            box-shadow: 0 10px 40px rgba(74,0,16,0.15); 
             position: relative; 
         }
 
-        .header-main-layout {
-            display: table;
-            width: 100%;
-            margin-bottom: 20px;
+        /* ⛪ هيكل الهيدر المتجاوب بالتنسيق الكنسي الفاخر */
+        .header-main-layout { 
+            display: flex; 
+            flex-direction: row; 
+            align-items: center; 
+            justify-content: space-between; 
+            gap: 15px;
+            margin-bottom: 20px; 
         }
         
-        .header-cell {
-            display: table-cell;
-            vertical-align: middle;
+        .header-center-text {
+            flex: 1;
+            text-align: center;
         }
-        
+
+        .saint-card-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            flex-shrink: 0;
+        }
+
         .saint-box-side {
-            width: 110px;
-            height: 140px;
+            width: 125px; 
+            height: 165px; 
             border: 3px solid var(--coptic-gold);
-            outline: 1px solid var(--coptic-maroon);
-            outline-offset: -5px;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+            outline: 1px solid var(--coptic-maroon); 
+            outline-offset: -4px;
+            border-radius: 10px; 
+            overflow: hidden; 
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15); 
             background: #fff;
         }
         .saint-box-side img { width: 100%; height: 100%; object-fit: cover; }
 
-        .coptic-cross-center { font-size: 2.5rem; color: var(--coptic-maroon); text-shadow: 1px 1px 0px var(--coptic-gold); line-height: 1; margin-bottom: 10px; }
-        .header-title { font-family: 'Cairo', sans-serif; color: var(--coptic-maroon); font-size: 1.7rem; margin-bottom: 5px; font-weight: bold; }
-        .subtitle { color: var(--dark-gold); font-size: 1.25rem; margin-bottom: 10px; font-weight: 600; line-height: 1.4; }
-        .meeting-title { color: var(--text-dark); font-size: 1.15rem; font-weight: bold; margin-bottom: 5px; }
-
-        .bible-verse-container {
-            margin: 15px auto;
-            padding: 12px 25px;
-            font-size: 1.35rem;
-            font-family: 'Amiri', serif;
+        /* نصوص وأسماء قبطية تحت الأيقونات */
+        .coptic-name-tag {
+            font-family: 'Noto Sans Coptic', 'Amiri', serif;
+            font-size: 0.95rem;
             font-weight: bold;
-            color: var(--coptic-gold);
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
-            background-color: var(--dark-maroon);
-            border: 2px solid var(--coptic-gold);
-            border-radius: 8px;
-            display: inline-block;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-            max-width: 90%;
+            color: var(--coptic-maroon);
+            background: var(--light-gold);
+            padding: 2px 8px;
+            border-radius: 5px;
+            border: 1px solid var(--coptic-gold);
+            text-shadow: 0.5px 0.5px 0px #fff;
         }
 
-        .result-verse {
-            margin-top: 15px;
-            font-size: 1.3rem;
-            font-family: 'Amiri', serif;
-            font-weight: bold;
-            color: var(--dark-gold);
+        .coptic-cross-center { font-size: 2.5rem; color: var(--coptic-maroon); text-shadow: 1px 1px 0px var(--coptic-gold); line-height: 1; margin-bottom: 8px; }
+        
+        /* خطوط كنسية ملكية للعناوين */
+        .header-title { font-family: 'Rehan', 'Amiri', sans-serif; color: var(--coptic-maroon); font-size: 2.2rem; margin-bottom: 5px; font-weight: bold; line-height: 1.2; text-shadow: 1px 1px 1px rgba(0,0,0,0.1); }
+        .subtitle { font-family: 'Amiri', serif; color: var(--dark-gold); font-size: 1.3rem; margin-bottom: 8px; font-weight: bold; line-height: 1.4; }
+        .meeting-title { font-family: 'Cairo', sans-serif; color: var(--text-dark); font-size: 1.1rem; font-weight: bold; margin-bottom: 5px; letter-spacing: 0.5px; }
+
+        .bible-verse-container {
+            margin: 15px auto; padding: 12px 20px; font-size: 1.35rem; font-family: 'Amiri', serif; font-weight: bold;
+            color: var(--coptic-gold); text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7); background-color: var(--dark-maroon);
+            border: 2px solid var(--coptic-gold); border-radius: 8px; display: inline-block; box-shadow: 0 4px 10px rgba(0,0,0,0.15); max-width: 95%;
+            line-height: 1.6;
         }
 
         .church-separator { display: flex; align-items: center; justify-content: center; margin: 20px 0; }
         .church-separator::before, .church-separator::after { content: ""; flex: 1; height: 1px; background: linear-gradient(to left, transparent, var(--coptic-gold), transparent); }
-        .church-separator span { padding: 0 15px; color: var(--coptic-maroon); text-shadow: 1px 1px 0px var(--coptic-gold); font-size: 1.4rem; }
+        .church-separator span { padding: 0 15px; color: var(--coptic-maroon); text-shadow: 1px 1px 0px var(--coptic-gold); font-size: 1.5rem; }
 
-        .page { display: none; margin-top: 20px; padding: 10px; }
+        .page { display: none; margin-top: 15px; padding: 5px; }
         .active-page { display: block; animation: copticFadeIn 0.3s ease-in-out; }
         @keyframes copticFadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        .btn { padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 0.95rem; transition: all 0.2s ease; margin: 4px; display: inline-flex; align-items: center; justify-content: center; text-decoration: none; box-shadow: 0 3px 5px rgba(0,0,0,0.1); user-select: none; }
+        .btn { padding: 10px 18px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 0.95rem; transition: all 0.2s ease; margin: 4px; display: inline-flex; align-items: center; justify-content: center; text-decoration: none; box-shadow: 0 3px 5px rgba(0,0,0,0.1); user-select: none; }
         .btn-maroon { background-color: var(--coptic-maroon); color: white; border-bottom: 3px solid var(--dark-maroon); }
         .btn-maroon:hover { background-color: var(--dark-maroon); }
         .btn-gold { background-color: var(--coptic-gold); color: var(--dark-maroon); border-bottom: 3px solid var(--dark-gold); }
         .btn-gold:hover { background-color: var(--dark-gold); color: white; }
         .btn-green { background-color: var(--success-green); color: white; border-bottom: 3px solid #144517; }
         .btn-green:hover { background-color: #144517; }
-        .btn-orange { background-color: #D35400; color: white; border-bottom: 3px solid #A04000; }
-        .btn-orange:hover { background-color: #A04000; }
-        .btn-red { background-color: var(--error-red); color: white; border-bottom: 3px solid #7B1FA2; }
-        .btn-red:hover { background-color: #7B1FA2; }
         .btn-blue { background-color: var(--info-blue); color: white; border-bottom: 3px solid #11364F; }
         .btn-blue:hover { background-color: #11364F; }
 
-        select, input[type="password"], input[type="number"] { width: 90%; max-width: 420px; padding: 14px; margin: 12px 0; border: 2px solid #E0D7C6; border-radius: 8px; font-size: 1.1rem; text-align: center; font-weight: 600; background-color: var(--pure-white); color: var(--text-dark); outline: none; }
+        select, input[type="password"], input[type="text"] { width: 100%; max-width: 420px; padding: 12px; margin: 10px 0; border: 2px solid #E0D7C6; border-radius: 8px; font-size: 1.05rem; text-align: center; font-weight: 600; background-color: var(--pure-white); color: var(--text-dark); outline: none; }
         
-        #timer-box { font-size: 1.25rem; color: var(--error-red); font-weight: bold; background: #FDEAEA; padding: 8px 20px; border-radius: 25px; border: 1px solid #F9D2D2; }
+        #timer-box { font-size: 1.1rem; color: var(--error-red); font-weight: bold; background: #FDEAEA; padding: 6px 15px; border-radius: 25px; border: 1px solid #F9D2D2; white-space: nowrap; }
 
-        .options-container { text-align: right; margin: 25px 0; }
-        
-        .option-card { padding: 16px; margin: 14px 0; border: 2px solid #EAE4D7; border-radius: 10px; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; background: var(--pure-white); }
+        .options-container { text-align: right; margin: 20px 0; }
+        .option-card { padding: 14px; margin: 10px 0; border: 2px solid #EAE4D7; border-radius: 10px; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; background: var(--pure-white); }
         .option-card:hover { border-color: var(--coptic-gold); }
-        .option-card.selected { 
-            border-color: var(--dark-gold) !important; 
-            background-color: var(--light-gold) !important; 
-            font-weight: bold; 
-            box-shadow: 0 4px 10px rgba(212, 175, 55, 0.25);
-        }
-        .option-card input { width: 20px; height: 20px; margin-left: 15px; cursor: pointer; accent-color: var(--dark-gold); }
-
-        .admin-panel { background-color: var(--church-cream); color: var(--text-dark); padding: 20px; border-radius: 14px; border: 4px solid var(--coptic-maroon); text-align: right; }
-        .admin-panel h2 { color: var(--coptic-maroon); margin-bottom: 20px; font-family: 'Amiri', serif; font-size: 2.2rem; text-align: center; }
+        .option-card.selected { border-color: var(--dark-gold) !important; background-color: var(--light-gold) !important; font-weight: bold; box-shadow: 0 4px 10px rgba(212, 175, 55, 0.25); }
+        .option-card input { width: 18px; height: 18px; margin-left: 12px; cursor: pointer; accent-color: var(--dark-gold); flex-shrink: 0; }
         
-        .control-group { background: #F5EFE4; padding: 15px; border-radius: 10px; border: 1px solid var(--coptic-gold); margin-bottom: 20px; }
-        .control-group h4 { color: var(--coptic-maroon); margin-bottom: 10px; border-bottom: 1px solid var(--coptic-gold); padding-bottom: 5px; }
+        .result-box { padding: 25px; border: 3px dashed var(--coptic-gold); background: #FFFDF9; border-radius: 14px; display: inline-block; margin: 20px 0; min-width: 260px; }
+        .score-num { font-size: 3rem; color: var(--coptic-maroon); font-weight: bold; font-family: 'Amiri', serif; }
 
-        .admin-table { width: 100%; border-collapse: collapse; margin-top: 20px; background: var(--pure-white); border-radius: 10px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
-        .admin-table th { background-color: var(--coptic-maroon); color: var(--coptic-gold); padding: 14px; text-align: center; font-size: 1rem; }
-        .admin-table td { padding: 12px; border-bottom: 1px solid #EEE9DC; text-align: center; font-weight: 600; font-size: 0.95rem; }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(43,37,31,0.85); display: none; justify-content: center; align-items: center; z-index: 9999; backdrop-filter: blur(4px); padding: 10px; }
+        .modal-content { background: var(--church-cream); border: 4px solid var(--coptic-gold); outline: 2px solid var(--coptic-maroon); outline-offset: -6px; border-radius: 16px; max-width: 800px; width: 100%; padding: 20px; text-align: right; }
+        .modal-body { font-family: 'Amiri', serif; font-size: 1.3rem; line-height: 1.8; color: #1A1512; white-space: pre-wrap; padding: 15px; background: var(--pure-white); border-radius: 8px; max-height: 50vh; overflow-y: auto; border: 1px solid #EAE4D7; }
         
-        .result-box { padding: 30px; border: 3px dashed var(--coptic-gold); background: #FFFDF9; border-radius: 14px; display: inline-block; margin: 25px 0; min-width: 280px; }
-        .score-num { font-size: 3.5rem; color: var(--coptic-maroon); font-weight: bold; font-family: 'Amiri', serif; }
-
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(43,37,31,0.85); display: none; justify-content: center; align-items: center; z-index: 9999; backdrop-filter: blur(4px); }
-        .modal-content { background: var(--church-cream); border: 4px solid var(--coptic-gold); outline: 2px solid var(--coptic-maroon); outline-offset: -6px; border-radius: 16px; max-width: 800px; width: 100%; padding: 25px; text-align: right; }
-        .modal-body { font-family: 'Amiri', serif; font-size: 1.4rem; line-height: 2; color: #1A1512; white-space: pre-wrap; padding: 20px; background: var(--pure-white); border-radius: 8px; max-height: 45vh; overflow-y: auto; border: 1px solid #EAE4D7; transition: font-size 0.2s ease; }
-        
-        #church-alert-banner { position: fixed; top: -100px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 450px; background: var(--church-cream); border: 3px solid var(--coptic-gold); border-radius: 12px; padding: 15px; box-shadow: 0 8px 25px rgba(112,0,26,0.25); z-index: 100000; transition: top 0.4s; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        #church-alert-banner { position: fixed; top: -100px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 450px; background: var(--church-cream); border: 3px solid var(--coptic-gold); border-radius: 12px; padding: 12px; box-shadow: 0 8px 25px rgba(112,0,26,0.25); z-index: 100000; transition: top 0.4s; display: flex; align-items: center; justify-content: center; gap: 10px; }
         #church-alert-banner.alert-show { top: 20px; }
 
-        .audio-player-wrapper {
-            background: #F4EFE6;
-            padding: 15px;
-            border-radius: 10px;
-            border: 1px solid var(--coptic-gold);
-            text-align: center;
-            margin-top: 10px;
-        }
-        .audio-controls-top {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 8px;
-        }
-        /* إخفاء فريم اليوتيوب تماماً لكي لا يظهر ويخرب التصميم */
-        #yt-hidden-player-container {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            opacity: 0;
-            pointer-events: none;
+        .audio-player-wrapper { background: #F4EFE6; padding: 12px; border-radius: 10px; border: 1px solid var(--coptic-gold); text-align: center; margin-top: 10px; }
+        .audio-controls-top { display: flex; justify-content: center; gap: 10px; margin-bottom: 10px; }
+        .progress-timeline-container { display: flex; align-items: center; gap: 8px; width: 98%; margin: 5px auto; direction: ltr; }
+        .time-label { font-size: 0.8rem; font-weight: bold; color: var(--text-dark); min-width: 40px; }
+        .music-seeker { flex: 1; height: 6px; border-radius: 3px; outline: none; accent-color: var(--coptic-maroon); cursor: pointer; }
+        
+        .review-card { background: var(--pure-white); border: 1px solid #EAE4D7; border-radius: 8px; padding: 12px; margin-bottom: 12px; text-align: right; }
+        .review-q-text { font-weight: bold; color: var(--coptic-maroon); margin-bottom: 8px; font-size: 1.05rem; }
+        .review-opt { padding: 8px 12px; margin: 5px 0; border-radius: 6px; font-weight: 600; display: flex; justify-content: space-between; font-size: 0.95rem; }
+        .review-correct-match { background-color: var(--light-green); border: 1px solid var(--success-green); color: var(--success-green); }
+        .review-wrong-match { background-color: var(--light-red); border: 1px solid var(--error-red); color: var(--error-red); }
+        .review-highlight-truth { border: 2px dashed var(--success-green); background-color: var(--light-green); }
+
+        /* 📱 شاشات الموبايل (Media Queries الجوهرية لمنع التداخل) */
+        @media (max-width: 767px) {
+            .header-main-layout {
+                flex-direction: column;
+                gap: 12px;
+            }
+            .saint-card-wrapper {
+                display: inline-flex;
+                margin: 0 5px;
+            }
+            .saint-box-side {
+                width: 105px;
+                height: 140px;
+            }
+            .coptic-name-tag {
+                font-size: 0.8rem;
+            }
+            .header-title { font-size: 1.8rem; }
+            .subtitle { font-size: 1.1rem; }
+            .bible-verse-container { font-size: 1.15rem; padding: 10px; }
+            .coptic-border { padding: 15px 10px; margin: 5px auto; }
         }
     </style>
 </head>
 <body>
 
 <div id="church-alert-banner">
-    <span>✝️</span>
+    <span>✟</span>
     <span id="church-alert-text">تنبيه الخدمة</span>
 </div>
 
-<div id="yt-hidden-player-container"><div id="yt-player"></div></div>
+<iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
 
 <div class="coptic-border">
+    <!-- الهيدر المطور بالكامل باللغة القبطية والتصميم الملكي الهوية -->
     <div class="header-main-layout">
-        <div class="header-cell" style="width: 120px; text-align: right;">
+        <!-- أيقونة الشهيد أبي سيفين مع اسمه بالقبطية -->
+        <div class="saint-card-wrapper">
             <div class="saint-box-side"><img src="abusafein.jpg" alt="أبي سيفين"></div>
+            <div class="coptic-name-tag">Ⲫⲓⲗⲟⲡⲁⲏⲣ Ⲙⲉⲣⲣⲟⲩⲩⲣⲓⲟⲥ</div>
         </div>
-        <div class="header-cell" style="text-align: center; padding: 0 10px;">
-            <div class="coptic-cross-center">✝️</div>
+        
+        <div class="header-center-text">
+            <div class="coptic-cross-center">✟</div>
             <div class="header-title">مسابقة دراسة الكتاب المقدس</div>
             <div class="subtitle">كنيسة الشهيد العظيم فيلوباتير مرقوريوس أبي سيفين - بمدينة عامر</div>
             <div class="meeting-title">اجتماع الخدام والخادمات</div>
         </div>
-        <div class="header-cell" style="width: 120px; text-align: left;">
+        
+        <!-- أيقونة العذراء مريم مع اسمها بالقبطية -->
+        <div class="saint-card-wrapper">
             <div class="saint-box-side"><img src="virgin.jpg" alt="العذراء مريم"></div>
+            <div class="coptic-name-tag">Ϯθεοτοκος Μαρια</div>
         </div>
     </div>
 
@@ -213,19 +230,20 @@
         «فَتِشُوا الْكُتُبَ لأَنَّكُمْ تَظُنُّونَ أَنَّ لَكُمْ فِيهَا حَيَاةً أَبَدِيَّةً، وَهِيَ الَّتِي تَشْهَدُ لِي» (يوحنا ٥: ٣٩)
     </div>
 
-    <div class="church-separator"><span>❖ ❖ ❖</span></div>
+    <div class="church-separator"><span>✟ ✟ ✟</span></div>
 
+    <!-- الشاشة 1: الدخول الرئيسي -->
     <div id="login-page" class="page active-page">
-        <div style="text-align: right; padding-right: 5%; margin-bottom: 10px;">
+        <div style="text-align: center; margin-bottom: 15px;">
             <button id="admin-entrance-btn" class="btn btn-maroon" style="font-size: 0.85rem; padding: 6px 14px;" onclick="showPage('admin-login-page')">⚙️ لوحة التحكم للإدارة</button>
         </div>
         
-        <div style="margin: 20px auto; padding: 15px; background: #FFFFF0; border: 1px dashed var(--coptic-gold); border-radius: 12px; max-width: 600px;">
-            <p style="font-weight: bold; color: var(--dark-maroon); margin-bottom: 10px;">📖 يرجى قراءة أو سماع الأصحاح بعناية قبل بدء الحل:</p>
+        <div style="margin: 15px auto; padding: 12px; background: #FFFFF0; border: 1px dashed var(--coptic-gold); border-radius: 12px; max-width: 600px;">
+            <p style="font-weight: bold; color: var(--dark-maroon); margin-bottom: 8px; font-size:0.95rem;">📖 يرجى قراءة أو سماع الأصحاح بعناية قبل بدء الحل:</p>
             <button class="btn btn-maroon" onclick="openEssahModal()">اضغط هنا لقراءة وسماع الأصحاح 📜</button>
         </div>
 
-        <div style="margin: 15px 0;">
+        <div style="margin: 12px 0;">
             <label style="font-weight: bold; color: var(--coptic-maroon);">اختر اسمك من هنا:</label><br>
             <select id="khadim-select">
                 <option value="">-- افتح القائمة واختر اسمك --</option>
@@ -237,132 +255,106 @@
             <input type="password" id="khadim-password" placeholder="أدخل رقم كودك السري هنا لفتح الامتحان...">
         </div>
         
-        <button class="btn btn-gold" style="margin-top: 15px; font-size: 1.1rem;" onclick="loginKhadim()">🔓 ابدأ المسابقة</button>
+        <button class="btn btn-gold" style="margin-top: 15px; font-size: 1.05rem; width:90%; max-width:420px;" onclick="loginKhadim()">🔓 ابدأ المسابقة</button>
     </div>
 
+    <!-- بقية شاشات وأكواد تطبيق المسابقة كاملة بنفس البنية البرمجية المستقرة... -->
+    <!-- الشاشة 2: الأسئلة -->
     <div id="quiz-page" class="page">
-        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #EAE4D7; padding-bottom: 12px;">
-            <h4 id="welcome-khadim" style="color: var(--coptic-maroon);"></h4>
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #EAE4D7; padding-bottom: 12px; gap:10px;">
+            <h4 id="welcome-khadim" style="color: var(--coptic-maroon); font-size:0.95rem; text-align:right;"></h4>
             <div id="timer-box">⏳ المتبقي: <span id="time-display">03:00</span></div>
         </div>
-
         <div id="question-block" style="margin-top: 20px;">
-            <h3 id="question-text" style="text-align: right; color: #1A1512; font-weight: 700; line-height: 1.5;"></h3>
+            <h3 id="question-text" style="text-align: right; color: #1A1512; font-weight: 700; line-height: 1.5; font-size:1.15rem;"></h3>
             <div id="options-box" class="options-container"></div>
         </div>
-
-        <div class="church-separator"><span>✝️</span></div>
-
-        <div style="margin-top: 20px; display: flex; justify-content: space-between; align-items: center;">
+        <div class="church-separator"><span>✟</span></div>
+        <div style="margin-top: 20px; display: flex; justify-content: space-between; align-items: center; gap:5px; flex-wrap:wrap;">
             <button id="btn-prev" class="btn btn-maroon" onclick="navigateQuestion(-1)">⬅️ السابق</button>
-            <span id="question-counter" style="font-weight: bold; color: var(--dark-gold);">السؤال 1</span>
+            <span id="question-counter" style="font-weight: bold; color: var(--dark-gold); font-size:0.9rem;">السؤال 1</span>
             <button id="btn-next" class="btn btn-maroon" onclick="navigateQuestion(1)">التالي ➡️</button>
             <button id="btn-submit" class="btn btn-green" style="display: none;" onclick="submitQuiz()">🟢 إنهاء وإرسال الإجابات</button>
         </div>
     </div>
 
+    <!-- الشاشة 3: النتيجة -->
     <div id="result-page" class="page">
-        <h2 id="result-title-khadim" style="color: var(--coptic-maroon); font-family: 'Amiri', serif;">تم إرسال إجاباتك بنجاح.</h2>
+        <h2 style="color: var(--coptic-maroon); font-size:1.4rem;">تم إرسال إجاباتك بنجاح.</h2>
         <div class="result-box">
-            <p style="font-size: 1.2rem; font-weight: bold;">اعرف نتيجتك:</p>
+            <p style="font-size: 1.1rem; font-weight: bold;">اعرف نتيجتك:</p>
             <div class="score-num" id="final-score">0 / 0</div>
-            
-            <div class="result-verse">
-                «سِرَاجٌ لِرِجْلِي كَلاَمُكَ وَنُورٌ لِسَبِيلِي»<br>
-                <span style="font-size: 1.1rem; color: var(--coptic-maroon);">(مزمور ١١٩: ١٠٥)</span>
-            </div>
         </div>
         <br>
-        <button class="btn btn-maroon" onclick="window.location.reload()">🔄 العودة للرئيسية</button>
+        <button class="btn btn-gold" style="font-size: 1rem; padding: 10px 20px; width:90%; max-width:320px;" onclick="openReviewModal()">👁️ مراجعة إجاباتك ومعرفة الخطأ</button>
+        <button class="btn btn-maroon" style="font-size: 1rem; padding: 10px 20px; width:90%; max-width:320px; margin-top:10px;" onclick="window.location.reload()">🔄 العودة للرئيسية</button>
     </div>
 
+    <!-- الشاشة 4: تسجيل دخول الإدارة -->
     <div id="admin-login-page" class="page">
-        <h3 style="color: var(--coptic-maroon); margin-bottom: 12px;">الدخول للإدارة</h3>
-        <input type="password" id="admin-pass-field" placeholder="باسورد الإدارة السري">
-        <br>
-        <button class="btn btn-maroon" onclick="loginAdmin()">🔑 دخول غرفة التحكم</button>
-        <button class="btn btn-gold" onclick="showPage('login-page')">إلغاء</button>
+        <div style="max-width: 450px; margin: 20px auto; padding: 20px; background: #fff; border: 2px solid var(--coptic-gold); border-radius: 12px; box-shadow: var(--soft-shadow);">
+            <div style="font-size: 2.2rem; margin-bottom: 5px;">🔐</div>
+            <h3 style="color: var(--coptic-maroon); margin-bottom: 15px;">غرفة تحكم الآباء الكهنة والأمناء</h3>
+            <input type="password" id="admin-pass-field" placeholder="أدخل كلمة المرور السرية للإدارة..." style="width: 100%;">
+            <br><br>
+            <button class="btn btn-maroon" style="width: 100%; padding: 12px;" onclick="loginAdmin()">🔑 دخول لوحة التحكم الملكية</button>
+            <button class="btn btn-gold" style="width: 100%; padding: 10px; margin-top: 10px;" onclick="showPage('login-page')">إلغاء والعودة</button>
+        </div>
     </div>
 
-    <div id="admin-dashboard-page" class="page admin-panel">
-        <h2>⚙️ لوحة التحكم والمتابعة</h2>
-        
-        <div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 20px;">
-            <button class="btn btn-green" onclick="fetchOnlineAnswersData()">🔄 تحديث وتحميل البيانات</button>
-            <button class="btn btn-gold" onclick="exportToExcel()">📥 تحميل كشف الدرجات الحالية Excel</button>
-            <button class="btn btn-red" onclick="resetAllOverrides()">⚠️ إلغاء كافة التعديلات اليدوية</button>
-            <button class="btn btn-blue" onclick="showPage('login-page')">خروج للشاشة الرئيسية</button>
+    <!-- الشاشة 5: لوحة المتابعة الكنسية -->
+    <div id="admin-dashboard-page" class="page" style="background-color: var(--church-cream); border: 3px solid var(--coptic-gold); border-radius: 14px; padding: 15px; text-align: right;">
+        <div style="background: var(--royal-gradient); color: #fff; padding: 12px; border-radius: 10px; margin-bottom: 20px; text-align: center;">
+            <h2>⛪ لوحة المتابعة الرقمية الفخمة لأمناء الخدمة</h2>
         </div>
-
-        <div class="control-group">
-            <h4>🛠️ أداة التعديل الإداري السريع:</h4>
-            <div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 10px;">
-                <select id="admin-modify-name" style="max-width: 220px; padding: 8px; margin: 0;" onchange="loadKhadimSelectedState()">
-                    <option value="">-- اختر اسم الخادم/ة --</option>
-                </select>
-                <div id="admin-inputs-container" style="display: none; align-items: center; flex-wrap: wrap; gap: 10px;">
-                    <input type="number" id="admin-modify-score" placeholder="الدرجة" style="max-width: 90px; padding: 6px; margin: 0;" min="0">
-                    <button class="btn btn-green" style="padding: 6px 12px; font-size: 0.85rem;" onclick="saveKhadimManualScore()">حفظ الدرجة</button>
-                    |
-                    <select id="admin-modify-q-idx" style="max-width: 130px; padding: 6px; margin: 0;">
-                        <option value="">-- اختر السؤال --</option>
-                    </select>
-                    <select id="admin-modify-q-ans" style="max-width: 120px; padding: 6px; margin: 0;">
-                        <option value="opt1">اختيار 1</option>
-                        <option value="opt2">اختيار 2</option>
-                        <option value="opt3">اختيار 3</option>
-                        <option value="opt4">اختيار 4</option>
-                    </select>
-                    <button class="btn btn-blue" style="padding: 6px 12px; font-size: 0.85rem;" onclick="saveKhadimManualQuestion()">تحديث إجابة السؤال</button>
-                </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-bottom: 20px;">
+            <div style="background: #fff; border-right: 4px solid var(--coptic-maroon); padding: 10px; text-align: center; border-radius: 6px;">
+                <p style="font-size:0.8rem; color:#666;">📊 إجمالي الخدام</p><h3 id="stat-total-servants">70</h3>
+            </div>
+            <div style="background: #fff; border-right: 4px solid var(--success-green); padding: 10px; text-align: center; border-radius: 6px;">
+                <p style="font-size:0.8rem; color:#666;">✅ الذين أتموا الحل</p><h3 id="stat-completed" style="color: var(--success-green);">0</h3>
+            </div>
+            <div style="background: #fff; border-right: 4px solid var(--error-red); padding: 10px; text-align: center; border-radius: 6px;">
+                <p style="font-size:0.8rem; color:#666;">⏳ متبقي لم يحل</p><h3 id="stat-pending" style="color: var(--error-red);">70</h3>
+            </div>
+            <div style="background: #fff; border-right: 4px solid var(--info-blue); padding: 10px; text-align: center; border-radius: 6px;">
+                <p style="font-size:0.8rem; color:#666;">📈 متوسط الدرجات</p><h3 id="stat-avg-score" style="color: var(--info-blue);">0%</h3>
             </div>
         </div>
-
-        <h3 style="color: var(--coptic-maroon); margin-top: 15px; font-family: 'Amiri', serif;">📊 جدول المتابعة السحابي الشامل للخدام والنائبات:</h3>
-        
-        <table class="admin-table">
-            <thead>
-                <tr>
-                    <th>م</th>
-                    <th>اسم الخادم / الخادمة المباركة</th>
-                    <th>كود الدخول (ترتيبه)</th>
-                    <th>الدرجة المحققة فعلياً</th>
-                    <th>وقت الدخول الفعلي (السحابي)</th>
-                    <th>إجراءات تصفير ومسح التجربة الحالية للعودة والإعادة 🔄</th>
-                </tr>
-            </thead>
-            <tbody id="results-table-body"></tbody>
-        </table>
+        <div style="margin-bottom: 15px; text-align: center;">
+            <button class="btn btn-green" onclick="fetchOnlineAnswersData()">🔄 مزامنة لايف</button>
+            <button class="btn btn-blue" onclick="exportToExcel()">📥 تحميل Excel</button>
+            <button class="btn btn-maroon" onclick="showPage('login-page')">🚪 خروج</button>
+        </div>
+        <div style="overflow-x: auto; background: #fff; border-radius: 8px; border: 1px solid #EAE4D7;">
+            <table style="width: 100%; border-collapse: collapse; min-width: 600px; text-align: center;">
+                <thead>
+                    <tr style="background: var(--coptic-maroon); color: var(--coptic-gold);">
+                        <th style="padding: 10px;">الترتيب</th><th style="padding: 10px; text-align: right;">الاسم</th><th style="padding: 10px;">الكود</th><th style="padding: 10px;">الحالة</th><th style="padding: 10px;">التوقيت</th><th style="padding: 10px;">إعادة</th>
+                    </tr>
+                </thead>
+                <tbody id="results-table-body"></tbody>
+            </table>
+        </div>
     </div>
 </div>
 
+<!-- نافذة الأصحاح والمشغل الصوتي مدمج -->
 <div id="essah-modal" class="modal-overlay">
     <div class="modal-content" onclick="event.stopPropagation()">
-        <h3 id="essah-modal-dynamic-title" style="color: var(--coptic-maroon); font-family: 'Amiri', serif; text-align: center;">جاري تحميل نص الأصحاح...</h3>
-        
-        <div style="text-align: center; margin: 10px 0;">
-            <button id="btn-toggle-audio" class="btn btn-orange" onclick="toggleAudioSection()">بلاش اسمع الأصحاح (إخفاء الصوت) 🚫</button>
-        </div>
-
+        <h3 id="essah-modal-dynamic-title" style="color: var(--coptic-maroon); font-family: 'Amiri', serif; text-align: center; margin-bottom: 12px;">جاري تحميل العنوان...</h3>
         <div id="audio-player-zone" class="audio-player-wrapper">
-            <p style="font-weight: bold; color: var(--coptic-maroon); margin-bottom: 8px;">🎧 أزرار التحكم والاستماع من اليوتيوب مباشرة:</p>
             <div class="audio-controls-top">
-                <button class="btn btn-maroon" style="padding: 6px 14px;" onclick="seekYT(-10)">⏪ تأخير 10ث</button>
-                <button class="btn btn-gold" style="padding: 6px 14px; color: black;" onclick="pauseYT()">⏸️ إيقاف مؤقت</button>
-                <button class="btn btn-green" style="padding: 6px 14px;" onclick="playYT()">▶️ تشغيل الصوت</button>
-                <button class="btn btn-maroon" style="padding: 6px 14px;" onclick="seekYT(10)">تقديم 10ث ⏩</button>
+                <button class="btn btn-gold" style="padding: 4px 12px; font-size:0.85rem;" onclick="pauseYT()">⏸️ إيقاف</button>
+                <button class="btn btn-green" style="padding: 4px 12px; font-size:0.85rem;" onclick="playYT()">▶️ تشغيل الاستماع</button>
             </div>
-            <div id="yt-status-text" style="font-size: 0.85rem; color: var(--info-blue); font-weight: bold;">حالة تشغيل اليوتيوب سحابياً: جاهز للتوصيل 🎚️</div>
+            <div class="progress-timeline-container">
+                <span id="current-time-label" class="time-label">00:00</span>
+                <input type="range" id="audio-seeker" class="music-seeker" min="0" max="100" value="0" oninput="onSeekerChange(this.value)">
+                <span id="total-time-label" class="time-label">00:00</span>
+            </div>
         </div>
-
-        <div style="text-align: left; margin: 8px 0; padding: 0 10px;">
-            <span style="font-weight: bold; color: var(--text-dark); margin-left: 8px; font-size: 0.9rem;">حجم الخط:</span>
-            <button class="btn btn-gold" style="padding: 4px 12px; font-size: 1rem; margin:0 2px;" onclick="changeFontSize(2)">➕ تكبير</button>
-            <button class="btn btn-gold" style="padding: 4px 12px; font-size: 1rem; margin:0 2px;" onclick="changeFontSize(-2)">➖ تصغير</button>
-        </div>
-        
-        <div id="essah-text-container" class="modal-body" style="white-space: pre-wrap; text-align: justify; direction: rtl;">جاري تحميل نص الأصحاح...</div>
-        
+        <div id="essah-text-container" class="modal-body" style="text-align: justify; font-size: 22px;">جاري تحميل نص الأصحاح...</div>
         <div style="text-align: center; margin-top: 15px;">
             <button class="btn btn-blue" onclick="closeEssahAndGoToQuiz()">📝 اذهب لحل الأسئلة</button>
             <button class="btn btn-maroon" onclick="closeEssahModal()">إغلاق ❌</button>
@@ -370,8 +362,25 @@
     </div>
 </div>
 
+<!-- نافذة المراجعة -->
+<div id="review-modal" class="modal-overlay" onclick="closeReviewModal()">
+    <div class="modal-content" onclick="event.stopPropagation()">
+        <h3 style="color: var(--coptic-maroon); text-align: center; margin-bottom: 12px;">📊 تقرير مراجعة إجاباتك بالتفصيل</h3>
+        <div id="review-modal-body-content" class="modal-body"></div>
+        <div style="text-align: center; margin-top: 15px;">
+            <button class="btn btn-maroon" onclick="closeReviewModal()">إغلاق التقرير ❌</button>
+        </div>
+    </div>
+</div>
+
+<!-- نموذج الإرسال الخلفي لجوجل فورم -->
+<form id="hidden_google_form" target="hidden_iframe" action="https://docs.google.com/forms/d/e/1FAIpQLSdXKHT_YC6-JzfgeyAlwwk7ChwZ6TCmgppgMyTNaJbH4A-Gnw/formResponse" method="POST" style="display:none;">
+    <input type="hidden" name="entry.1011855427" id="form_field_name">
+    <input type="hidden" name="entry.1352726057" id="form_field_code">
+    <input type="hidden" name="entry.2120015509" id="form_field_score">
+</form>
+
 <script>
-    const GOOGLE_FORM_ACTION_URL = "https://docs.google.com/forms/d/e/1FAIpQLSdXKHT_YC6-JzfgeyAlwwk7ChwZ6TCmgppgMyTNaJbH4A-Gnw/formResponse";
     const ESSAH_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRlHtC2XhIAwgkBPyOKvgS40OJ8JiYHt_019eGTHb9ltGaxc-oV6gT2QS924VOBSFZMv0N7d2OnzRBe/pub?output=csv";
     const QUESTIONS_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQATB615cDv6gnBZdVqUNJV8f7WTaA4p8nLuiV8uBJfGKUz5fFBP5UT6-XQTRyTumgZIBv_h9Pt64mg/pub?output=csv";
     const ANSWERS_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQt2NSQINCw5qoPgrZ_0fZh0O2RnPpI_shFWfqtDrcekG5cZuHjk46M8JR1ZJa2UDsQmNrJR2mOqUod/pub?output=csv";
@@ -399,25 +408,15 @@
         "سماح نعيم", "سمر جادالرب", "سناء سعيد", "شيري شهدي", "صفاء سمير", "صفاء عدلي",
         "عايدة معوض", "عايدة يعقوب", "فيوليت فوزي", "كرستين نصر", "ليلي وهبه", "ماجدة نجيب",
         "ماري عادل", "ماري وجيه", "ماريان مجدي", "ماريان ادورد", "مارينا اشرف", "مريان عادل",
-        "مريم عماد", "مريم مكرم", "مني ميشيل", "ميرفت يعقوب", "ميرنا عماد", "ناهد فاروق",
-        "نرجس خير", "نرمين سليمان", "نعمة عبدالسيد", "هيلانة جورج", "وردة ماهر", "يوستينا رافت"
+        "مريم عماد", "mريم مكرم", "مني ميشيل", "ميرفت يعقوب", "ميرنا عماد", "مينا اشرف", "مينا مجدي",
+        "ناهد فاروق", "نرجس خير", "نرمين سليمان", "نعمة عبدالسيد", "هيلانة جورج", "وردة ماهر", "يوستينا رافت"
     ];
 
-    let quizQuestions = [];
-    let currentQuestionIndex = 0;
-    let selectedAnswers = {}; 
-    let questionTimer = null;
-    let secondsLeftForQuestion = 3 * 60; 
-    let activeKhadimName = "";
-    let activeKhadimCode = "";
-    let currentEssahFontSize = 22; 
-    
-    let ytPlayer = null; 
-    let currentYoutubeVideoId = ""; 
-
-    let cloudFetchedRecords = {}; 
-    let localForcedOverrides = {}; 
-    let localResetExclusions = {}; 
+    let quizQuestions = []; let currentQuestionIndex = 0; let selectedAnswers = {}; 
+    let questionTimer = null; let secondsLeftForQuestion = 3 * 60; 
+    let activeKhadimName = ""; let activeKhadimCode = "";
+    let ytPlayer = null; let trackingInterval = null; let isUserSeeking = false; 
+    let cloudFetchedRecords = {}; let localForcedOverrides = {}; let localResetExclusions = {}; 
 
     function showChurchNotification(text) {
         const banner = document.getElementById("church-alert-banner");
@@ -426,84 +425,67 @@
         setTimeout(() => { banner.classList.remove("alert-show"); }, 3000);
     }
 
-    function getKhadimTitle(name) {
-        return femaleServants.includes(name) ? "الخادمة" : "الخادم";
-    }
-
-    function changeFontSize(delta) {
-        currentEssahFontSize += delta;
-        if(currentEssahFontSize < 14) currentEssahFontSize = 14;
-        if(currentEssahFontSize > 40) currentEssahFontSize = 40;
-        document.getElementById("essah-text-container").style.fontSize = currentEssahFontSize + "px";
-    }
-
-    // دوال تشغيل اليوتيوب السحابية عبر أزرار الموقع
-    function onYouTubeIframeAPIReady() { console.log("YouTube API Loaded."); }
+    function getKhadimTitle(name) { return femaleServants.includes(name) ? "الخادمة" : "الخادم"; }
 
     function extractYoutubeId(url) {
         let regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-        let match = url.match(regExp);
-        return (match && match[2].length === 11) ? match[2] : "";
+        let match = url.match(regExp); return (match && match[2].length === 11) ? match[2] : "";
     }
 
     function initYoutubePlayer(videoId) {
         if (!videoId) return;
-        if (ytPlayer) {
-            ytPlayer.cueVideoById({videoId: videoId});
-            return;
-        }
-        ytPlayer = new YT.Player('yt-player', {
-            height: '1px',
-            width: '1px',
-            videoId: videoId,
+        if (ytPlayer) { ytPlayer.cueVideoById({videoId: videoId}); return; }
+        ytPlayer = new YT.Player('hidden_iframe', {
+            height: '1px', width: '1px', videoId: videoId,
             playerVars: { 'playsinline': 1, 'controls': 0, 'disablekb': 1 },
             events: {
-                'onStateChange': (event) => {
-                    const txt = document.getElementById("yt-status-text");
-                    if (event.data == YT.PlayerState.PLAYING) txt.textContent = "🔊 حالة الأصحاح: جاري الاستماع الآن...";
-                    if (event.data == YT.PlayerState.PAUSED) txt.textContent = "⏸️ حالة الأصحاح: متوقف مؤقتاً";
-                }
+                'onReady': () => { startTrackingTimeline(); },
+                'onStateChange': (event) => { if (event.data == YT.PlayerState.PLAYING) { startTrackingTimeline(); } }
             }
         });
     }
 
     function playYT() { if(ytPlayer && ytPlayer.playVideo) ytPlayer.playVideo(); }
     function pauseYT() { if(ytPlayer && ytPlayer.pauseVideo) ytPlayer.pauseVideo(); }
-    function seekYT(seconds) {
-        if(ytPlayer && ytPlayer.getCurrentTime) {
-            let current = ytPlayer.getCurrentTime();
-            ytPlayer.seekTo(current + seconds, true);
+    
+    function onSeekerChange(value) {
+        if (ytPlayer && ytPlayer.getDuration) {
+            isUserSeeking = true; let duration = ytPlayer.getDuration() || 0;
+            let newTime = (value / 100) * duration; ytPlayer.seekTo(newTime, true);
+            document.getElementById("current-time-label").textContent = formatTime(newTime);
+            setTimeout(() => { isUserSeeking = false; }, 400);
         }
     }
 
-    function toggleAudioSection() {
-        const zone = document.getElementById("audio-player-zone");
-        const btn = document.getElementById("btn-toggle-audio");
-        if(zone.style.display === "none") {
-            zone.style.display = "block";
-            btn.textContent = "بلاش اسمع الأصحاح (إخفاء الصوت) 🚫";
-        } else {
-            zone.style.display = "none";
-            pauseYT();
-            btn.textContent = "أريد الاستماع للأصحاح 🎧";
-        }
+    function startTrackingTimeline() {
+        if(trackingInterval) clearInterval(trackingInterval);
+        trackingInterval = setInterval(() => {
+            if (ytPlayer && ytPlayer.getCurrentTime && !isUserSeeking) {
+                let current = ytPlayer.getCurrentTime() || 0; let duration = ytPlayer.getDuration() || 0;
+                document.getElementById("current-time-label").textContent = formatTime(current);
+                if (duration > 0) {
+                    document.getElementById("total-time-label").textContent = formatTime(duration);
+                    document.getElementById("audio-seeker").value = (current / duration) * 100;
+                }
+            }
+        }, 500);
     }
 
-    // قارئ ومحلل CSV الاحترافي متوافق 100% مع النزول للسطر (Alt+Enter) داخل الخلية الواحدة
+    function formatTime(seconds) {
+        let mins = Math.floor(seconds / 60); let secs = Math.floor(seconds % 60);
+        return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    }
+
     function parseCsvAdvanced(text) {
         let lines = []; let row = []; let inQuotes = false; let currentToken = "";
         for (let i = 0; i < text.length; i++) {
             let c = text[i];
-            if (c === '"') { 
-                inQuotes = !inQuotes; 
-            } else if (c === ',' && !inQuotes) { 
-                row.push(currentToken); currentToken = ""; 
-            } else if ((c === '\n' || c === '\r') && !inQuotes) {
+            if (c === '"') { inQuotes = !inQuotes; } 
+            else if (c === ',' && !inQuotes) { row.push(currentToken); currentToken = ""; } 
+            else if ((c === '\n' || c === '\r') && !inQuotes) {
                 if (c === '\r' && text[i+1] === '\n') { i++; }
                 row.push(currentToken); lines.push(row); row = []; currentToken = "";
-            } else { 
-                currentToken += c; 
-            }
+            } else { currentToken += c; }
         }
         if (currentToken || row.length > 0) { row.push(currentToken); lines.push(row); }
         return lines;
@@ -511,91 +493,39 @@
 
     function initApp() {
         const selectEl = document.getElementById("khadim-select");
-        const adminModifySelect = document.getElementById("admin-modify-name");
-        
         rawServants.forEach((name, index) => {
             let autoCode = (index + 1).toString(); 
-            let title = getKhadimTitle(name);
-            
-            let opt = document.createElement("option");
-            opt.value = name; 
-            opt.textContent = name; 
-            opt.setAttribute("data-pass", autoCode);
+            let opt = document.createElement("option"); opt.value = name; opt.textContent = name; opt.setAttribute("data-pass", autoCode);
             selectEl.appendChild(opt);
-
-            let optAdmin = document.createElement("option");
-            optAdmin.value = name; 
-            optAdmin.textContent = `${title}: ${name}`;
-            adminModifySelect.appendChild(optAdmin);
         });
-
-        if (localStorage.getItem("church_forced_overrides")) {
-            localForcedOverrides = JSON.parse(localStorage.getItem("church_forced_overrides"));
-        }
-        if (localStorage.getItem("church_reset_exclusions")) {
-            localResetExclusions = JSON.parse(localStorage.getItem("church_reset_exclusions"));
-        }
-        
-        fetchOnlineSheetData();
-        fetchOnlineAnswersData();
+        if (localStorage.getItem("church_forced_overrides")) localForcedOverrides = JSON.parse(localStorage.getItem("church_forced_overrides"));
+        if (localStorage.getItem("church_reset_exclusions")) localResetExclusions = JSON.parse(localStorage.getItem("church_reset_exclusions"));
+        fetchOnlineSheetData(); fetchOnlineAnswersData();
     }
 
     async function fetchOnlineSheetData() {
         try {
             const eResponse = await fetch(ESSAH_SHEET_URL + "&t=" + new Date().getTime());
-            const eData = await eResponse.text();
-            parseEssahCsv(eData);
-
+            const eData = await eResponse.text(); parseEssahCsv(eData);
             const qResponse = await fetch(QUESTIONS_SHEET_URL + "&t=" + new Date().getTime());
-            const qData = await qResponse.text();
-            
-            let newHash = CryptoJS.MD5(qData).toString();
-            let savedHash = localStorage.getItem("church_questions_current_hash");
-            parseQuestionsCsv(qData);
-
-            if (savedHash && savedHash !== newHash) {
-                localStorage.setItem("church_questions_current_hash", newHash);
-                localResetExclusions = {};
-                localStorage.removeItem("church_reset_exclusions");
-                showChurchNotification("🔄 تم تحديث شيت الأسئلة تلقائياً بنجاح!");
-            } else if (!savedHash) {
-                localStorage.setItem("church_questions_current_hash", newHash);
-            }
+            const qData = await qResponse.text(); parseQuestionsCsv(qData);
         } catch (e) { console.error(e); }
     }
 
     async function fetchOnlineAnswersData() {
         try {
             const response = await fetch(ANSWERS_SHEET_URL + "&t=" + new Date().getTime());
-            const csvText = await response.text();
-            let parsed = parseCsvAdvanced(csvText);
-            parseAnswersParsedArray(parsed);
-            renderAdminTable();
-        } catch(e) {
-            console.error("Answers Sync Error: ", e);
-            renderAdminTable();
-        }
+            const csvText = await response.text(); parseAnswersParsedArray(parseCsvAdvanced(csvText));
+            calculateAndRenderStats(); renderAdminTable();
+        } catch(e) { calculateAndRenderStats(); renderAdminTable(); }
     }
 
     function parseEssahCsv(text) {
         let lines = parseCsvAdvanced(text);
-        if(lines.length >= 2) {
-            // سطر العنوان في أول عمود
-            document.getElementById("essah-modal-dynamic-title").textContent = lines[1][0] || "الأصحاح الدراسي المبارك";
-            
-            // سطر الأصحاح كامل بـ Alt+Enter موجود بالكامل في الخانة الثانية B2
-            if(lines[1] && lines[1][1]) {
-                document.getElementById("essah-text-container").textContent = lines[1][1].trim();
-            }
-            
-            // رابط اليوتيوب الموجود بدقة في الخانة الثالثة C2
-            if(lines[1] && lines[1][2]) {
-                let youtubeUrl = lines[1][2].trim();
-                currentYoutubeVideoId = extractYoutubeId(youtubeUrl);
-                if(currentYoutubeVideoId) {
-                    initYoutubePlayer(currentYoutubeVideoId);
-                }
-            }
+        if(lines.length >= 1) {
+            document.getElementById("essah-modal-dynamic-title").textContent = (lines[0] && lines[0][0]) ? lines[0][0].trim() : "مسابقة دراسة الكتاب المقدس";
+            if(lines[1] && lines[1][1]) document.getElementById("essah-text-container").textContent = lines[1][1].trim();
+            if(lines[1] && lines[1][2]) { let vidId = extractYoutubeId(lines[1][2].trim()); if(vidId) initYoutubePlayer(vidId); }
         }
     }
 
@@ -603,9 +533,7 @@
         let lines = parseCsvAdvanced(text); quizQuestions = [];
         for (let i = 1; i < lines.length; i++) {
             let row = lines[i];
-            if (row && row.length >= 6 && row[0]) {
-                quizQuestions.push({ q: row[0], opt1: row[1], opt2: row[2], opt3: row[3], opt4: row[4], correct: row[5] });
-            }
+            if (row && row.length >= 6 && row[0]) { quizQuestions.push({ q: row[0], opt1: row[1], opt2: row[2], opt3: row[3], opt4: row[4], correct: row[5] }); }
         }
     }
 
@@ -614,21 +542,14 @@
         for (let i = 1; i < lines.length; i++) {
             let row = lines[i];
             if(row && row.length >= 4) {
-                let timestamp = row[0].trim();
-                let name = row[1].trim();
-                let scoreStr = row[3].trim(); 
-                if (name) {
-                    cloudFetchedRecords[name] = { score: scoreStr, date: timestamp };
-                }
+                let timestamp = row[0].trim(); let name = row[1].trim(); let scoreStr = row[3].trim(); 
+                if (name) cloudFetchedRecords[name] = { score: scoreStr, date: timestamp };
             }
         }
     }
 
     function openEssahModal() { document.getElementById("essah-modal").style.display = "flex"; }
-    function closeEssahModal() { 
-        document.getElementById("essah-modal").style.display = "none"; 
-        pauseYT();
-    }
+    function closeEssahModal() { document.getElementById("essah-modal").style.display = "none"; pauseYT(); }
     function closeEssahAndGoToQuiz() { closeEssahModal(); }
 
     function loginKhadim() {
@@ -639,51 +560,33 @@
         if (!selectedOption.value) { showChurchNotification("رجاءً اختر اسمك من القائمة."); return; }
         if (passwordInput !== selectedOption.getAttribute("data-pass")) { showChurchNotification("كود المرور الترتيبي خاطئ!"); return; }
         
-        activeKhadimName = selectedOption.value;
-        activeKhadimCode = passwordInput;
-
-        let hasSolved = cloudFetchedRecords[activeKhadimName] || localForcedOverrides[activeKhadimName];
-        let isExcluded = localResetExclusions[activeKhadimName];
-
-        if (hasSolved && !isExcluded) {
-            showChurchNotification(`لقد قمت بأداء الامتحان مسبقًا! برجاء مراجعة الإدارة.`);
-            return;
+        activeKhadimName = selectedOption.value; activeKhadimCode = passwordInput;
+        if ((cloudFetchedRecords[activeKhadimName] || localForcedOverrides[activeKhadimName]) && !localResetExclusions[activeKhadimName]) {
+            showChurchNotification(`لقد قمت بأداء الامتحان مسبقًا! برجاء مراجعة الإدارة.`); return;
         }
-
-        let title = getKhadimTitle(activeKhadimName);
-        document.getElementById("welcome-khadim").textContent = `${title}: ${activeKhadimName}`;
-        document.getElementById("result-title-khadim").textContent = `عاشت إيديك يا ${title} المبارك/ة، تم إرسال إجاباتك بنجاح.`;
-        
-        showPage("quiz-page");
-        currentQuestionIndex = 0; selectedAnswers = {};
-        startQuestionTimer(); displayQuestion();
+        document.getElementById("welcome-khadim").textContent = `${getKhadimTitle(activeKhadimName)}: ${activeKhadimName}`;
+        showPage("quiz-page"); currentQuestionIndex = 0; selectedAnswers = {}; startQuestionTimer(); displayQuestion();
     }
 
     function displayQuestion() {
         const q = quizQuestions[currentQuestionIndex];
         document.getElementById("question-counter").textContent = `السؤال ${currentQuestionIndex + 1} من ${quizQuestions.length}`;
         document.getElementById("question-text").textContent = `س ${currentQuestionIndex + 1}: ${q.q}`;
-        
         const box = document.getElementById("options-box"); box.innerHTML = "";
-        
         ['opt1', 'opt2', 'opt3', 'opt4'].forEach(k => {
             if (q[k]) {
                 let isSel = selectedAnswers[currentQuestionIndex] === k;
-                let div = document.createElement("div");
-                div.className = `option-card ${isSel ? 'selected' : ''}`;
+                let div = document.createElement("div"); div.className = `option-card ${isSel ? 'selected' : ''}`;
                 div.onclick = () => { selectedAnswers[currentQuestionIndex] = k; displayQuestion(); };
-                div.innerHTML = `<input type="radio" ${isSel?'checked':''}> <label style="cursor:pointer; width:100%;">${q[k]}</label>`;
+                div.innerHTML = `<input type="radio" ${isSel?'checked':''}> <label style="cursor:pointer; width:100%; text-align:right;">${q[k]}</label>`;
                 box.appendChild(div);
             }
         });
-
         document.getElementById("btn-prev").style.visibility = currentQuestionIndex === 0 ? "hidden" : "visible";
         if (currentQuestionIndex === quizQuestions.length - 1) {
-            document.getElementById("btn-next").style.display = "none";
-            document.getElementById("btn-submit").style.display = "inline-flex";
+            document.getElementById("btn-next").style.display = "none"; document.getElementById("btn-submit").style.display = "inline-flex";
         } else {
-            document.getElementById("btn-next").style.display = "inline-flex";
-            document.getElementById("btn-submit").style.display = "none";
+            document.getElementById("btn-next").style.display = "inline-flex"; document.getElementById("btn-submit").style.display = "none";
         }
     }
 
@@ -695,183 +598,110 @@
             secondsLeftForQuestion--;
             let m = Math.floor(secondsLeftForQuestion/60); let s = secondsLeftForQuestion%60;
             document.getElementById("time-display").textContent = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
-            if (secondsLeftForQuestion <= 0) { 
-                if (currentQuestionIndex < quizQuestions.length - 1) navigateQuestion(1); else submitQuiz(); 
-            }
+            if (secondsLeftForQuestion <= 0) { if (currentQuestionIndex < quizQuestions.length - 1) navigateQuestion(1); else submitQuiz(); }
         }, 1000);
     }
 
     function submitQuiz() {
-        clearInterval(questionTimer);
-        let score = 0;
-        quizQuestions.forEach((q, idx) => {
-            let ans = selectedAnswers[idx];
-            if(ans && q[ans] && q[ans].trim() === q.correct.trim()) score++;
-        });
-
+        clearInterval(questionTimer); let score = 0;
+        quizQuestions.forEach((q, idx) => { let ans = selectedAnswers[idx]; if(ans && q[ans] && q[ans].trim() === q.correct.trim()) score++; });
         let finalScoreString = `${score} من ${quizQuestions.length}`;
         document.getElementById("final-score").textContent = `${score} / ${quizQuestions.length}`;
         
-        if(localResetExclusions[activeKhadimName]) {
-            delete localResetExclusions[activeKhadimName];
-            localStorage.setItem("church_reset_exclusions", JSON.stringify(localResetExclusions));
-        }
-
-        localForcedOverrides[activeKhadimName] = {
-            score: finalScoreString,
-            date: new Date().toLocaleString("ar-EG")
-        };
+        if(localResetExclusions[activeKhadimName]) { delete localResetExclusions[activeKhadimName]; localStorage.setItem("church_reset_exclusions", JSON.stringify(localResetExclusions)); }
+        localForcedOverrides[activeKhadimName] = { score: finalScoreString, date: new Date().toLocaleString("ar-EG"), savedAnswers: Object.assign({}, selectedAnswers) };
         localStorage.setItem("church_forced_overrides", JSON.stringify(localForcedOverrides));
 
         showPage("result-page");
-
-        let formParams = new URLSearchParams();
-        formParams.append("entry.1011855427", activeKhadimName); 
-        formParams.append("entry.1352726057", `كود: ${activeKhadimCode}`);
-        formParams.append("entry.2120015509", finalScoreString);
-        fetch(GOOGLE_FORM_ACTION_URL, { method: "POST", mode: "no-cors", body: formParams }).then(() => {
-            setTimeout(fetchOnlineAnswersData, 2000); 
-        });
+        document.getElementById("form_field_name").value = activeKhadimName;
+        document.getElementById("form_field_code").value = `كود: ${activeKhadimCode}`;
+        document.getElementById("form_field_score").value = finalScoreString;
+        document.getElementById("hidden_google_form").submit();
+        setTimeout(fetchOnlineAnswersData, 2500);
     }
 
+    function openReviewModal() {
+        const modal = document.getElementById("review-modal"); const container = document.getElementById("review-modal-body-content"); container.innerHTML = "";
+        let mySavedData = localForcedOverrides[activeKhadimName]; let userAnswersMap = mySavedData ? mySavedData.savedAnswers : selectedAnswers;
+
+        quizQuestions.forEach((q, idx) => {
+            let div = document.createElement("div"); div.className = "review-card"; div.innerHTML = `<div class="review-q-text">السؤال ${idx + 1}: ${q.q}</div>`;
+            let userSelectedKey = userAnswersMap[idx];
+            ['opt1', 'opt2', 'opt3', 'opt4'].forEach(k => {
+                if(q[k]) {
+                    let optText = q[k].trim(); let isCorrectAnswer = optText === q.correct.trim(); let isUserChoice = k === userSelectedKey;
+                    let optDiv = document.createElement("div"); optDiv.className = "review-opt"; optDiv.textContent = q[k];
+                    if (isUserChoice && isCorrectAnswer) { optDiv.classList.add("review-correct-match"); optDiv.innerHTML += " <span>✅ (إجابتك صحيحة)</span>"; } 
+                    else if (isUserChoice && !isCorrectAnswer) { optDiv.classList.add("review-wrong-match"); optDiv.innerHTML += " <span>❌ (إجابتك خاطئة)</span>"; } 
+                    else if (!isUserChoice && isCorrectAnswer) { optDiv.classList.add("review-highlight-truth"); optDiv.innerHTML += " <span>👈 الإجابة الصحيحة</span>"; }
+                    div.appendChild(optDiv);
+                }
+            });
+            container.appendChild(div);
+        });
+        modal.style.display = "flex";
+    }
+
+    function closeReviewModal() { document.getElementById("review-modal").style.display = "none"; }
     function loginAdmin() {
         const pass = document.getElementById("admin-pass-field").value;
-        if (CryptoJS.SHA256(pass).toString() === ADMIN_HASHED_LOCK) {
-            document.getElementById("admin-pass-field").value = "";
-            showPage("admin-dashboard-page");
-            fetchOnlineAnswersData();
-        } else { showChurchNotification("كود المرور خاطئ!"); }
+        if (CryptoJS.SHA256(pass).toString() === ADMIN_HASHED_LOCK) { document.getElementById("admin-pass-field").value = ""; showPage("admin-dashboard-page"); fetchOnlineAnswersData(); } 
+        else { showChurchNotification("كود المرور خاطئ!"); }
+    }
+
+    function calculateAndRenderStats() {
+        let totalCount = rawServants.length; let solvedCount = 0; let totalPercentSum = 0;
+        rawServants.forEach(name => {
+            let hasSolved = false; let scoreStr = "";
+            if (cloudFetchedRecords[name]) { hasSolved = true; scoreStr = cloudFetchedRecords[name].score; }
+            if (localForcedOverrides[name]) { hasSolved = true; scoreStr = localForcedOverrides[name].score; }
+            if (localResetExclusions[name]) { hasSolved = false; }
+            if(hasSolved && scoreStr.includes("من")) {
+                solvedCount++; let parts = scoreStr.split("من"); let gained = parseFloat(parts[0]); let maxQ = parseFloat(parts[1]);
+                if(maxQ > 0) { totalPercentSum += (gained / maxQ) * 100; }
+            }
+        });
+        document.getElementById("stat-total-servants").textContent = totalCount;
+        document.getElementById("stat-completed").textContent = solvedCount;
+        document.getElementById("stat-pending").textContent = totalCount - solvedCount;
+        document.getElementById("stat-avg-score").textContent = (solvedCount > 0 ? Math.round(totalPercentSum / solvedCount) : 0) + "%";
     }
 
     function renderAdminTable() {
         const tbody = document.getElementById("results-table-body"); tbody.innerHTML = "";
-        
         rawServants.forEach((name, index) => {
-            let tr = document.createElement("tr");
-            let title = getKhadimTitle(name);
-            let accessCode = (index + 1).toString();
-            
-            let scoreShow = "لم يحل بعد";
-            let dateShow = "--";
-            
-            if (cloudFetchedRecords[name]) {
-                scoreShow = cloudFetchedRecords[name].score;
-                dateShow = cloudFetchedRecords[name].date;
-            }
-            if (localForcedOverrides[name]) {
-                scoreShow = localForcedOverrides[name].score;
-                dateShow = localForcedOverrides[name].date;
-            }
-
-            if (localResetExclusions[name]) {
-                scoreShow = "<span style='color:orange;'>🔄 تم تصفير المحاولة (متاح للإعادة)</span>";
-                dateShow = "--";
-            }
-
-            let scoreStyle = scoreShow.includes("من") || scoreShow.includes("/") ? "color:var(--success-green); font-size:1.05rem;" : "color:#999; font-style:italic;";
-
-            tr.innerHTML = `
-                <td>${index + 1}</td>
-                <td style="color:var(--coptic-maroon); text-align:right; padding-right:15px;">${title}: ${name}</td>
-                <td style="font-weight:bold; color:var(--info-blue);">${accessCode}</td>
-                <td style="${scoreStyle}">${scoreShow}</td>
-                <td style="font-size:0.85rem; color:#666;">${dateShow}</td>
-                <td>
-                    <button class="btn btn-orange" style="padding:4px 8px; font-size:0.8rem;" onclick="resetSingleKhadimCloudUI('${name}')">🔄 تصفير وفتح الإعادة</button>
-                </td>
-            `;
+            let tr = document.createElement("tr"); let title = getKhadimTitle(name); let accessCode = (index + 1).toString();
+            let scoreShow = `<span class="badge-unsolved">⏳ لم يحل بعد</span>`; let dateShow = "--";
+            if (cloudFetchedRecords[name]) { scoreShow = `<span class="badge-score">${cloudFetchedRecords[name].score}</span>`; dateShow = cloudFetchedRecords[name].date; }
+            if (localForcedOverrides[name]) { scoreShow = `<span class="badge-score" style="background-color: var(--success-green); border-color:#fff;">${localForcedOverrides[name].score}</span>`; dateShow = localForcedOverrides[name].date; }
+            if (localResetExclusions[name]) { scoreShow = "<span style='color:orange; font-weight:bold;'>🔄 تصفير</span>"; dateShow = "--"; }
+            tr.innerHTML = `<td>${index + 1}</td><td style="color:var(--coptic-maroon); text-align:right; font-weight:bold; padding-right:15px;">${title}: ${name}</td><td style="font-weight:bold; color:var(--info-blue); font-family: monospace;">${accessCode}</td><td>${scoreShow}</td><td style="font-size:0.85rem; color:#555;">${dateShow}</td><td><button class="btn-action-premium btn-reset-premium" style="background:#E74C3C; color:#fff; padding:3px 8px; border:none; border-radius:4px; cursor:pointer;" onclick="resetSingleKhadimCloudUI('${name}')">🔄 تصفير</button></td>`;
             tbody.appendChild(tr);
         });
     }
 
-    function loadKhadimSelectedState() {
-        const name = document.getElementById("admin-modify-name").value;
-        const container = document.getElementById("admin-inputs-container");
-        const qSelect = document.getElementById("admin-modify-q-idx");
-        if(!name) { container.style.display = "none"; return; }
-        
-        container.style.display = "inline-flex";
-        qSelect.innerHTML = '<option value="">-- اختر السؤال --</option>';
-        quizQuestions.forEach((q, idx) => {
-            let o = document.createElement("option"); o.value = idx; o.textContent = `السؤال ${idx+1}`; qSelect.appendChild(o);
-        });
-    }
-
-    function saveKhadimManualScore() {
-        const name = document.getElementById("admin-modify-name").value;
-        const scoreNum = document.getElementById("admin-modify-score").value;
-        if(!name || scoreNum === "") return;
-
-        localForcedOverrides[name] = {
-            score: `${scoreNum} من ${quizQuestions.length || 10}`,
-            date: "✏️ تعديل إداري يدوي"
-        };
-        localStorage.setItem("church_forced_overrides", JSON.stringify(localForcedOverrides));
-        renderAdminTable();
-        let title = getKhadimTitle(name);
-        showChurchNotification(`✅ تم تعديل درجة ${title} (${name}) بنجاح.`);
-    }
-
-    function saveKhadimManualQuestion() {
-        const name = document.getElementById("admin-modify-name").value;
-        const qIdx = document.getElementById("admin-modify-q-idx").value;
-        if(!name || qIdx === "") { showChurchNotification("⚠️ يرجى تحديد السؤال أولاً"); return; }
-        showChurchNotification(`✅ تم تحديث إجابة السؤال رقم ${parseInt(qIdx)+1} بنجاح.`);
-    }
-
     function resetSingleKhadimCloudUI(name) {
-        let title = getKhadimTitle(name);
-        if (confirm(`هل أنت متأكد من تصفير محاولة ${title} (${name})؟`)) {
-            localResetExclusions[name] = true;
-            localStorage.setItem("church_reset_exclusions", JSON.stringify(localResetExclusions));
-            
+        if (confirm(`هل أنت متأكد من تصفير محاولة ${getKhadimTitle(name)} (${name})؟`)) {
+            localResetExclusions[name] = true; localStorage.setItem("church_reset_exclusions", JSON.stringify(localResetExclusions));
             if (localForcedOverrides[name]) delete localForcedOverrides[name];
             localStorage.setItem("church_forced_overrides", JSON.stringify(localForcedOverrides));
-
-            renderAdminTable();
-        }
-    }
-
-    function resetAllOverrides() {
-        if(confirm("هل تريد إلغاء كافة التعديلات اليدوية؟")) {
-            localForcedOverrides = {};
-            localResetExclusions = {};
-            localStorage.removeItem("church_forced_overrides");
-            localStorage.removeItem("church_reset_exclusions");
-            fetchOnlineAnswersData();
+            calculateAndRenderStats(); renderAdminTable(); showChurchNotification(`تم إعادة ضبط محاولة ${getKhadimTitle(name)}!`);
         }
     }
 
     function exportToExcel() {
         let dataRows = [];
         rawServants.forEach((name, idx) => {
-            let title = getKhadimTitle(name);
-            let scoreShow = "لم يحل بعد";
-            let dateShow = "--";
+            let scoreShow = "لم يحل بعد"; let dateShow = "--";
             if (cloudFetchedRecords[name]) { scoreShow = cloudFetchedRecords[name].score; dateShow = cloudFetchedRecords[name].date; }
             if (localForcedOverrides[name]) { scoreShow = localForcedOverrides[name].score; dateShow = localForcedOverrides[name].date; }
-            if (localResetExclusions[name]) { scoreShow = "تم التصفير للإعادة"; dateShow = "--"; }
-
-            dataRows.push({
-                "م": idx + 1,
-                "اللقب": title,
-                "اسم الخادم/الخادمة المباركة": name,
-                "كود الدخول (ترتيبه الأبجدي)": idx + 1,
-                "الدرجة والنتيجة": scoreShow,
-                "وقت الدخول الفعلي السحابي": dateShow
-            });
+            dataRows.push({ "م": idx + 1, "اللقب": getKhadimTitle(name), "الاسم الكريم": name, "كود الدخول": idx + 1, "النتيجة": scoreShow, "التوقيت": dateShow });
         });
-        const worksheet = XLSX.utils.json_to_sheet(dataRows);
-        const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, worksheet, "كشف المتابعة الموحد");
-        XLSX.writeFile(workbook, "مسابقة_الكتاب_المقدس.xlsx");
+        const worksheet = XLSX.utils.json_to_sheet(dataRows); const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "كشف المتابعة الكنسية"); XLSX.writeFile(workbook, "مسابقة_الكتاب_المقدس_الفاخرة.xlsx");
     }
 
-    function showPage(id) {
-        document.querySelectorAll('.page').forEach(p => p.classList.remove('active-page')); 
-        document.getElementById(id).classList.add('active-page'); 
-    }
-    
+    function showPage(id) { document.querySelectorAll('.page').forEach(p => p.classList.remove('active-page')); document.getElementById(id).classList.add('active-page'); }
     window.onload = initApp;
 </script>
 </body>

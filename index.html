@@ -8,6 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.5/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <script src="https://www.youtube.com/iframe_api"></script>
 
     <style>
         :root {
@@ -167,10 +168,19 @@
             text-align: center;
             margin-top: 10px;
         }
-        .audio-player-wrapper audio {
-            width: 100%;
-            margin-top: 5px;
-            accent-color: var(--coptic-maroon);
+        .audio-controls-top {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+        /* إخفاء فريم اليوتيوب تماماً لكي لا يظهر ويخرب التصميم */
+        #yt-hidden-player-container {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            opacity: 0;
+            pointer-events: none;
         }
     </style>
 </head>
@@ -180,6 +190,8 @@
     <span>✝️</span>
     <span id="church-alert-text">تنبيه الخدمة</span>
 </div>
+
+<div id="yt-hidden-player-container"><div id="yt-player"></div></div>
 
 <div class="coptic-border">
     <div class="header-main-layout">
@@ -203,7 +215,6 @@
 
     <div class="church-separator"><span>❖ ❖ ❖</span></div>
 
-    <!-- الشاشة 1: الدخول الرئيسي -->
     <div id="login-page" class="page active-page">
         <div style="text-align: right; padding-right: 5%; margin-bottom: 10px;">
             <button id="admin-entrance-btn" class="btn btn-maroon" style="font-size: 0.85rem; padding: 6px 14px;" onclick="showPage('admin-login-page')">⚙️ لوحة التحكم للإدارة</button>
@@ -229,7 +240,6 @@
         <button class="btn btn-gold" style="margin-top: 15px; font-size: 1.1rem;" onclick="loginKhadim()">🔓 ابدأ المسابقة</button>
     </div>
 
-    <!-- الشاشة 2: شاشة عرض الأسئلة والتنقل -->
     <div id="quiz-page" class="page">
         <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #EAE4D7; padding-bottom: 12px;">
             <h4 id="welcome-khadim" style="color: var(--coptic-maroon);"></h4>
@@ -251,7 +261,6 @@
         </div>
     </div>
 
-    <!-- الشاشة 3: شاشة النتيجة -->
     <div id="result-page" class="page">
         <h2 id="result-title-khadim" style="color: var(--coptic-maroon); font-family: 'Amiri', serif;">تم إرسال إجاباتك بنجاح.</h2>
         <div class="result-box">
@@ -267,7 +276,6 @@
         <button class="btn btn-maroon" onclick="window.location.reload()">🔄 العودة للرئيسية</button>
     </div>
 
-    <!-- الشاشة 4: شاشة الدخول للإدارة -->
     <div id="admin-login-page" class="page">
         <h3 style="color: var(--coptic-maroon); margin-bottom: 12px;">الدخول للإدارة</h3>
         <input type="password" id="admin-pass-field" placeholder="باسورد الإدارة السري">
@@ -276,7 +284,6 @@
         <button class="btn btn-gold" onclick="showPage('login-page')">إلغاء</button>
     </div>
 
-    <!-- الشاشة 5: لوحة التحكم والمتابعة -->
     <div id="admin-dashboard-page" class="page admin-panel">
         <h2>⚙️ لوحة التحكم والمتابعة</h2>
         
@@ -333,9 +340,19 @@
     <div class="modal-content" onclick="event.stopPropagation()">
         <h3 id="essah-modal-dynamic-title" style="color: var(--coptic-maroon); font-family: 'Amiri', serif; text-align: center;">جاري تحميل نص الأصحاح...</h3>
         
-        <div class="audio-player-wrapper">
-            <p style="font-weight: bold; color: var(--coptic-maroon); margin-bottom: 2px;">🎧 استمع وتمرر داخل تسجيل الأصحاح بحرية:</p>
-            <audio id="essah-hidden-audio-player" controls controlsList="nodownload"></audio>
+        <div style="text-align: center; margin: 10px 0;">
+            <button id="btn-toggle-audio" class="btn btn-orange" onclick="toggleAudioSection()">بلاش اسمع الأصحاح (إخفاء الصوت) 🚫</button>
+        </div>
+
+        <div id="audio-player-zone" class="audio-player-wrapper">
+            <p style="font-weight: bold; color: var(--coptic-maroon); margin-bottom: 8px;">🎧 أزرار التحكم والاستماع من اليوتيوب مباشرة:</p>
+            <div class="audio-controls-top">
+                <button class="btn btn-maroon" style="padding: 6px 14px;" onclick="seekYT(-10)">⏪ تأخير 10ث</button>
+                <button class="btn btn-gold" style="padding: 6px 14px; color: black;" onclick="pauseYT()">⏸️ إيقاف مؤقت</button>
+                <button class="btn btn-green" style="padding: 6px 14px;" onclick="playYT()">▶️ تشغيل الصوت</button>
+                <button class="btn btn-maroon" style="padding: 6px 14px;" onclick="seekYT(10)">تقديم 10ث ⏩</button>
+            </div>
+            <div id="yt-status-text" style="font-size: 0.85rem; color: var(--info-blue); font-weight: bold;">حالة تشغيل اليوتيوب سحابياً: جاهز للتوصيل 🎚️</div>
         </div>
 
         <div style="text-align: left; margin: 8px 0; padding: 0 10px;">
@@ -344,7 +361,7 @@
             <button class="btn btn-gold" style="padding: 4px 12px; font-size: 1rem; margin:0 2px;" onclick="changeFontSize(-2)">➖ تصغير</button>
         </div>
         
-        <div id="essah-text-container" class="modal-body">جاري تحميل نص الأصحاح...</div>
+        <div id="essah-text-container" class="modal-body" style="white-space: pre-wrap; text-align: justify; direction: rtl;">جاري تحميل نص الأصحاح...</div>
         
         <div style="text-align: center; margin-top: 15px;">
             <button class="btn btn-blue" onclick="closeEssahAndGoToQuiz()">📝 اذهب لحل الأسئلة</button>
@@ -361,7 +378,6 @@
     
     const ADMIN_HASHED_LOCK = "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3"; 
 
-    // تم تصحيح اسم سناء سعيد بدقة تامة وحذف الحروف الغريبة بالكامل
     const rawServants = [
         "امال سامي", "ايريني سمير", "ايريني عاطف", "توني هاني", "جاكلين سعيد", "جانيت ويصا",
         "جمال حنا", "جورج فايز", "جيرمين زاهر", "جيهان شحاتة", "جيهان ماهر", "رامز امير",
@@ -371,7 +387,7 @@
         "عادلي رمزي", "عايدة معوض", "عايدة يعقوب", "عماد سمير", "فادي سليمان", "فادي كحيل",
         "فيوليت فوزي", "كرستين نصر", "كريم شكرالله", "كمال كريم", "كيرلس اسامه", "كيرلس فادي",
         "كيرلس يوسف", "ليلي وهبه", "ماجدة نجيب", "مارك جوزيف", "ماركو مجدي", "ماري عادل",
-        "ماري وجيه", "ماريان مجدي", "ماريانا ادورد", "مارينا اشرف", "مريان عادل", "مريم عماد",
+        "ماري وجيه", "ماريان مجدي", "ماريان ادورد", "مارينا اشرف", "مريان عادل", "مريم عماد",
         "مريم مكرم", "مني ميشيل", "ميرفت يعقوب", "ميرنا عماد", "مينا اشرف", "مينا مجدي",
         "ناهد فاروق", "نرجس خير", "نرمين سليمان", "نعمة عبدالسيد", "هيلانة جورج", "وائل ماهر",
         "وردة ماهر", "ياسر نبيه", "يوسف وليم", "يوستينا رافت"
@@ -382,7 +398,7 @@
         "جيهان شحاتة", "جيهان ماهر", "سارة عماد", "sاندرا جورج", "سامية جريس", "سماح حلمي",
         "سماح نعيم", "سمر جادالرب", "سناء سعيد", "شيري شهدي", "صفاء سمير", "صفاء عدلي",
         "عايدة معوض", "عايدة يعقوب", "فيوليت فوزي", "كرستين نصر", "ليلي وهبه", "ماجدة نجيب",
-        "ماري عادل", "ماري وجيه", "ماريان مجدي", "ماريانا ادورد", "مارينا اشرف", "مريان عادل",
+        "ماري عادل", "ماري وجيه", "ماريان مجدي", "ماريان ادورد", "مارينا اشرف", "مريان عادل",
         "مريم عماد", "مريم مكرم", "مني ميشيل", "ميرفت يعقوب", "ميرنا عماد", "ناهد فاروق",
         "نرجس خير", "نرمين سليمان", "نعمة عبدالسيد", "هيلانة جورج", "وردة ماهر", "يوستينا رافت"
     ];
@@ -396,6 +412,9 @@
     let activeKhadimCode = "";
     let currentEssahFontSize = 22; 
     
+    let ytPlayer = null; 
+    let currentYoutubeVideoId = ""; 
+
     let cloudFetchedRecords = {}; 
     let localForcedOverrides = {}; 
     let localResetExclusions = {}; 
@@ -416,6 +435,78 @@
         if(currentEssahFontSize < 14) currentEssahFontSize = 14;
         if(currentEssahFontSize > 40) currentEssahFontSize = 40;
         document.getElementById("essah-text-container").style.fontSize = currentEssahFontSize + "px";
+    }
+
+    // دوال تشغيل اليوتيوب السحابية عبر أزرار الموقع
+    function onYouTubeIframeAPIReady() { console.log("YouTube API Loaded."); }
+
+    function extractYoutubeId(url) {
+        let regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+        let match = url.match(regExp);
+        return (match && match[2].length === 11) ? match[2] : "";
+    }
+
+    function initYoutubePlayer(videoId) {
+        if (!videoId) return;
+        if (ytPlayer) {
+            ytPlayer.cueVideoById({videoId: videoId});
+            return;
+        }
+        ytPlayer = new YT.Player('yt-player', {
+            height: '1px',
+            width: '1px',
+            videoId: videoId,
+            playerVars: { 'playsinline': 1, 'controls': 0, 'disablekb': 1 },
+            events: {
+                'onStateChange': (event) => {
+                    const txt = document.getElementById("yt-status-text");
+                    if (event.data == YT.PlayerState.PLAYING) txt.textContent = "🔊 حالة الأصحاح: جاري الاستماع الآن...";
+                    if (event.data == YT.PlayerState.PAUSED) txt.textContent = "⏸️ حالة الأصحاح: متوقف مؤقتاً";
+                }
+            }
+        });
+    }
+
+    function playYT() { if(ytPlayer && ytPlayer.playVideo) ytPlayer.playVideo(); }
+    function pauseYT() { if(ytPlayer && ytPlayer.pauseVideo) ytPlayer.pauseVideo(); }
+    function seekYT(seconds) {
+        if(ytPlayer && ytPlayer.getCurrentTime) {
+            let current = ytPlayer.getCurrentTime();
+            ytPlayer.seekTo(current + seconds, true);
+        }
+    }
+
+    function toggleAudioSection() {
+        const zone = document.getElementById("audio-player-zone");
+        const btn = document.getElementById("btn-toggle-audio");
+        if(zone.style.display === "none") {
+            zone.style.display = "block";
+            btn.textContent = "بلاش اسمع الأصحاح (إخفاء الصوت) 🚫";
+        } else {
+            zone.style.display = "none";
+            pauseYT();
+            btn.textContent = "أريد الاستماع للأصحاح 🎧";
+        }
+    }
+
+    // قارئ ومحلل CSV الاحترافي متوافق 100% مع النزول للسطر (Alt+Enter) داخل الخلية الواحدة
+    function parseCsvAdvanced(text) {
+        let lines = []; let row = []; let inQuotes = false; let currentToken = "";
+        for (let i = 0; i < text.length; i++) {
+            let c = text[i];
+            if (c === '"') { 
+                inQuotes = !inQuotes; 
+            } else if (c === ',' && !inQuotes) { 
+                row.push(currentToken); currentToken = ""; 
+            } else if ((c === '\n' || c === '\r') && !inQuotes) {
+                if (c === '\r' && text[i+1] === '\n') { i++; }
+                row.push(currentToken); lines.push(row); row = []; currentToken = "";
+            } else { 
+                currentToken += c; 
+            }
+        }
+        if (currentToken || row.length > 0) { row.push(currentToken); lines.push(row); }
+        return lines;
     }
 
     function initApp() {
@@ -477,7 +568,8 @@
         try {
             const response = await fetch(ANSWERS_SHEET_URL + "&t=" + new Date().getTime());
             const csvText = await response.text();
-            parseAnswersCsv(csvText);
+            let parsed = parseCsvAdvanced(csvText);
+            parseAnswersParsedArray(parsed);
             renderAdminTable();
         } catch(e) {
             console.error("Answers Sync Error: ", e);
@@ -486,49 +578,47 @@
     }
 
     function parseEssahCsv(text) {
-        let lines = text.split("\n").map(l => l.split(","));
+        let lines = parseCsvAdvanced(text);
         if(lines.length >= 2) {
-            document.getElementById("essah-modal-dynamic-title").textContent = lines[0][0] || "الأصحاح الدراسي المبارك";
+            // سطر العنوان في أول عمود
+            document.getElementById("essah-modal-dynamic-title").textContent = lines[1][0] || "الأصحاح الدراسي المبارك";
             
-            let fullTextCombined = "";
-            for(let i=1; i<lines.length; i++) {
-                if(lines[i] && lines[i][1]) {
-                    fullTextCombined += lines[i][1] + "\n";
-                }
+            // سطر الأصحاح كامل بـ Alt+Enter موجود بالكامل في الخانة الثانية B2
+            if(lines[1] && lines[1][1]) {
+                document.getElementById("essah-text-container").textContent = lines[1][1].trim();
             }
-            document.getElementById("essah-text-container").textContent = fullTextCombined.trim() || "لا يوجد نص متاح حالياً.";
             
+            // رابط اليوتيوب الموجود بدقة في الخانة الثالثة C2
             if(lines[1] && lines[1][2]) {
-                document.getElementById("essah-hidden-audio-player").src = lines[1][2].trim();
+                let youtubeUrl = lines[1][2].trim();
+                currentYoutubeVideoId = extractYoutubeId(youtubeUrl);
+                if(currentYoutubeVideoId) {
+                    initYoutubePlayer(currentYoutubeVideoId);
+                }
             }
         }
     }
 
     function parseQuestionsCsv(text) {
-        let lines = text.split("\n"); quizQuestions = [];
+        let lines = parseCsvAdvanced(text); quizQuestions = [];
         for (let i = 1; i < lines.length; i++) {
-            let row = lines[i].split(",");
-            if (row.length >= 6) {
+            let row = lines[i];
+            if (row && row.length >= 6 && row[0]) {
                 quizQuestions.push({ q: row[0], opt1: row[1], opt2: row[2], opt3: row[3], opt4: row[4], correct: row[5] });
             }
         }
     }
 
-    function parseAnswersCsv(text) {
-        let lines = text.split("\n");
+    function parseAnswersParsedArray(lines) {
         cloudFetchedRecords = {};
         for (let i = 1; i < lines.length; i++) {
-            let row = lines[i].split(",");
-            if(row.length >= 4) {
+            let row = lines[i];
+            if(row && row.length >= 4) {
                 let timestamp = row[0].trim();
                 let name = row[1].trim();
                 let scoreStr = row[3].trim(); 
-                
                 if (name) {
-                    cloudFetchedRecords[name] = {
-                        score: scoreStr,
-                        date: timestamp
-                    };
+                    cloudFetchedRecords[name] = { score: scoreStr, date: timestamp };
                 }
             }
         }
@@ -537,7 +627,7 @@
     function openEssahModal() { document.getElementById("essah-modal").style.display = "flex"; }
     function closeEssahModal() { 
         document.getElementById("essah-modal").style.display = "none"; 
-        document.getElementById("essah-hidden-audio-player").pause(); 
+        pauseYT();
     }
     function closeEssahAndGoToQuiz() { closeEssahModal(); }
 
@@ -616,7 +706,7 @@
         let score = 0;
         quizQuestions.forEach((q, idx) => {
             let ans = selectedAnswers[idx];
-            if(ans && q[ans].trim() === q.correct.trim()) score++;
+            if(ans && q[ans] && q[ans].trim() === q.correct.trim()) score++;
         });
 
         let finalScoreString = `${score} من ${quizQuestions.length}`;

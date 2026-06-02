@@ -588,13 +588,13 @@
         <div id="loginSection" class="card">
             <h2 style="color:var(--gold); margin-bottom:15px; text-align:center;">تسجيل دخول الخدام</h2>
             <div class="form-group">
-                <label for="servantSelect">اختر اسمك :</label>
+                <label for="servantSelect">اختر اسمك الكريم:</label>
                 <select id="servantSelect">
                     <option value="">-- اضغط واختبر اسمك --</option>
                 </select>
             </div>
             <div class="form-group">
-                <label for="accessCode">كود التحقق:</label>
+                <label for="accessCode">كود التحقق السري (الباسورد):</label>
                 <input type="password" id="accessCode" placeholder="أدخل رقم الكود الخاص بترتيبك الأبجدي">
             </div>
             <div style="text-align: center; margin-top: 25px;">
@@ -661,7 +661,7 @@
         <div id="resultSection" class="card" style="display: none;">
             <div style="text-align: center;">
                 <h2 style="color: var(--gold); font-family:'Reem Kufi', sans-serif; font-size:1.8rem; margin-bottom:15px;" id="successVerse">"شُكْرًا لِلَّهِ الَّذِي يَقُودُنَا فِي مَوْكِبِ نُصْرَتِهِ"</h2>
-                <div style="font-size: 1.4rem; margin-bottom: 10px;">نتيجتك هي:</div>
+                <div style="font-size: 1.4rem; margin-bottom: 10px;">نتيجتك الفردية هي:</div>
                 <div id="scoreDisplay" style="font-size: 3rem; font-weight:bold; color:var(--gold); text-shadow:0 0 10px rgba(212,175,55,0.4); margin-bottom:20px;">0 / 10</div>
                 <button class="btn" onclick="openReviewModal()">عرف إجاباتك ونتيجتك بالتفصيل 🔎</button>
             </div>
@@ -673,9 +673,9 @@
     <div class="modal-overlay" id="adminGateModal">
         <div class="modal-card" style="max-width: 400px;">
             <button class="close-modal" onclick="closeModal('adminGateModal')">×</button>
-            <h3 class="modal-title">  الإدارة</h3>
+            <h3 class="modal-title">خزنة حماية الإدارة</h3>
             <div class="form-group">
-                <label>أدخل كود للإدارة:</label>
+                <label>أدخل الباسورد المشفر للإدارة:</label>
                 <input type="password" id="adminPassField">
             </div>
             <button class="btn" style="width:100%;" onclick="verifyAdminAccess()">دخول لوحة التحكم 📂</button>
